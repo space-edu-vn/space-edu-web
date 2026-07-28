@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Khóa Học - Space Education</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --deep-red: #b71c1c; 
+            --light-red: #fde0e0;
+            --text-dark: #2c3e50;
+            --bg-gray: #f8f9fa;
+            --white: #ffffff;
+            --sidebar-width: 260px;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background-color: var(--bg-gray); color: var(--text-dark); overflow-x: hidden; }
+
+        /* ================= HEADER & SIDEBAR (Đồng bộ) ================= */
+        header { background-color: var(--white); height: 80px; display: flex; align-items: center; padding: 0 30px; box-shadow: 0 2px 10px rgba(0,0,0,0.08); position: sticky; top: 0; z-index: 99; }
+        .header-left-group { display: flex; align-items: center; gap: 18px; }
+        .menu-btn { font-size: 24px; color: var(--deep-red); background: none; border: none; cursor: pointer; transition: 0.2s; }
+        .menu-btn:hover { transform: scale(1.1); }
+        .header-logo-img { width: 45px; height: 45px; object-fit: cover; border-radius: 50%; border: 2px solid var(--deep-red); background-color: white;}
+        .logo-text-group { display: flex; flex-direction: column; justify-content: center; }
+        .logo-text { font-size: 22px; font-weight: 900; color: var(--deep-red); text-transform: uppercase; letter-spacing: 1px; line-height: 1.2; }
+        .slogan-text { font-size: 13px; font-style: italic; color: #7f8c8d; font-weight: 500; }
+
+        .sidebar { position: fixed; top: 0; left: calc(-1 * var(--sidebar-width)); width: var(--sidebar-width); height: 100vh; background-color: var(--white); box-shadow: 4px 0 15px rgba(0,0,0,0.1); transition: left 0.3s ease; z-index: 1000; display: flex; flex-direction: column; }
+        .sidebar.active { left: 0; }
+        .sidebar-header { padding: 20px; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; align-items: center; }
+        .sidebar-logo { color: var(--deep-red); font-size: 20px; font-weight: bold; }
+        .close-btn { background: none; border: none; font-size: 20px; color: #777; cursor: pointer; }
+        .sidebar-menu { list-style: none; padding: 20px 0; flex: 1; }
+        .sidebar-menu li a { display: flex; align-items: center; padding: 15px 25px; color: var(--text-dark); text-decoration: none; font-weight: 500; font-size: 16px; transition: 0.2s; }
+        .sidebar-menu li a i { width: 30px; font-size: 18px; color: var(--deep-red); }
+        .sidebar-menu li a:hover, .sidebar-menu li a.active-link { background-color: var(--light-red); color: var(--deep-red); border-right: 4px solid var(--deep-red); }
+        
+        .sidebar-menu li.dropdown { flex-direction: column; align-items: flex-start; padding: 0; }
+        .dropdown-btn { width: 100%; display: flex; align-items: center; justify-content: space-between; padding: 15px 25px; background: none; border: none; font-size: 16px; font-weight: 500; color: var(--text-dark); cursor: pointer; transition: 0.2s; }
+        .dropdown-btn i.left-icon { width: 30px; font-size: 18px; color: var(--deep-red); text-align: left; }
+        .dropdown-btn:hover { background-color: var(--light-red); color: var(--deep-red); }
+        .dropdown-container { display: none; background-color: #f1f5f9; width: 100%; flex-direction: column; overflow: hidden; }
+        .dropdown-container a { padding: 12px 25px 12px 55px; font-size: 15px; border-left: 4px solid transparent; }
+        .dropdown-container a:hover { border-left: 4px solid var(--deep-red); background-color: #e2e8f0; }
+        .dropdown-container.active { display: flex; }
+
+        .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 999; display: none; opacity: 0; transition: opacity 0.3s; }
+        .overlay.active { display: block; opacity: 1; }
+
+        /* ================= KHU VỰC KHÓA HỌC ================= */
+        .course-container { max-width: 1200px; margin: 0 auto; padding: 40px 20px; }
+        
+        .page-header { text-align: center; margin-bottom: 50px; }
+        .page-header h1 { font-size: 32px; font-weight: 900; color: var(--deep-red); text-transform: uppercase; margin-bottom: 10px;}
+        .page-header p { font-size: 16px; color: #7f8c8d; }
+
+        /* BỘ LỌC MÔN HỌC */
+        .filter-container { display: flex; justify-content: center; gap: 15px; margin-bottom: 40px; flex-wrap: wrap; }
+        .filter-btn { padding: 10px 25px; font-size: 16px; font-weight: bold; background: var(--white); border: 2px solid var(--border-color); border-radius: 30px; cursor: pointer; transition: 0.3s; color: var(--text-dark); }
+        .filter-btn:hover { border-color: var(--deep-red); color: var(--deep-red); }
+        .filter-btn.active { background: var(--deep-red); color: white; border-color: var(--deep-red); box-shadow: 0 4px 10px rgba(183, 28, 28, 0.3); }
+
+        /* LƯỚI KHÓA HỌC */
+        .course-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 30px; }
+        
+        .course-card { background: var(--white); border-radius: 15px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.06); transition: 0.3s; display: flex; flex-direction: column; border: 1px solid #eee; position: relative;}
+        .course-card:hover { transform: translateY(-8px); box-shadow: 0 10px 25px rgba(183, 28, 28, 0.15); border-color: var(--light-red);}
+        
+        .course-badge { position: absolute; top: 15px; right: 15px; background: #f39c12; color: white; padding: 5px 12px; font-size: 12px; font-weight: bold; border-radius: 20px; z-index: 2; box-shadow: 0 2px 5px rgba(0,0,0,0.2);}
+        
+        .course-img-wrapper { position: relative; width: 100%; height: 200px; overflow: hidden; }
+        .course-img { width: 100%; height: 100%; object-fit: cover; transition: 0.5s; }
+        .course-card:hover .course-img { transform: scale(1.05); }
+        
+        .course-content { padding: 25px; flex: 1; display: flex; flex-direction: column; }
+        .course-subject { font-size: 13px; font-weight: bold; color: var(--deep-red); text-transform: uppercase; margin-bottom: 8px; letter-spacing: 1px;}
+        .course-title { font-size: 20px; font-weight: 900; color: var(--text-dark); margin-bottom: 15px; line-height: 1.4; }
+        
+        .course-meta { display: flex; flex-direction: column; gap: 8px; margin-bottom: 20px; font-size: 14px; color: #555; }
+        .course-meta span i { color: var(--deep-red); width: 20px; text-align: center; margin-right: 5px; }
+
+        .course-footer { margin-top: auto; display: flex; justify-content: space-between; align-items: center; padding-top: 20px; border-top: 1px solid #eee; }
+        .course-price { font-size: 22px; font-weight: 900; color: var(--deep-red); }
+        .btn-enroll { background: var(--deep-red); color: white; padding: 10px 20px; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; transition: 0.2s; }
+        .btn-enroll:hover { filter: brightness(1.1); transform: scale(1.05); }
+
+        /* FOOTER */
+        footer { background-color: var(--text-dark); color: white; text-align: center; padding: 40px 20px; margin-top: 50px; font-size: 14px; }
+        footer .footer-logo { font-size: 20px; font-weight: bold; color: var(--light-red); margin-bottom: 10px; display: inline-block;}
+
+        @media (max-width: 768px) {
+            header { padding: 0 15px; height: 65px; }
+            .header-left-group { gap: 10px; }
+            .header-logo-img { width: 35px; height: 35px; }
+            .logo-text { font-size: 16px; }
+            .slogan-text { display: none; }
+            
+            .course-grid { grid-template-columns: 1fr; }
+            .page-header h1 { font-size: 26px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- SIDEBAR -->
+    <div class="overlay" id="overlay"></div>
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <div class="sidebar-logo">SPACE EDU</div>
+            <button class="close-btn" id="close-btn"><i class="fas fa-times"></i></button>
+        </div>
+        
+        <ul class="sidebar-menu">
+            <li><a href="index.html"><i class="fas fa-home"></i> Trang chủ</a></li>
+            <li class="dropdown">
+                <button class="dropdown-btn" id="phong-luyen-btn">
+                    <div><i class="fas fa-laptop-code left-icon"></i> Phòng luyện thi</div>
+                    <i class="fas fa-chevron-down" id="phong-luyen-icon"></i>
+                </button>
+                <div class="dropdown-container" id="phong-luyen-menu">
+                    <a href="danhsachde.html?kithi=thptqg">Kỳ thi THPTQG</a>
+                    <a href="danhsachde.html?kithi=tsa">Kỳ thi TSA (Bách Khoa)</a>
+                </div>
+            </li>
+            <li><a href="khoahoc.html" class="active-link"><i class="fas fa-chalkboard-teacher"></i> Khóa học</a></li>
+        </ul>
+    </aside>
+
+    <!-- HEADER -->
+    <header>
+        <div class="header-left-group">
+            <button class="menu-btn" id="menu-btn"><i class="fas fa-bars"></i></button>
+            <img src="logo.webp" onerror="this.src='https://ui-avatars.com/api/?name=SE&background=b71c1c&color=fff&size=80&rounded=true'" alt="Space Edu Logo" class="header-logo-img">
+            <div class="logo-text-group">
+                <div class="logo-text">Space Education</div>
+                <div class="slogan-text">Nâng tầm tri thức, Bứt phá tư duy</div>
+            </div>
+        </div>
+        <div class="header-right"></div>
+    </header>
+
+    <!-- NỘI DUNG CHÍNH -->
+    <main class="course-container">
+        <div class="page-header">
+            <h1>Chương Trình Đào Tạo Điểm Cao</h1>
+            <p>Lộ trình bài bản - Giáo viên tận tâm - Cam kết đầu ra</p>
+        </div>
+
+        <div class="filter-container">
+            <button class="filter-btn active" onclick="filterCourses('all')">Tất cả</button>
+            <button class="filter-btn" onclick="filterCourses('toan')">Môn Toán</button>
+            <button class="filter-btn" onclick="filterCourses('ly')">Môn Lý</button>
+            <button class="filter-btn" onclick="filterCourses('hoa')">Môn Hóa</button>
+            <button class="filter-btn" onclick="filterCourses('it')">Lập Trình</button>
+        </div>
+
+        <div class="course-grid">
+            <!-- Khóa Toán -->
+            <div class="course-card" data-category="toan">
+                <div class="course-badge">HOT 2026</div>
+                <div class="course-img-wrapper">
+                    <img src="https://images.unsplash.com/photo-1635070041078-e363dbe005cb?auto=format&fit=crop&w=600&q=80" alt="Toán Học" class="course-img">
+                </div>
+                <div class="course-content">
+                    <div class="course-subject">Khối A - Lớp 12</div>
+                    <h3 class="course-title">Chinh Phục Toán 12: Hình Học Không Gian & Giải Tích</h3>
+                    <div class="course-meta">
+                        <span><i class="fas fa-chalkboard-teacher"></i> Thầy Trung Quân</span>
+                        <span><i class="far fa-clock"></i> 60 Buổi học</span>
+                        <span><i class="fas fa-users"></i> 1,200+ Học viên</span>
+                    </div>
+                    <div class="course-footer">
+                        <span class="course-price">1.500.000đ</span>
+                        <button class="btn-enroll">Đăng Ký</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Khóa Lý -->
+            <div class="course-card" data-category="ly">
+                <div class="course-img-wrapper">
+                    <img src="https://images.unsplash.com/photo-1532094349884-543bc11b234d?auto=format&fit=crop&w=600&q=80" alt="Vật Lý" class="course-img">
+                </div>
+                <div class="course-content">
+                    <div class="course-subject">Khối A - Lớp 12</div>
+                    <h3 class="course-title">Vật Lý Thực Chiến: Mạch Điện Xoay Chiều & Dao Động</h3>
+                    <div class="course-meta">
+                        <span><i class="fas fa-chalkboard-teacher"></i> Thầy Bình Minh</span>
+                        <span><i class="far fa-clock"></i> 55 Buổi học</span>
+                        <span><i class="fas fa-users"></i> 950+ Học viên</span>
+                    </div>
+                    <div class="course-footer">
+                        <span class="course-price">1.200.000đ</span>
+                        <button class="btn-enroll">Đăng Ký</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Khóa Hóa -->
+            <div class="course-card" data-category="hoa">
+                <div class="course-badge">ĐIỂM 9+</div>
+                <div class="course-img-wrapper">
+                    <img src="https://images.unsplash.com/photo-1603126857599-f6e1578248ce?auto=format&fit=crop&w=600&q=80" alt="Hóa Học" class="course-img">
+                </div>
+                <div class="course-content">
+                    <div class="course-subject">Khối A - Lớp 12</div>
+                    <h3 class="course-title">Đột Phá Hóa Học 12: Phá Đảo Chuỗi Phản Ứng</h3>
+                    <div class="course-meta">
+                        <span><i class="fas fa-chalkboard-teacher"></i> Thầy Gia Bảo</span>
+                        <span><i class="far fa-clock"></i> 50 Buổi học</span>
+                        <span><i class="fas fa-users"></i> 800+ Học viên</span>
+                    </div>
+                    <div class="course-footer">
+                        <span class="course-price">1.200.000đ</span>
+                        <button class="btn-enroll">Đăng Ký</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Khóa Công nghệ / Lập trình (Bonus) -->
+            <div class="course-card" data-category="it">
+                <div class="course-badge">NEW</div>
+                <div class="course-img-wrapper">
+                    <img src="https://images.unsplash.com/photo-1555066931-4365d14bab8c?auto=format&fit=crop&w=600&q=80" alt="Khoa học Máy tính" class="course-img">
+                </div>
+                <div class="course-content">
+                    <div class="course-subject">Định Hướng Nghề Nghiệp</div>
+                    <h3 class="course-title">Nhập Môn Tư Duy Lập Trình & Khoa Học Máy Tính</h3>
+                    <div class="course-meta">
+                        <span><i class="fas fa-chalkboard-teacher"></i> Kỹ sư phần mềm TDM</span>
+                        <span><i class="far fa-clock"></i> 30 Buổi học</span>
+                        <span><i class="fas fa-users"></i> 400+ Học viên</span>
+                    </div>
+                    <div class="course-footer">
+                        <span class="course-price" style="color: #27ae60;">Miễn phí</span>
+                        <button class="btn-enroll" style="background-color: #27ae60;">Tham Gia</button>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- FOOTER -->
+    <footer>
+        <span class="footer-logo">SPACE EDUCATION</span>
+        <p>&copy; 2026 Space Education. Tất cả bản quyền được bảo lưu.</p>
+        <p style="opacity: 0.7; margin-top: 5px;">Hệ thống tự luyện bám sát chương trình mới của Bộ Giáo Dục.</p>
+    </footer>
+
+    <script>
+        /* ================= XỬ LÝ MENU TRƯỢT ================= */
+        const menuBtn = document.getElementById('menu-btn');
+        const closeBtn = document.getElementById('close-btn');
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('overlay');
+
+        menuBtn.addEventListener('click', () => { sidebar.classList.add('active'); overlay.classList.add('active'); });
+        closeBtn.addEventListener('click', closeMenu);
+        overlay.addEventListener('click', closeMenu);
+
+        function closeMenu() { sidebar.classList.remove('active'); overlay.classList.remove('active'); }
+
+        /* ================= XỬ LÝ DROPDOWN PHÒNG LUYỆN ================= */
+        const phongLuyenBtn = document.getElementById('phong-luyen-btn');
+        const phongLuyenMenu = document.getElementById('phong-luyen-menu');
+        const phongLuyenIcon = document.getElementById('phong-luyen-icon');
+
+        phongLuyenBtn.addEventListener('click', () => {
+            phongLuyenMenu.classList.toggle('active');
+            if(phongLuyenMenu.classList.contains('active')) {
+                phongLuyenIcon.classList.remove('fa-chevron-down');
+                phongLuyenIcon.classList.add('fa-chevron-up');
+            } else {
+                phongLuyenIcon.classList.remove('fa-chevron-up');
+                phongLuyenIcon.classList.add('fa-chevron-down');
+            }
+        });
+
+        /* ================= BỘ LỌC KHÓA HỌC ================= */
+        function filterCourses(category) {
+            // Đổi style cho nút bấm
+            document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+
+            // Lọc danh sách
+            const cards = document.querySelectorAll('.course-card');
+            cards.forEach(card => {
+                if (category === 'all' || card.getAttribute('data-category') === category) {
+                    card.style.display = 'flex';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+    </script>
+</body>
+</html>
