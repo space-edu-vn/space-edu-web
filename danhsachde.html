@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Phòng Luyện Thi - Space Education</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root { --deep-red: #b71c1c; --light-red: #fde0e0; --text-dark: #2c3e50; --bg-gray: #f8f9fa; --white: #ffffff; --sidebar-width: 260px; }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', sans-serif; }
+        body { background-color: var(--bg-gray); color: var(--text-dark); overflow-x: hidden; }
+
+        /* HEADER & SIDEBAR */
+        header { background-color: var(--white); height: 80px; display: flex; align-items: center; justify-content: space-between; padding: 0 30px; box-shadow: 0 2px 10px rgba(0,0,0,0.08); position: sticky; top: 0; z-index: 99; }
+        .header-left-group { display: flex; align-items: center; gap: 18px; }
+        .menu-btn { font-size: 24px; color: var(--deep-red); background: none; border: none; cursor: pointer; transition: 0.2s; }
+        .header-logo-img { width: 45px; height: 45px; object-fit: cover; border-radius: 50%; border: 2px solid var(--deep-red); background-color: white;}
+        .logo-text { font-size: 22px; font-weight: 900; color: var(--deep-red); text-transform: uppercase; letter-spacing: 1px;}
+        
+        .header-right { display: flex; align-items: center; gap: 15px; }
+        .btn-icon { background: #f1f5f9; border: none; width: 40px; height: 40px; border-radius: 8px; font-size: 16px; color: var(--text-dark); cursor: pointer; transition: 0.2s; }
+        .btn-icon:hover { background: var(--light-red); color: var(--deep-red); }
+
+        .sidebar { position: fixed; top: 0; left: calc(-1 * var(--sidebar-width)); width: var(--sidebar-width); height: 100vh; background-color: var(--white); box-shadow: 4px 0 15px rgba(0,0,0,0.1); transition: left 0.3s ease; z-index: 1000; display: flex; flex-direction: column; }
+        .sidebar.active { left: 0; }
+        .sidebar-header { padding: 20px; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; align-items: center; }
+        .sidebar-logo { color: var(--deep-red); font-size: 20px; font-weight: bold; }
+        .close-btn { background: none; border: none; font-size: 20px; color: #777; cursor: pointer; }
+        .sidebar-menu { list-style: none; padding: 20px 0; flex: 1; }
+        .sidebar-menu li a { display: flex; align-items: center; padding: 15px 25px; color: var(--text-dark); text-decoration: none; font-weight: 500; font-size: 16px; transition: 0.2s; }
+        .sidebar-menu li a i { width: 30px; font-size: 18px; color: var(--deep-red); }
+        .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 999; display: none; opacity: 0; transition: opacity 0.3s; }
+        .overlay.active { display: block; opacity: 1; }
+
+        /* KHU VỰC DANH SÁCH & TÌM KIẾM */
+        .container { max-width: 1000px; margin: 40px auto; padding: 0 20px; }
+        .page-title { text-align: center; font-size: 28px; font-weight: 900; color: var(--deep-red); text-transform: uppercase; margin-bottom: 20px; border-bottom: 3px solid var(--deep-red); display: inline-block; padding-bottom: 10px;}
+        .title-wrapper { text-align: center; }
+        
+        .search-container { max-width: 600px; margin: 0 auto 30px auto; position: relative; }
+        .search-container i { position: absolute; left: 15px; top: 50%; transform: translateY(-50%); color: #7f8c8d; font-size: 18px; }
+        .search-input { width: 100%; padding: 15px 20px 15px 45px; border-radius: 30px; border: 2px solid #eaeaea; font-size: 16px; outline: none; transition: 0.3s; box-shadow: 0 4px 10px rgba(0,0,0,0.02);}
+        .search-input:focus { border-color: var(--deep-red); box-shadow: 0 4px 15px rgba(183,28,28,0.1); }
+
+        /* TAB */
+        .tabs-container { display: flex; justify-content: center; margin-bottom: 40px; border-bottom: 2px solid #ddd; }
+        .tab-btn { background: none; border: none; padding: 12px 30px; font-size: 18px; font-weight: bold; color: #7f8c8d; cursor: pointer; position: relative; transition: 0.3s; }
+        .tab-btn.active { color: var(--deep-red); }
+        .tab-btn.active::after { content: ''; position: absolute; bottom: -2px; left: 0; width: 100%; height: 3px; background-color: var(--deep-red); border-radius: 3px 3px 0 0; }
+        .tab-content { display: none; animation: fadeIn 0.4s ease; }
+        .tab-content.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* THƯ MỤC MÔN HỌC & CARD */
+        .subject-folder { background: white; border-radius: 12px; margin-bottom: 20px; border: 1px solid #eaeaea; overflow: hidden; }
+        .subject-header { padding: 20px 25px; background: #fdfafa; cursor: pointer; display: flex; justify-content: space-between; align-items: center; font-weight: 800; font-size: 18px; color: var(--text-dark); transition: 0.3s; }
+        .subject-header:hover { background: var(--light-red); color: var(--deep-red); }
+        .subject-header i.fa-clipboard-list { color: var(--deep-red); margin-right: 10px; font-size: 20px;}
+        .subject-content { padding: 20px 25px; display: none; background: white; border-top: 1px solid #eaeaea; }
+        .subject-content.active { display: block; }
+
+        .test-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 350px)); gap: 20px; }
+        .test-card { background: var(--white); border-radius: 10px; padding: 20px; border: 1px solid #eaeaea; display: flex; flex-direction: column; transition: 0.3s; max-width: 380px;}
+        .test-card:hover { transform: translateY(-3px); box-shadow: 0 8px 20px rgba(183,28,28,0.1); border-color: var(--light-red); }
+        .test-source { font-size: 12px; color: #7f8c8d; font-style: italic; margin-bottom: 12px; }
+        .test-title { font-size: 17px; font-weight: bold; color: var(--text-dark); margin-bottom: 15px; flex-grow: 1;}
+        .test-meta { display: flex; justify-content: space-between; font-size: 13px; color: #555; margin-bottom: 20px; padding-top: 15px; border-top: 1px dashed #ddd;}
+        .test-actions { display: flex; gap: 10px; }
+        .btn-start { flex: 2; background: var(--deep-red); color: white; border: none; padding: 10px; border-radius: 6px; font-weight: bold; cursor: pointer; transition: 0.2s; font-size: 14px;}
+        .btn-history { flex: 1; background: #f1f5f9; border: 1px solid #ddd; padding: 10px; border-radius: 6px; font-weight: bold; cursor: pointer; font-size: 14px;}
+
+        /* MODAL CHUNG */
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 10000; display: flex; align-items: center; justify-content: center; opacity: 0; visibility: hidden; transition: 0.3s ease; }
+        .modal-overlay.active { opacity: 1; visibility: visible; }
+        .modal-box { background: white; border-radius: 15px; width: 90%; max-width: 400px; padding: 30px 25px; text-align: center; transform: translateY(-20px); transition: 0.3s ease; }
+        .modal-overlay.active .modal-box { transform: translateY(0); }
+        .modal-buttons { display: flex; justify-content: center; gap: 15px; margin-top: 25px;}
+        .modal-buttons button { padding: 12px 0; width: 120px; font-size: 16px; font-weight: bold; border-radius: 8px; cursor: pointer; border: none; transition: 0.2s;}
+        .btn-cancel { background: #f1f5f9; color: #555; }
+        .btn-cancel:hover { background: #e2e8f0; }
+        .btn-confirm { background: var(--deep-red); color: white; }
+        .btn-confirm:hover { filter: brightness(1.1); }
+        
+        /* GIAO DIỆN LỊCH SỬ LÀM BÀI */
+        .history-box { background: white; border-radius: 12px; width: 90%; max-width: 500px; padding: 25px; transform: translateY(-20px); transition: 0.3s ease; max-height: 80vh; display: flex; flex-direction: column; }
+        .modal-overlay.active .history-box { transform: translateY(0); }
+        .history-list { flex: 1; overflow-y: auto; margin: 15px 0; padding-right: 5px; }
+        .history-item { background: #f8fafc; padding: 15px; border-radius: 8px; margin-bottom: 10px; border: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center; text-align: left; }
+        .btn-clear { background: #e74c3c; color: white; border: none; padding: 10px 15px; border-radius: 8px; font-weight: bold; cursor: pointer; transition: 0.2s; width: 100%; margin-top: 10px;}
+        .btn-clear:hover { background: #c0392b; }
+    </style>
+</head>
+<body>
+    <div class="overlay" id="overlay"></div>
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <div class="sidebar-logo">SPACE EDU</div>
+            <button class="close-btn" id="close-btn"><i class="fas fa-times"></i></button>
+        </div>
+        <ul class="sidebar-menu">
+            <li><a href="index.html"><i class="fas fa-home"></i> Trang chủ</a></li>
+            <li><a href="danhsachde.html?kithi=thptqg"><i class="fas fa-laptop-code"></i> Kỳ thi THPTQG</a></li>
+            <li><a href="danhsachde.html?kithi=tsa"><i class="fas fa-laptop-code"></i> Kỳ thi TSA</a></li>
+        </ul>
+    </aside>
+
+    <header>
+        <div class="header-left-group">
+            <button class="menu-btn" id="menu-btn"><i class="fas fa-bars"></i></button>
+            <img src="logo.webp" class="header-logo-img" onerror="this.style.display='none'">
+            <div class="logo-text">Space Education</div>
+        </div>
+        <div class="header-right">
+            <button class="btn-icon" onclick="showHistory()" title="Lịch sử làm bài"><i class="fas fa-history"></i></button>
+            <div style="display:flex; align-items:center; color:#555; font-weight:bold; margin-left: 10px;"><i class="far fa-user-circle" style="margin-right: 5px;"></i> Ẩn danh</div>
+        </div>
+    </header>
+
+    <section class="container">
+        <div class="title-wrapper">
+            <h1 class="page-title" id="pageTitle">ĐANG TẢI DỮ LIỆU...</h1>
+        </div>
+        
+        <div class="search-container">
+            <i class="fas fa-search"></i>
+            <input type="text" id="searchInput" class="search-input" placeholder="Tìm kiếm tên đề, mã đề, môn học..." onkeyup="timKiemDeThi()">
+        </div>
+
+        <div class="tabs-container">
+            <button class="tab-btn active" onclick="switchTab('luyentap')">Đề Luyện Tập</button>
+            <button class="tab-btn" onclick="switchTab('chuancautruc')">Đề Chuẩn Cấu Trúc</button>
+        </div>
+        <div class="tab-content active" id="luyentap-content"></div>
+        <div class="tab-content" id="chuancautruc-content"></div>
+    </section>
+
+    <!-- Modal Vào Thi -->
+    <div class="modal-overlay" id="confirmModal">
+        <div class="modal-box">
+            <i class="fas fa-edit" style="font-size: 50px; color: #b71c1c; margin-bottom: 15px;"></i>
+            <h3 style="font-size: 22px; font-weight: 900; margin-bottom: 10px;">XÁC NHẬN VÀO THI</h3>
+            <p style="color: #555;">Thời gian đếm ngược sẽ bắt đầu ngay khi bạn bấm làm bài.</p>
+            <div class="modal-buttons">
+                <button class="btn-cancel" onclick="document.getElementById('confirmModal').classList.remove('active')">Hủy</button>
+                <button class="btn-confirm" id="btnConfirmStart">Làm bài</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Lịch Sử -->
+    <div class="modal-overlay" id="historyModal">
+        <div class="history-box">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                <h3 style="font-size: 20px; font-weight: 900; color: #b71c1c;"><i class="fas fa-award"></i> LỊCH SỬ LÀM BÀI</h3>
+                <button style="background: none; border: none; font-size: 24px; cursor: pointer; color: #555;" onclick="document.getElementById('historyModal').classList.remove('active')">&times;</button>
+            </div>
+            
+            <div class="history-list" id="historyList">
+                <!-- Dữ liệu lịch sử sẽ được đổ vào đây -->
+            </div>
+            
+            <button class="btn-clear" onclick="clearHistory()"><i class="fas fa-trash-alt"></i> Xóa toàn bộ lịch sử</button>
+        </div>
+    </div>
+
+    <!-- Modal Xác nhận xóa Lịch Sử (MỚI) -->
+    <div class="modal-overlay" id="confirmDeleteModal">
+        <div class="modal-box">
+            <i class="fas fa-exclamation-triangle" style="font-size: 50px; color: #e74c3c; margin-bottom: 15px;"></i>
+            <h3 style="font-size: 22px; font-weight: 900; margin-bottom: 10px;">XÓA LỊCH SỬ</h3>
+            <p style="color: #555;" id="deleteModalMessage">Bạn có chắc chắn muốn xóa sạch thành tích không? Hành động này sẽ xóa vĩnh viễn!</p>
+            <div class="modal-buttons" id="deleteModalButtons">
+                <!-- Nút bấm sẽ được JavaScript tự động điền vào tùy trường hợp -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const menuBtn = document.getElementById('menu-btn');
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('overlay');
+        menuBtn.addEventListener('click', () => { sidebar.classList.add('active'); overlay.classList.add('active'); });
+        overlay.addEventListener('click', () => { sidebar.classList.remove('active'); overlay.classList.remove('active'); });
+        document.getElementById('close-btn').addEventListener('click', () => { sidebar.classList.remove('active'); overlay.classList.remove('active'); });
+
+        const khoDeThi = {
+            thptqg: {
+                title: "PHÒNG LUYỆN THI THPT QUỐC GIA",
+                luyentap: [
+                    { 
+                        monHoc: "Môn Toán", 
+                        danhSach: [
+                            { id: "TOAN_LT_01", ten: "Đề Luyện Tập Toán Số 01", thoiGian: 45, nguon: "Space Edu" },
+                            { id: "TOAN_LT_02", ten: "Đề Luyện Tập Toán Số 02", thoiGian: 45, nguon: "Space Edu" },
+                            { id: "TOAN_LT_03", ten: "Đề Luyện Tập Toán Số 03", thoiGian: 45, nguon: "Space Edu" }
+                        ] 
+                    },
+                    { 
+                        monHoc: "Môn Vật Lý", 
+                        danhSach: [
+                            { id: "LY_LT_01", ten: "Đề Luyện Tập Vật Lý Số 01", thoiGian: 45, nguon: "Space Edu" },
+                            { id: "LY_LT_02", ten: "Đề Luyện Tập Vật Lý Số 02", thoiGian: 45, nguon: "Space Edu" },
+                            { id: "LY_LT_03", ten: "Đề Luyện Tập Vật Lý Số 03", thoiGian: 45, nguon: "Space Edu" }
+                        ] 
+                    },
+                    { 
+                        monHoc: "Môn Hóa Học", 
+                        danhSach: [
+                            { id: "HOA_LT_01", ten: "Đề Luyện Tập Hóa Học Số 01", thoiGian: 45, nguon: "Space Edu" },
+                            { id: "HOA_LT_02", ten: "Đề Luyện Tập Hóa Học Số 02", thoiGian: 45, nguon: "Space Edu" },
+                            { id: "HOA_LT_03", ten: "Đề Luyện Tập Hóa Học Số 03", thoiGian: 45, nguon: "Space Edu" }
+                        ] 
+                    }
+                ],
+                chuancautruc: [
+                    { 
+                        monHoc: "Môn Toán", 
+                        danhSach: [
+                            { id: "TDMT202701", ten: "KSCL Toán THPT 2027 Lần 01", thoiGian: 90, nguon: "Tư Duy Mở" },
+                            { id: "TDMT202702", ten: "KSCL Toán THPT 2027 Lần 02", thoiGian: 90, nguon: "Tư Duy Mở" },
+                            { id: "TOAN_CCT_03", ten: "Đề Chuẩn Cấu Trúc Toán Số 03", thoiGian: 90, nguon: "Space Edu" },
+                            { id: "TOAN_CCT_04", ten: "Đề Chuẩn Cấu Trúc Toán Số 04", thoiGian: 90, nguon: "Space Edu" }
+                        ] 
+                    },
+                    { 
+                        monHoc: "Môn Vật Lý", 
+                        danhSach: [
+                            { id: "TDPT202701", ten: "KSCL Vật Lý THPT 2027 lần 01", thoiGian: 50, nguon: "Tư Duy Mở" },
+                            { id: "TDPT202702", ten: "KSCL Vật Lý THPT 2027 lần 02", thoiGian: 50, nguon: "Tư Duy Mở" },
+                            { id: "TDPT202703", ten: "Đề Chuẩn Cấu Trúc Vật Lý Số 03", thoiGian: 50, nguon: "Space Edu" },
+                            { id: "TDPT202704", ten: "Đề Chuẩn Cấu Trúc Vật Lý Số 04", thoiGian: 50, nguon: "Space Edu" }
+                        ] 
+                    },
+                    { 
+                        monHoc: "Môn Hóa Học", 
+                        danhSach: [
+                            { id: "HOA_CCT_01", ten: "Đề Chuẩn Cấu Trúc Hóa Học Số 01", thoiGian: 50, nguon: "Space Edu" },
+                            { id: "HOA_CCT_02", ten: "Đề Chuẩn Cấu Trúc Hóa Học Số 02", thoiGian: 50, nguon: "Space Edu" },
+                            { id: "HOA_CCT_03", ten: "Đề Chuẩn Cấu Trúc Hóa Học Số 03", thoiGian: 50, nguon: "Space Edu" }
+                        ] 
+                    }
+                ]
+            },
+            tsa: {
+                title: "PHÒNG LUYỆN ĐÁNH GIÁ TƯ DUY",
+                luyentap: [
+                    { 
+                        monHoc: "Tư duy Toán học", 
+                        danhSach: [
+                            { id: "TSA_TOAN_01", ten: "Luyện Tư Duy Toán Học Số 01", thoiGian: 40, nguon: "Space Edu" },
+                            { id: "TSA_TOAN_02", ten: "Luyện Tư Duy Toán Học Số 02", thoiGian: 40, nguon: "Space Edu" },
+                            { id: "TSA_TOAN_03", ten: "Luyện Tư Duy Toán Học Số 03", thoiGian: 40, nguon: "Space Edu" }
+                        ] 
+                    },
+                    { 
+                        monHoc: "Tư duy Đọc hiểu", 
+                        danhSach: [
+                            { id: "TSA_DOC_01", ten: "Luyện Tư Duy Đọc Hiểu Số 01", thoiGian: 30, nguon: "Space Edu" },
+                            { id: "TSA_DOC_02", ten: "Luyện Tư Duy Đọc Hiểu Số 02", thoiGian: 30, nguon: "Space Edu" },
+                            { id: "TSA_DOC_03", ten: "Luyện Tư Duy Đọc Hiểu Số 03", thoiGian: 30, nguon: "Space Edu" }
+                        ] 
+                    },
+                    { 
+                        monHoc: "Tư duy Khoa học và Giải quyết vấn đề", 
+                        danhSach: [
+                            { id: "TSA_KHOA_01", ten: "Luyện Tư Duy Khoa Học Số 01", thoiGian: 40, nguon: "Space Edu" },
+                            { id: "TSA_KHOA_02", ten: "Luyện Tư Duy Khoa Học Số 02", thoiGian: 40, nguon: "Space Edu" },
+                            { id: "TSA_KHOA_03", ten: "Luyện Tư Duy Khoa Học Số 03", thoiGian: 40, nguon: "Space Edu" }
+                        ] 
+                    }
+                ],
+                chuancautruc: [
+                    { id: "TSA_CCT_01", ten: "Đề Đánh Giá Tư Duy TSA Toàn Diện 01", thoiGian: 150, nguon: "Space Edu" },
+                    { id: "TSA_CCT_02", ten: "Đề Đánh Giá Tư Duy TSA Toàn Diện 02", thoiGian: 150, nguon: "Space Edu" },
+                    { id: "TSA_CCT_03", ten: "Đề Đánh Giá Tư Duy TSA Toàn Diện 03", thoiGian: 150, nguon: "Space Edu" }
+                ] 
+            }
+        };
+
+        let kyThiHienTai = new URLSearchParams(window.location.search).get('kithi') || 'thptqg';
+        document.getElementById('pageTitle').textContent = khoDeThi[kyThiHienTai].title;
+
+        function taoTheDeThi(deThi, isTsaChuan = false) {
+            return `<div class="test-card" data-keyword="${deThi.ten.toLowerCase()} ${deThi.id.toLowerCase()}">
+                        ${!isTsaChuan ? `<div class="test-source"><i class="fas fa-book-open"></i> Nguồn: ${deThi.nguon}</div>` : ''}
+                        <h3 class="test-title">${deThi.ten}</h3>
+                        <div class="test-meta"><span><i class="far fa-clock"></i> ${deThi.thoiGian} phút</span></div>
+                        <div class="test-actions">
+                            <button class="btn-start" onclick="vaoThi('${kyThiHienTai}', '${deThi.id}')">Bắt đầu làm</button>
+                        </div>
+                    </div>`;
+        }
+
+        function taoThuMuc(danhMuc) {
+            const deThiHtml = danhMuc.danhSach.length > 0 
+                ? danhMuc.danhSach.map(de => taoTheDeThi(de, false)).join('')
+                : '<p style="color:#777; font-style:italic; grid-column: 1 / -1; padding: 10px 0;">Chưa có đề thi nào trong mục này.</p>';
+
+            return `<div class="subject-folder" data-keyword="${danhMuc.monHoc.toLowerCase()}">
+                        <div class="subject-header" onclick="this.nextElementSibling.classList.toggle('active')">
+                            <div><i class="fas fa-clipboard-list"></i> ${danhMuc.monHoc} <span style="font-size: 13px; color: #7f8c8d; font-weight: normal;">(${danhMuc.danhSach.length} đề)</span></div>
+                            <i class="fas fa-chevron-down toggle-icon"></i>
+                        </div>
+                        <div class="subject-content"><div class="test-grid">${deThiHtml}</div></div>
+                    </div>`;
+        }
+
+        const luyentapContent = document.getElementById('luyentap-content');
+        const chuancautrucContent = document.getElementById('chuancautruc-content');
+        luyentapContent.innerHTML = khoDeThi[kyThiHienTai].luyentap.map(taoThuMuc).join('');
+        
+        if (kyThiHienTai === 'thptqg') chuancautrucContent.innerHTML = khoDeThi.thptqg.chuancautruc.map(taoThuMuc).join('');
+        else chuancautrucContent.innerHTML = `<div class="test-grid">${khoDeThi.tsa.chuancautruc.map(de => taoTheDeThi(de, true)).join('')}</div>`;
+
+        function switchTab(tabName) {
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            event.currentTarget.classList.add('active');
+            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+            document.getElementById(tabName + '-content').classList.add('active');
+        }
+
+        function timKiemDeThi() {
+            let input = document.getElementById('searchInput').value.toLowerCase();
+            document.querySelectorAll('.test-card').forEach(card => {
+                let text = card.getAttribute('data-keyword');
+                card.style.display = text.includes(input) ? "flex" : "none";
+            });
+            document.querySelectorAll('.subject-folder').forEach(folder => {
+                let hasVisibleCard = Array.from(folder.querySelectorAll('.test-card')).some(c => c.style.display !== 'none');
+                folder.style.display = hasVisibleCard ? "block" : "none";
+            });
+        }
+
+        let urlPhongThi = "";
+        
+        function vaoThi(kyThi, idDe) { 
+            urlPhongThi = `phongthi.html?kithi=${kyThi}&id=${idDe}`; 
+            
+            // RESET TRẠNG THÁI NÚT BẤM MỖI KHI MỞ BẢNG
+            let btn = document.getElementById('btnConfirmStart');
+            btn.innerHTML = 'Làm bài';
+            btn.style.pointerEvents = 'auto'; // Mở khóa cho phép bấm
+            
+            document.getElementById('confirmModal').classList.add('active'); 
+        }
+
+        document.getElementById('btnConfirmStart').addEventListener('click', function() {
+            // Hiệu ứng loading và khóa nút để tránh bấm 2 lần
+            this.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Đang tải...';
+            this.style.pointerEvents = 'none'; 
+            
+            setTimeout(() => { 
+                window.location.href = urlPhongThi; 
+                
+                // Tự động đóng bảng thông báo sau khi chuyển trang
+                // Để lỡ học sinh có bấm Back quay lại thì màn hình vẫn sạch sẽ
+                setTimeout(() => {
+                    document.getElementById('confirmModal').classList.remove('active');
+                }, 100);
+            }, 500);
+        });
+
+        // ================= XỬ LÝ LỊCH SỬ LÀM BÀI (Đã loại bỏ Default Popup) =================
+        function showHistory() {
+            let history = JSON.parse(localStorage.getItem('SpaceEdu_History')) || [];
+            let listEl = document.getElementById('historyList');
+            
+            if(history.length === 0) {
+                listEl.innerHTML = '<p style="color:#888; text-align:center; padding: 30px 0; font-style: italic;">Bạn chưa hoàn thành bài thi nào.</p>';
+            } else {
+                listEl.innerHTML = history.map(h => `
+                    <div class="history-item">
+                        <div>
+                            <div style="font-weight:900; color:#2c3e50; margin-bottom:5px; font-size: 15px;">${h.tenDe}</div>
+                            <div style="font-size:13px; color:#7f8c8d;"><i class="far fa-clock"></i> Nộp lúc: ${h.thoiGianNop}</div>
+                        </div>
+                        <div style="font-size:22px; font-weight:900; color:#27ae60;">${h.diem}</div>
+                    </div>
+                `).join('');
+            }
+            document.getElementById('historyModal').classList.add('active');
+        }
+
+        function clearHistory() {
+            let history = JSON.parse(localStorage.getItem('SpaceEdu_History')) || [];
+            let modal = document.getElementById('confirmDeleteModal');
+            let msg = document.getElementById('deleteModalMessage');
+            let btns = document.getElementById('deleteModalButtons');
+
+            if(history.length === 0) {
+                // Xử lý trường hợp trống bằng Modal luôn
+                msg.textContent = "Lịch sử đang trống, không có gì để xóa!";
+                btns.innerHTML = `<button class="btn-cancel" style="width: 100%;" onclick="document.getElementById('confirmDeleteModal').classList.remove('active')">Đóng</button>`;
+                modal.classList.add('active');
+                return;
+            }
+            
+            // Xử lý trường hợp có dữ liệu cần xác nhận
+            msg.textContent = "Bạn có chắc chắn muốn xóa sạch thành tích không? Hành động này sẽ xóa vĩnh viễn!";
+            btns.innerHTML = `
+                <button class="btn-cancel" onclick="document.getElementById('confirmDeleteModal').classList.remove('active')">Hủy</button>
+                <button class="btn-confirm" style="background: #e74c3c;" onclick="executeClearHistory()">Xóa vĩnh viễn</button>
+            `;
+            modal.classList.add('active');
+        }
+
+        function executeClearHistory() {
+            localStorage.removeItem('SpaceEdu_History');
+            document.getElementById('confirmDeleteModal').classList.remove('active'); // Đóng hộp thoại cảnh báo
+            showHistory(); // Cập nhật lại danh sách ngay lập tức (sẽ hiện chữ trống)
+        }
+    </script>
+</body>
+</html>

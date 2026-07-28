@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trang Chủ - Space Education</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- TỐI ƯU: Chỉ tải trước Logo để đảm bảo màn hình Loading xuất hiện ngay lập tức -->
+    <link rel="preload" as="image" href="logo.webp">
+    
+    <style>
+        :root {
+            --deep-red: #b71c1c; 
+            --light-red: #fde0e0;
+            --text-dark: #2c3e50;
+            --bg-gray: #f8f9fa;
+            --white: #ffffff;
+            --sidebar-width: 260px;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background-color: var(--bg-gray); color: var(--text-dark); overflow-x: hidden; }
+
+        /* ================= HIỆU ỨNG MỞ CỬA CÓ LOGO XOAY ================= */
+        .door-container {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100vh;
+            z-index: 99999; display: flex; pointer-events: none;
+        }
+        .door {
+            width: 50%; height: 100%; background-color: #f4f6f9;
+            transition: transform 1.2s cubic-bezier(0.77, 0, 0.175, 1);
+            position: relative;
+        }
+        .door-left { border-right: 2px solid var(--deep-red); transform-origin: left; }
+        .door-right { border-left: 2px solid var(--deep-red); transform-origin: right; }
+        
+        .intro-logo-wrapper {
+            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            z-index: 100000; transition: opacity 0.4s ease, transform 0.4s ease;
+            display: flex; flex-direction: column; align-items: center;
+        }
+        
+        .spin-logo {
+            width: 140px; height: 140px; border-radius: 50%;
+            animation: spin 1.5s linear infinite;
+            box-shadow: 0 0 30px rgba(183, 28, 28, 0.3);
+            object-fit: cover; background-color: white;
+        }
+        
+        @keyframes spin { 100% { transform: rotate(360deg); } }
+
+        body.logo-fade .intro-logo-wrapper { opacity: 0; transform: translate(-50%, -50%) scale(1.5); }
+        body.loaded .door-left { transform: translateX(-100%); }
+        body.loaded .door-right { transform: translateX(100%); }
+        body.loaded .door-container { visibility: hidden; transition: visibility 0s 1.2s; }
+
+        /* ================= HEADER & SIDEBAR ================= */
+        header { 
+            background-color: var(--white); height: 80px; display: flex; align-items: center; 
+            padding: 0 30px; box-shadow: 0 2px 10px rgba(0,0,0,0.08); position: sticky; top: 0; z-index: 99; 
+        }
+
+        .header-left-group { display: flex; align-items: center; gap: 18px; }
+        .menu-btn { font-size: 24px; color: var(--deep-red); background: none; border: none; cursor: pointer; transition: 0.2s; }
+        .menu-btn:hover { transform: scale(1.1); }
+        
+        .header-logo-img { width: 45px; height: 45px; object-fit: cover; border-radius: 50%; border: 2px solid var(--deep-red); background-color: white;}
+        
+        .logo-text-group { display: flex; flex-direction: column; justify-content: center; }
+        .logo-text { font-size: 22px; font-weight: 900; color: var(--deep-red); text-transform: uppercase; letter-spacing: 1px; line-height: 1.2; }
+        .slogan-text { font-size: 13px; font-style: italic; color: #7f8c8d; font-weight: 500; }
+
+        .header-right { margin-left: auto; display: flex; align-items: center; }
+
+        /* Sidebar */
+        .sidebar {
+            position: fixed; top: 0; left: calc(-1 * var(--sidebar-width)); width: var(--sidebar-width); height: 100vh;
+            background-color: var(--white); box-shadow: 4px 0 15px rgba(0,0,0,0.1); transition: left 0.3s ease;
+            z-index: 1000; display: flex; flex-direction: column;
+        }
+        .sidebar.active { left: 0; }
+        .sidebar-header { padding: 20px; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; align-items: center; }
+        .sidebar-logo { color: var(--deep-red); font-size: 20px; font-weight: bold; }
+        .close-btn { background: none; border: none; font-size: 20px; color: #777; cursor: pointer; }
+        .sidebar-menu { list-style: none; padding: 20px 0; flex: 1; }
+        .sidebar-menu li a { display: flex; align-items: center; padding: 15px 25px; color: var(--text-dark); text-decoration: none; font-weight: 500; font-size: 16px; transition: 0.2s; }
+        .sidebar-menu li a i { width: 30px; font-size: 18px; color: var(--deep-red); }
+        .sidebar-menu li a:hover, .sidebar-menu li a.active-link { background-color: var(--light-red); color: var(--deep-red); border-right: 4px solid var(--deep-red); }
+        
+        /* ================= CSS CHO MENU DROPDOWN PHÒNG LUYỆN ================= */
+        .sidebar-menu li.dropdown { flex-direction: column; align-items: flex-start; padding: 0; }
+        .dropdown-btn { width: 100%; display: flex; align-items: center; justify-content: space-between; padding: 15px 25px; background: none; border: none; font-size: 16px; font-weight: 500; color: var(--text-dark); cursor: pointer; transition: 0.2s; }
+        .dropdown-btn i.left-icon { width: 30px; font-size: 18px; color: var(--deep-red); text-align: left; }
+        .dropdown-btn:hover { background-color: var(--light-red); color: var(--deep-red); }
+        .dropdown-container { display: none; background-color: #f1f5f9; width: 100%; flex-direction: column; overflow: hidden; }
+        .dropdown-container a { padding: 12px 25px 12px 55px; font-size: 15px; border-left: 4px solid transparent; }
+        .dropdown-container a:hover { border-left: 4px solid var(--deep-red); background-color: #e2e8f0; }
+        .dropdown-container.active { display: flex; }
+
+        .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 999; display: none; opacity: 0; transition: opacity 0.3s; }
+        .overlay.active { display: block; opacity: 1; }
+
+        /* ================= NỘI DUNG TRANG CHỦ ================= */
+        .container { max-width: 1200px; margin: 0 auto; padding: 50px 20px; }
+        
+        .hero-section { text-align: center; padding: 80px 20px; background-color: white; position: relative; overflow: hidden; min-height: 400px;}
+        .hero-section::before { content: ''; position: absolute; top: -50%; left: -10%; width: 300px; height: 300px; background: var(--deep-red); transform: rotate(45deg); opacity: 0.9; }
+        .hero-section::after { content: ''; position: absolute; bottom: -50%; right: -10%; width: 300px; height: 300px; background: var(--deep-red); transform: rotate(45deg); opacity: 0.9; }
+        
+        .hero-title { font-size: 36px; font-weight: 900; color: var(--text-dark); margin-bottom: 60px; position: relative; z-index: 2; line-height: 1.5; }
+        .typing-text { color: var(--deep-red); border-bottom: 3px solid var(--deep-red); }
+        .cursor { display: inline-block; width: 3px; height: 40px; background-color: #2c3e50; vertical-align: text-bottom; margin-left: 5px; animation: blink 0.8s infinite; }
+        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+        
+        .stats-grid { display: flex; justify-content: center; gap: 40px; position: relative; z-index: 2; flex-wrap: wrap;}
+        .stat-item { text-align: center; max-width: 320px; padding: 25px; background: #fdfafa; border-radius: 10px; border: 1px solid #f9e3e3; box-shadow: 0 4px 15px rgba(0,0,0,0.03);}
+        .stat-item p { font-size: 15px; color: #555; margin-top: 8px; line-height: 1.5; font-weight: 500;}
+        .stat-item h3 { font-size: 26px; color: var(--deep-red); font-weight: 900; text-transform: uppercase; }
+
+        .section-title { text-align: center; margin-bottom: 40px; }
+        .section-title span { display: inline-block; background: var(--deep-red); color: white; padding: 10px 40px; font-size: 22px; font-weight: bold; border-radius: 30px; border: 4px solid #f9c2c2; box-shadow: 0 4px 10px rgba(183, 28, 28, 0.3); text-transform: uppercase; }
+
+        /* VINH DANH THÀNH TÍCH */
+        .hall-of-fame-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
+        .student-card { background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.05); text-align: center; border-bottom: 4px solid var(--deep-red); }
+        .student-img { width: 100%; height: 220px; object-fit: cover; background: #eee; }
+        .student-info { padding: 15px; }
+        .student-name { font-weight: bold; font-size: 18px; }
+        .student-score { color: var(--deep-red); font-weight: 900; font-size: 22px; margin: 5px 0; }
+
+        /* GIÁO VIÊN */
+        .teacher-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 25px; }
+        .teacher-poster-card { background: white; border-radius: 10px; overflow: hidden; box-shadow: 0 5px 20px rgba(0,0,0,0.08); transition: 0.3s; position: relative; cursor: pointer; }
+        .teacher-poster-card:hover { transform: translateY(-10px); }
+        .teacher-img { width: 100%; height: 380px; object-fit: cover; display: block; background: #ddd; }
+        .teacher-info { position: absolute; bottom: 0; left: 0; width: 100%; background: linear-gradient(transparent, rgba(183, 28, 28, 0.95) 30%); color: white; padding: 40px 20px 20px; text-align: center; }
+        .teacher-name { font-size: 22px; font-weight: bold; margin-bottom: 5px; }
+        .teacher-subject { font-size: 14px; text-transform: uppercase; letter-spacing: 1px; color: #ffcccc; font-weight: bold;}
+
+        /* WIDGET PROGRESS LỘ TRÌNH (Bổ sung thêm) */
+        @keyframes progressLoad { from { width: 0%; } to { width: 35%; } }
+
+        /* FOOTER */
+        footer { background-color: var(--text-dark); color: white; text-align: center; padding: 40px 20px; margin-top: 50px; font-size: 14px; }
+        footer .footer-logo { font-size: 20px; font-weight: bold; color: var(--light-red); margin-bottom: 10px; display: inline-block;}
+
+        /* ================= CẤU HÌNH NÚT SLIDER ================= */
+        .slider-wrapper { position: relative; }
+        .slider-btn { display: none; position: absolute; top: 50%; transform: translateY(-50%); background: white; border: 1px solid #eee; width: 45px; height: 45px; border-radius: 50%; box-shadow: 0 4px 10px rgba(0,0,0,0.15); cursor: pointer; z-index: 10; font-size: 18px; color: var(--deep-red); align-items: center; justify-content: center;}
+        .slider-btn.prev-btn { left: -10px; }
+        .slider-btn.next-btn { right: -10px; }
+
+        /* ================= THIẾT KẾ ĐÁP ỨNG (MOBILE FRIENDLY) ================= */
+        @media (max-width: 768px) {
+            header { padding: 0 15px; height: 65px; }
+            .header-left-group { gap: 10px; }
+            .header-logo-img { width: 35px; height: 35px; }
+            .logo-text { font-size: 16px; }
+            .slogan-text { display: none; }
+            
+            .menu-btn { padding: 5px 10px; }
+
+            .hero-section { padding: 50px 15px; min-height: auto; }
+            .hero-title { font-size: 22px; margin-bottom: 30px; }
+            
+            .stats-grid { flex-direction: column; gap: 20px; }
+            .stat-item { max-width: 100%; width: 100%; padding: 15px; }
+            
+            .slider-btn { display: flex; } 
+            
+            .hall-of-fame-grid, .teacher-grid { 
+                display: flex; flex-wrap: nowrap; overflow-x: auto; 
+                scroll-snap-type: x mandatory; scroll-behavior: smooth;
+                gap: 15px; padding-bottom: 15px; 
+                -ms-overflow-style: none; scrollbar-width: none;
+            }
+            .hall-of-fame-grid::-webkit-scrollbar, .teacher-grid::-webkit-scrollbar { display: none; }
+            
+            .student-card, .teacher-poster-card { flex: 0 0 85%; scroll-snap-align: center; }
+            
+            .student-img { height: 260px; }
+            .teacher-img { height: 380px; }
+            .section-title span { font-size: 16px; padding: 8px 20px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- HIỆU ỨNG MỞ CỬA CÓ LOGO XOAY -->
+    <div class="door-container">
+        <div class="door door-left"></div>
+        <div class="door door-right"></div>
+        <div class="intro-logo-wrapper" id="intro-logo">
+            <img src="logo.webp" onerror="this.src='https://ui-avatars.com/api/?name=SE&background=fff&color=b71c1c&size=150&rounded=true'" alt="Loading Logo" class="spin-logo">
+        </div>
+    </div>
+
+    <!-- SIDEBAR -->
+    <div class="overlay" id="overlay"></div>
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <div class="sidebar-logo">SPACE EDU</div>
+            <button class="close-btn" id="close-btn"><i class="fas fa-times"></i></button>
+        </div>
+        
+        <ul class="sidebar-menu">
+            <li><a href="#" class="active-link"><i class="fas fa-home"></i> Trang chủ</a></li>
+            
+            <!-- Menu Dropdown Phòng Luyện -->
+            <li class="dropdown">
+                <button class="dropdown-btn" id="phong-luyen-btn">
+                    <div><i class="fas fa-laptop-code left-icon"></i> Phòng luyện thi</div>
+                    <i class="fas fa-chevron-down" id="phong-luyen-icon"></i>
+                </button>
+                <div class="dropdown-container" id="phong-luyen-menu">
+                    <a href="danhsachde.html?kithi=thptqg">Kỳ thi THPTQG</a>
+                    <a href="danhsachde.html?kithi=tsa">Kỳ thi TSA (Bách Khoa)</a>
+                </div>
+            </li>
+
+            <li><a href="#"><i class="fas fa-file-pdf"></i> Kho tài liệu</a></li>
+        </ul>
+    </aside>
+
+    <!-- HEADER (Đã lược bỏ đăng nhập) -->
+    <header>
+        <div class="header-left-group">
+            <button class="menu-btn" id="menu-btn"><i class="fas fa-bars"></i></button>
+            <img src="logo.webp" onerror="this.src='https://ui-avatars.com/api/?name=SE&background=b71c1c&color=fff&size=80&rounded=true'" alt="Space Edu Logo" class="header-logo-img">
+            <div class="logo-text-group">
+                <div class="logo-text">Space Education</div>
+                <div class="slogan-text">Nâng tầm tri thức, Bứt phá tư duy</div>
+            </div>
+        </div>
+        <div class="header-right"></div>
+    </header>
+
+    <!-- HERO SECTION -->
+    <section class="hero-section">
+        <h1 class="hero-title">
+            Hệ thống luyện thi với <br>
+            <span class="typing-text" id="typing-text"></span><span class="cursor"></span>
+        </h1>
+        
+        <div class="stats-grid">
+            <div class="stat-item">
+                <h3>CHẤT LƯỢNG HÀNG ĐẦU</h3>
+                <p>Hệ thống luyện thi với chất lượng hàng đầu</p>
+            </div>
+            <div class="stat-item">
+                <h3>7.000+</h3>
+                <p>Học viên đã tham gia hệ thống luyện thi</p>
+            </div>
+            <div class="stat-item">
+                <h3>ĐA DẠNG BÀI THI</h3>
+                <p>Các dạng đề, phù hợp các kì thi cho học sinh THPT</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- WIDGET LỘ TRÌNH ÔN THI THÔNG MINH -->
+    <section class="container" style="padding-top: 20px; padding-bottom: 20px;">
+        <div style="background: white; padding: 30px; border-radius: 15px; box-shadow: 0 4px 20px rgba(0,0,0,0.05); border-left: 6px solid #b71c1c;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 15px;">
+                <div>
+                    <h3 style="font-size: 20px; color: #2c3e50; font-weight: bold;">🎯 TIẾN TRÌNH MỤC TIÊU CỦA BẠN</h3>
+                    <p style="font-size: 14px; color: #7f8c8d; margin-top: 5px;">Hệ thống tự động cá nhân hóa dựa trên lịch sử luyện đề</p>
+                </div>
+                <div style="text-align: right;">
+                    <span style="font-size: 24px; font-weight: 800; color: #b71c1c;">Chặng 1/3</span>
+                    <p style="font-size: 12px; background: #fde0e0; color: #b71c1c; padding: 2px 8px; border-radius: 10px; display: inline-block; font-weight: bold; margin-top: 5px;">BẬT TỐC TƯ DUY</p>
+                </div>
+            </div>
+            
+            <div style="width: 100%; height: 12px; background: #eaeded; border-radius: 6px; overflow: hidden; margin-bottom: 25px;">
+                <div style="width: 35%; height: 100%; background: linear-gradient(90deg, #b71c1c, #e74c3c); border-radius: 6px; animation: progressLoad 1s ease-out forwards;"></div>
+            </div>
+
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; text-align: center;">
+                <div style="padding: 15px; background: #fdfafa; border: 1px solid #b71c1c; border-radius: 8px;">
+                    <i class="fas fa-graduation-cap" style="color: #b71c1c; font-size: 20px; margin-bottom: 8px;"></i>
+                    <h4 style="font-size: 15px; font-weight: bold;">1. Xây Gốc Kiến Thức</h4>
+                    <p style="font-size: 12px; color: #27ae60; font-weight: 600; margin-top: 5px;"><i class="fas fa-check-circle"></i> Đã hoàn thành</p>
+                </div>
+                <div style="padding: 15px; background: #fff; border: 1px solid #ddd; border-radius: 8px; box-shadow: 0 4px 10px rgba(183,28,28,0.1);">
+                    <i class="fas fa-bolt" style="color: #f39c12; font-size: 20px; margin-bottom: 8px;"></i>
+                    <h4 style="font-size: 15px; font-weight: bold; color: #b71c1c;">2. Chiến Thuật Giải Nhanh</h4>
+                    <span style="font-size: 12px; color: #fff; background:#b71c1c; padding: 3px 10px; border-radius: 4px; display: inline-block; margin-top: 5px; font-weight: bold;">Đang rèn luyện</span>
+                </div>
+                <div style="padding: 15px; background: #f8f9fa; border: 1px solid #eee; border-radius: 8px; opacity: 0.6;">
+                    <i class="fas fa-trophy" style="color: #7f8c8d; font-size: 20px; margin-bottom: 8px;"></i>
+                    <h4 style="font-size: 15px; font-weight: bold; color: #7f8c8d;">3. Thực Chiến Đề Thi</h4>
+                    <p style="font-size: 12px; color: #7f8c8d; margin-top: 5px;">Đang khóa</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- VINH DANH THÀNH TÍCH -->
+    <section class="container">
+        <div class="section-title">
+            <span>Vinh danh thành tích các học viên</span>
+        </div>
+        <div class="slider-wrapper">
+            <button class="slider-btn prev-btn"><i class="fas fa-chevron-left"></i></button>
+            <div class="hall-of-fame-grid slider-track">
+                <div class="student-card">
+                    <img src="https://images.unsplash.com/photo-1517486808906-6ca8b3f04846?auto=format&fit=crop&w=300&q=80" class="student-img" alt="Học sinh" loading="lazy">
+                    <div class="student-info">
+                        <p style="font-size:12px; color:#777">THỦ KHOA KHỐI A</p>
+                        <div class="student-name">Trần Quang Khải</div>
+                        <div class="student-score">29.5 Điểm</div>
+                    </div>
+                </div>
+                <div class="student-card">
+                    <img src="https://images.unsplash.com/photo-1544717302-de2939b7ef71?auto=format&fit=crop&w=300&q=80" class="student-img" alt="Học sinh" loading="lazy">
+                    <div class="student-info">
+                        <p style="font-size:12px; color:#777">THỦ KHOA ĐÁNH GIÁ NĂNG LỰC</p>
+                        <div class="student-name">Lê Hải Yến</div>
+                        <div class="student-score">125/150</div>
+                    </div>
+                </div>
+                <div class="student-card">
+                    <img src="https://images.unsplash.com/photo-1531427186611-ecfd6d936c79?auto=format&fit=crop&w=300&q=80" class="student-img" alt="Học sinh" loading="lazy">
+                    <div class="student-info">
+                        <p style="font-size:12px; color:#777">Á KHOA TOÀN QUỐC</p>
+                        <div class="student-name">Phạm Hoàng Anh</div>
+                        <div class="student-score">29.0 Điểm</div>
+                    </div>
+                </div>
+                <div class="student-card">
+                    <img src="https://images.unsplash.com/photo-1522075469751-3a6694fb2f61?auto=format&fit=crop&w=300&q=80" class="student-img" alt="Học sinh" loading="lazy">
+                    <div class="student-info">
+                        <p style="font-size:12px; color:#777">ĐIỂM 10 TUYỆT ĐỐI TOÁN</p>
+                        <div class="student-name">Nguyễn Thảo My</div>
+                        <div class="student-score">10.0 Toán</div>
+                    </div>
+                </div>
+            </div>
+            <button class="slider-btn next-btn"><i class="fas fa-chevron-right"></i></button>
+        </div>
+    </section>
+
+    <!-- GIÁO VIÊN ĐỒNG HÀNH -->
+    <section class="container">
+        <div class="section-title">
+            <span>Giáo viên đồng hành</span>
+        </div>
+        <div class="slider-wrapper">
+            <button class="slider-btn prev-btn"><i class="fas fa-chevron-left"></i></button>
+            <div class="teacher-grid slider-track">
+                <div class="teacher-poster-card">
+                    <img src="https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=400&q=80" class="teacher-img" alt="Giáo viên" loading="lazy">
+                    <div class="teacher-info">
+                        <div class="teacher-name">Thầy Đăng Ái</div>
+                        <div class="teacher-subject">Chuyên gia Môn Toán</div>
+                    </div>
+                </div>
+                <div class="teacher-poster-card">
+                    <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=400&q=80" class="teacher-img" alt="Giáo viên" loading="lazy">
+                    <div class="teacher-info">
+                        <div class="teacher-name">Cô Lan Phương</div>
+                        <div class="teacher-subject">Chuyên gia Môn Lý</div>
+                    </div>
+                </div>
+                <div class="teacher-poster-card">
+                    <img src="https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=400&q=80" class="teacher-img" alt="Giáo viên" loading="lazy">
+                    <div class="teacher-info">
+                        <div class="teacher-name">Thầy Lê Hoàng</div>
+                        <div class="teacher-subject">Chuyên gia Môn Hóa</div>
+                    </div>
+                </div>
+                <div class="teacher-poster-card">
+                    <img src="https://images.unsplash.com/photo-1580894732444-8ecded7900cd?auto=format&fit=crop&w=400&q=80" class="teacher-img" alt="Giáo viên" loading="lazy">
+                    <div class="teacher-info">
+                        <div class="teacher-name">Cô Thu Trang</div>
+                        <div class="teacher-subject">Chuyên gia Môn Anh</div>
+                    </div>
+                </div>
+            </div>
+            <button class="slider-btn next-btn"><i class="fas fa-chevron-right"></i></button>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer>
+        <span class="footer-logo">SPACE EDUCATION</span>
+        <p>&copy; 2026 Space Education. Tất cả bản quyền được bảo lưu.</p>
+        <p style="opacity: 0.7; margin-top: 5px;">Hệ thống tự luyện bám sát chương trình mới của Bộ Giáo Dục.</p>
+    </footer>
+
+    <script>
+        /* ================= 1. XỬ LÝ HIỆU ỨNG MỞ CỬA ================= */
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                document.body.classList.add('logo-fade');
+                setTimeout(() => {
+                    document.body.classList.add('loaded');
+                }, 400);
+            }, 1500); 
+        });
+
+        /* ================= 2. XỬ LÝ MENU TRƯỢT ================= */
+        const menuBtn = document.getElementById('menu-btn');
+        const closeBtn = document.getElementById('close-btn');
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('overlay');
+
+        menuBtn.addEventListener('click', () => {
+            sidebar.classList.add('active');
+            overlay.classList.add('active');
+        });
+
+        closeBtn.addEventListener('click', closeMenu);
+        overlay.addEventListener('click', closeMenu);
+
+        function closeMenu() {
+            sidebar.classList.remove('active');
+            overlay.classList.remove('active');
+        }
+
+        /* ================= 3. XỬ LÝ CHỮ GÕ ================= */
+        const textArray = [
+            "đề thi đa dạng, phù hợp kì thi Đánh giá tư duy.",
+            "cách chấm điểm IRT như thi thật.",
+            "phương pháp rèn luyện tư duy, phản xạ, xử lý mọi câu hỏi."
+        ];
+        
+        let textIndex = 0; let charIndex = 0; let isDeleting = false;
+        const typingDelay = 45; const erasingDelay = 25; const newTextDelay = 2500;  
+        const typingSpan = document.getElementById("typing-text");
+
+        function typeEffect() {
+            const currentText = textArray[textIndex];
+            if (isDeleting) {
+                typingSpan.textContent = currentText.substring(0, charIndex - 1);
+                charIndex--;
+            } else {
+                typingSpan.textContent = currentText.substring(0, charIndex + 1);
+                charIndex++;
+            }
+
+            let typeSpeed = isDeleting ? erasingDelay : typingDelay;
+
+            if (!isDeleting && charIndex === currentText.length) {
+                typeSpeed = newTextDelay;
+                isDeleting = true;
+            } else if (isDeleting && charIndex === 0) {
+                isDeleting = false;
+                textIndex++;
+                if (textIndex >= textArray.length) textIndex = 0;
+                typeSpeed = 400; 
+            }
+            setTimeout(typeEffect, typeSpeed);
+        }
+        setTimeout(typeEffect, 2500); 
+
+        /* ================= 4. XỬ LÝ SLIDER TRÊN MOBILE ================= */
+        const sliders = document.querySelectorAll('.slider-wrapper');
+        sliders.forEach(wrapper => {
+            const track = wrapper.querySelector('.slider-track');
+            const prevBtn = wrapper.querySelector('.prev-btn');
+            const nextBtn = wrapper.querySelector('.next-btn');
+
+            prevBtn.addEventListener('click', () => {
+                track.scrollBy({ left: -track.offsetWidth * 0.85, behavior: 'smooth' });
+            });
+
+            nextBtn.addEventListener('click', () => {
+                track.scrollBy({ left: track.offsetWidth * 0.85, behavior: 'smooth' });
+            });
+        });
+
+        /* ================= 5. XỬ LÝ DROPDOWN MENU PHÒNG LUYỆN ================= */
+        const phongLuyenBtn = document.getElementById('phong-luyen-btn');
+        const phongLuyenMenu = document.getElementById('phong-luyen-menu');
+        const phongLuyenIcon = document.getElementById('phong-luyen-icon');
+
+        phongLuyenBtn.addEventListener('click', () => {
+            phongLuyenMenu.classList.toggle('active');
+            if(phongLuyenMenu.classList.contains('active')) {
+                phongLuyenIcon.classList.remove('fa-chevron-down');
+                phongLuyenIcon.classList.add('fa-chevron-up');
+            } else {
+                phongLuyenIcon.classList.remove('fa-chevron-up');
+                phongLuyenIcon.classList.add('fa-chevron-down');
+            }
+        });
+    </script>
+</body>
+</html> 
