@@ -98,6 +98,18 @@
         .btn-cancel:hover { background: #e2e8f0; }
         .btn-confirm { background: var(--deep-red); color: white; }
         .btn-confirm:hover { filter: brightness(1.1); }
+    /* --- NÚT XOAY MÀN HÌNH --- */
+        /* Mặc định ẩn nút xoay trên máy tính */
+        #btnRotate { 
+            display: none; 
+        }
+
+        /* Chỉ hiển thị nút xoay khi dùng điện thoại (màn hình nhỏ hơn 768px) */
+        @media (max-width: 768px) {
+            #btnRotate { 
+                display: block; 
+            }
+        }
     </style>
 </head>
 <body>
@@ -109,6 +121,8 @@
             <div class="test-title-header" id="headerTitle">ĐANG TẢI ĐỀ THI...</div>
         </div>
         <div class="header-right" style="display:flex; gap: 15px;">
+            <button class="btn-icon" id="btnRotate" title="Xoay ngang (Dành cho Điện thoại)"><i class="fas fa-sync-alt"></i></button>
+            
             <button class="btn-icon" id="btnFullscreen" title="Toàn màn hình"><i class="fas fa-expand"></i></button>
             <div style="display:flex; align-items:center; color:#555; font-weight:bold;"><i class="far fa-user-circle"></i> Ẩn danh</div>
         </div>
@@ -491,9 +505,24 @@
             showPage(1); 
         }
 
-        document.getElementById('btnFullscreen').addEventListener('click', () => {
-            if (!document.fullscreenElement) document.documentElement.requestFullscreen();
-            else if (document.exitFullscreen) document.exitFullscreen();
+        // XỬ LÝ SỰ KIỆN XOAY NGANG MÀN HÌNH CHO ĐIỆN THOẠI
+        // XỬ LÝ SỰ KIỆN XOAY NGANG MÀN HÌNH CHO ĐIỆN THOẠI (Phiên bản im lặng)
+        document.getElementById('btnRotate').addEventListener('click', async () => {
+            try {
+                // Nguyên tắc của Web: Phải vào Fullscreen thì mới được cấp quyền ép xoay hướng
+                if (!document.fullscreenElement) {
+                    await document.documentElement.requestFullscreen();
+                }
+                
+                // Gọi API khóa hướng màn hình sang nằm ngang (landscape)
+                if (screen.orientation && screen.orientation.lock) {
+                    await screen.orientation.lock('landscape');
+                }
+                // Nếu trình duyệt không hỗ trợ, kệ nó luôn, không hiện cảnh báo gì cả
+            } catch (err) {
+                // Xóa bỏ cảnh báo alert(), chỉ log lỗi ngầm vào hệ thống
+                console.error("Trình duyệt từ chối xoay hoặc không hỗ trợ:", err);
+            }
         });
     </script>
 </body>
