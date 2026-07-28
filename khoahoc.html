@@ -85,7 +85,9 @@
 
         .course-footer { margin-top: auto; display: flex; justify-content: space-between; align-items: center; padding-top: 20px; border-top: 1px solid #eee; }
         .course-price { font-size: 22px; font-weight: 900; color: var(--deep-red); }
-        .btn-enroll { background: var(--deep-red); color: white; padding: 10px 20px; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; transition: 0.2s; }
+        
+        /* CẬP NHẬT NÚT THÀNH THẺ A ĐỂ CHỨA LINK */
+        .btn-enroll { display: inline-block; background: var(--deep-red); color: white; padding: 10px 20px; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; transition: 0.2s; text-decoration: none; text-align: center; }
         .btn-enroll:hover { filter: brightness(1.1); transform: scale(1.05); }
 
         /* FOOTER */
@@ -152,6 +154,7 @@
 
         <div class="filter-container">
             <button class="filter-btn active" onclick="filterCourses('all')">Tất cả</button>
+            <button class="filter-btn" onclick="filterCourses('tsa')">Kỳ thi TSA</button>
             <button class="filter-btn" onclick="filterCourses('toan')">Môn Toán</button>
             <button class="filter-btn" onclick="filterCourses('ly')">Môn Lý</button>
             <button class="filter-btn" onclick="filterCourses('hoa')">Môn Hóa</button>
@@ -159,6 +162,28 @@
         </div>
 
         <div class="course-grid">
+            
+            <!-- Khóa TSA (Đứng đầu tiên, có gắn link) -->
+            <div class="course-card" data-category="tsa">
+                <div class="course-badge" style="background: #e74c3c;">HOT NHẤT</div>
+                <div class="course-img-wrapper">
+                    <img src="https://images.unsplash.com/photo-1434030216411-0b793f4b4173?auto=format&fit=crop&w=600&q=80" alt="Đánh giá tư duy TSA" class="course-img">
+                </div>
+                <div class="course-content">
+                    <div class="course-subject">Kỳ thi Đánh Giá Tư Duy</div>
+                    <h3 class="course-title">Thực Chiến Đánh Giá Tư Duy (TSA) Toàn Diện</h3>
+                    <div class="course-meta">
+                        <span><i class="fas fa-chalkboard-teacher"></i> Đội ngũ Tư Duy Mở</span>
+                        <span><i class="far fa-clock"></i> 80 Buổi học</span>
+                        <span><i class="fas fa-users"></i> 2,000+ Học viên</span>
+                    </div>
+                    <div class="course-footer">
+                        <span class="course-price">2.000.000đ</span>
+                        <a href="https://space-edu-vn.github.io/space-tdm/" target="_blank" class="btn-enroll">Đăng Ký</a>
+                    </div>
+                </div>
+            </div>
+
             <!-- Khóa Toán -->
             <div class="course-card" data-category="toan">
                 <div class="course-badge">HOT 2026</div>
@@ -175,7 +200,7 @@
                     </div>
                     <div class="course-footer">
                         <span class="course-price">1.500.000đ</span>
-                        <button class="btn-enroll">Đăng Ký</button>
+                        <a href="#" class="btn-enroll">Đăng Ký</a>
                     </div>
                 </div>
             </div>
@@ -195,7 +220,7 @@
                     </div>
                     <div class="course-footer">
                         <span class="course-price">1.200.000đ</span>
-                        <button class="btn-enroll">Đăng Ký</button>
+                        <a href="#" class="btn-enroll">Đăng Ký</a>
                     </div>
                 </div>
             </div>
@@ -216,12 +241,12 @@
                     </div>
                     <div class="course-footer">
                         <span class="course-price">1.200.000đ</span>
-                        <button class="btn-enroll">Đăng Ký</button>
+                        <a href="#" class="btn-enroll">Đăng Ký</a>
                     </div>
                 </div>
             </div>
 
-            <!-- Khóa Công nghệ / Lập trình (Bonus) -->
+            <!-- Khóa Công nghệ / Lập trình -->
             <div class="course-card" data-category="it">
                 <div class="course-badge">NEW</div>
                 <div class="course-img-wrapper">
@@ -237,7 +262,7 @@
                     </div>
                     <div class="course-footer">
                         <span class="course-price" style="color: #27ae60;">Miễn phí</span>
-                        <button class="btn-enroll" style="background-color: #27ae60;">Tham Gia</button>
+                        <a href="#" class="btn-enroll" style="background-color: #27ae60;">Tham Gia</a>
                     </div>
                 </div>
             </div>
