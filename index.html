@@ -130,7 +130,7 @@
         .student-score { color: var(--deep-red); font-weight: 900; font-size: 22px; margin: 5px 0; }
 
         /* GIÁO VIÊN */
-        .teacher-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 25px; }
+        .teacher-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 20px; }
         .teacher-poster-card { background: white; border-radius: 10px; overflow: hidden; box-shadow: 0 5px 20px rgba(0,0,0,0.08); transition: 0.3s; position: relative; cursor: pointer; }
         .teacher-poster-card:hover { transform: translateY(-10px); }
         .teacher-img { width: 100%; height: 380px; object-fit: cover; display: block; background: #ddd; }
@@ -219,7 +219,8 @@
                 </div>
             </li>
 
-            <li><a href="#"><i class="fas fa-file-pdf"></i> Kho tài liệu</a></li>
+            <!-- CẬP NHẬT KHO TÀI LIỆU -> KHÓA HỌC -->
+            <li><a href="#"><i class="fas fa-chalkboard-teacher"></i> Khóa học</a></li>
         </ul>
     </aside>
 
@@ -351,32 +352,37 @@
             <button class="slider-btn prev-btn"><i class="fas fa-chevron-left"></i></button>
             <div class="teacher-grid slider-track">
                 <div class="teacher-poster-card">
-                    <img src="https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=400&q=80" class="teacher-img" alt="Giáo viên" loading="lazy">
+                    <img src="thay-quan.webp" class="teacher-img" alt="Giáo viên" loading="lazy">
                     <div class="teacher-info">
-                        <div class="teacher-name">Thầy Đăng Ái</div>
+                        <div class="teacher-name">Thầy Trung Quân</div>
                         <div class="teacher-subject">Chuyên gia Môn Toán</div>
                     </div>
                 </div>
                 <div class="teacher-poster-card">
-                    <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=400&q=80" class="teacher-img" alt="Giáo viên" loading="lazy">
+                    <img src="thay-minh.webp" class="teacher-img" alt="Giáo viên" loading="lazy">
                     <div class="teacher-info">
-                        <div class="teacher-name">Cô Lan Phương</div>
+                        <div class="teacher-name">Thầy Bình Minh</div>
                         <div class="teacher-subject">Chuyên gia Môn Lý</div>
                     </div>
                 </div>
                 <div class="teacher-poster-card">
-                    <img src="https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=400&q=80" class="teacher-img" alt="Giáo viên" loading="lazy">
+                    <img src="thay-bao.webp" class="teacher-img" alt="Giáo viên" loading="lazy">
                     <div class="teacher-info">
-                        <div class="teacher-name">Thầy Lê Hoàng</div>
+                        <div class="teacher-name">Thầy Gia Bảo</div>
                         <div class="teacher-subject">Chuyên gia Môn Hóa</div>
                     </div>
                 </div>
                 <div class="teacher-poster-card">
+                    <!-- Giữ nguyên link ảnh của cô Minh Vũ -->
                     <img src="https://images.unsplash.com/photo-1580894732444-8ecded7900cd?auto=format&fit=crop&w=400&q=80" class="teacher-img" alt="Giáo viên" loading="lazy">
                     <div class="teacher-info">
-                        <div class="teacher-name">Cô Thu Trang</div>
+                        <div class="teacher-name">Cô Minh Vũ</div>
                         <div class="teacher-subject">Chuyên gia Môn Anh</div>
                     </div>
+                </div>
+                <!-- BỔ SUNG POSTER -->
+                <div class="teacher-poster-card">
+                    <img src="poster.webp" class="teacher-img" alt="Poster Đồng Hành" loading="lazy">
                 </div>
             </div>
             <button class="slider-btn next-btn"><i class="fas fa-chevron-right"></i></button>
@@ -489,4 +495,4 @@
         });
     </script>
 </body>
-</html> 
+</html>
