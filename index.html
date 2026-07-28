@@ -6,7 +6,6 @@
     <title>Trang Chủ - Space Education</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
-    <!-- TỐI ƯU: Chỉ tải trước Logo để đảm bảo màn hình Loading xuất hiện ngay lập tức -->
     <link rel="preload" as="image" href="logo.webp">
     
     <style>
@@ -23,62 +22,30 @@
         body { background-color: var(--bg-gray); color: var(--text-dark); overflow-x: hidden; }
 
         /* ================= HIỆU ỨNG MỞ CỬA CÓ LOGO XOAY ================= */
-        .door-container {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100vh;
-            z-index: 99999; display: flex; pointer-events: none;
-        }
-        .door {
-            width: 50%; height: 100%; background-color: #f4f6f9;
-            transition: transform 1.2s cubic-bezier(0.77, 0, 0.175, 1);
-            position: relative;
-        }
+        .door-container { position: fixed; top: 0; left: 0; width: 100%; height: 100vh; z-index: 99999; display: flex; pointer-events: none; }
+        .door { width: 50%; height: 100%; background-color: #f4f6f9; transition: transform 1.2s cubic-bezier(0.77, 0, 0.175, 1); position: relative; }
         .door-left { border-right: 2px solid var(--deep-red); transform-origin: left; }
         .door-right { border-left: 2px solid var(--deep-red); transform-origin: right; }
-        
-        .intro-logo-wrapper {
-            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
-            z-index: 100000; transition: opacity 0.4s ease, transform 0.4s ease;
-            display: flex; flex-direction: column; align-items: center;
-        }
-        
-        .spin-logo {
-            width: 140px; height: 140px; border-radius: 50%;
-            animation: spin 1.5s linear infinite;
-            box-shadow: 0 0 30px rgba(183, 28, 28, 0.3);
-            object-fit: cover; background-color: white;
-        }
-        
+        .intro-logo-wrapper { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 100000; transition: opacity 0.4s ease, transform 0.4s ease; display: flex; flex-direction: column; align-items: center; }
+        .spin-logo { width: 140px; height: 140px; border-radius: 50%; animation: spin 1.5s linear infinite; box-shadow: 0 0 30px rgba(183, 28, 28, 0.3); object-fit: cover; background-color: white; }
         @keyframes spin { 100% { transform: rotate(360deg); } }
-
         body.logo-fade .intro-logo-wrapper { opacity: 0; transform: translate(-50%, -50%) scale(1.5); }
         body.loaded .door-left { transform: translateX(-100%); }
         body.loaded .door-right { transform: translateX(100%); }
         body.loaded .door-container { visibility: hidden; transition: visibility 0s 1.2s; }
 
         /* ================= HEADER & SIDEBAR ================= */
-        header { 
-            background-color: var(--white); height: 80px; display: flex; align-items: center; 
-            padding: 0 30px; box-shadow: 0 2px 10px rgba(0,0,0,0.08); position: sticky; top: 0; z-index: 99; 
-        }
-
+        header { background-color: var(--white); height: 80px; display: flex; align-items: center; padding: 0 30px; box-shadow: 0 2px 10px rgba(0,0,0,0.08); position: sticky; top: 0; z-index: 99; }
         .header-left-group { display: flex; align-items: center; gap: 18px; }
         .menu-btn { font-size: 24px; color: var(--deep-red); background: none; border: none; cursor: pointer; transition: 0.2s; }
         .menu-btn:hover { transform: scale(1.1); }
-        
         .header-logo-img { width: 45px; height: 45px; object-fit: cover; border-radius: 50%; border: 2px solid var(--deep-red); background-color: white;}
-        
         .logo-text-group { display: flex; flex-direction: column; justify-content: center; }
         .logo-text { font-size: 22px; font-weight: 900; color: var(--deep-red); text-transform: uppercase; letter-spacing: 1px; line-height: 1.2; }
         .slogan-text { font-size: 13px; font-style: italic; color: #7f8c8d; font-weight: 500; }
-
         .header-right { margin-left: auto; display: flex; align-items: center; }
 
-        /* Sidebar */
-        .sidebar {
-            position: fixed; top: 0; left: calc(-1 * var(--sidebar-width)); width: var(--sidebar-width); height: 100vh;
-            background-color: var(--white); box-shadow: 4px 0 15px rgba(0,0,0,0.1); transition: left 0.3s ease;
-            z-index: 1000; display: flex; flex-direction: column;
-        }
+        .sidebar { position: fixed; top: 0; left: calc(-1 * var(--sidebar-width)); width: var(--sidebar-width); height: 100vh; background-color: var(--white); box-shadow: 4px 0 15px rgba(0,0,0,0.1); transition: left 0.3s ease; z-index: 1000; display: flex; flex-direction: column; }
         .sidebar.active { left: 0; }
         .sidebar-header { padding: 20px; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; align-items: center; }
         .sidebar-logo { color: var(--deep-red); font-size: 20px; font-weight: bold; }
@@ -88,7 +55,6 @@
         .sidebar-menu li a i { width: 30px; font-size: 18px; color: var(--deep-red); }
         .sidebar-menu li a:hover, .sidebar-menu li a.active-link { background-color: var(--light-red); color: var(--deep-red); border-right: 4px solid var(--deep-red); }
         
-        /* ================= CSS CHO MENU DROPDOWN PHÒNG LUYỆN ================= */
         .sidebar-menu li.dropdown { flex-direction: column; align-items: flex-start; padding: 0; }
         .dropdown-btn { width: 100%; display: flex; align-items: center; justify-content: space-between; padding: 15px 25px; background: none; border: none; font-size: 16px; font-weight: 500; color: var(--text-dark); cursor: pointer; transition: 0.2s; }
         .dropdown-btn i.left-icon { width: 30px; font-size: 18px; color: var(--deep-red); text-align: left; }
@@ -121,37 +87,47 @@
         .section-title { text-align: center; margin-bottom: 40px; }
         .section-title span { display: inline-block; background: var(--deep-red); color: white; padding: 10px 40px; font-size: 22px; font-weight: bold; border-radius: 30px; border: 4px solid #f9c2c2; box-shadow: 0 4px 10px rgba(183, 28, 28, 0.3); text-transform: uppercase; }
 
-        /* VINH DANH THÀNH TÍCH */
-        .hall-of-fame-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
-        .student-card { background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.05); text-align: center; border-bottom: 4px solid var(--deep-red); }
+        /* ================= VINH DANH THÀNH TÍCH ================= */
+        .hall-of-fame-grid { display: flex; flex-wrap: nowrap; overflow-x: auto; gap: 20px; padding-bottom: 15px; scroll-behavior: smooth; scrollbar-width: thin; scrollbar-color: var(--deep-red) #eee; }
+        .hall-of-fame-grid::-webkit-scrollbar { height: 8px; }
+        .hall-of-fame-grid::-webkit-scrollbar-track { background: #eee; border-radius: 10px; }
+        .hall-of-fame-grid::-webkit-scrollbar-thumb { background: var(--deep-red); border-radius: 10px; }
+        
+        .student-card { flex: 0 0 270px; background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.05); text-align: center; border-bottom: 4px solid var(--deep-red); }
         .student-img { width: 100%; height: 220px; object-fit: cover; background: #eee; }
         .student-info { padding: 15px; }
         .student-name { font-weight: bold; font-size: 18px; }
         .student-score { color: var(--deep-red); font-weight: 900; font-size: 22px; margin: 5px 0; }
 
-        /* GIÁO VIÊN */
-        .teacher-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 20px; }
-        .teacher-poster-card { background: white; border-radius: 10px; overflow: hidden; box-shadow: 0 5px 20px rgba(0,0,0,0.08); transition: 0.3s; position: relative; cursor: pointer; }
+        /* ================= GIÁO VIÊN (DẠNG TRƯỢT NGANG NGAY TRÊN DESKTOP) ================= */
+        .teacher-grid { display: flex; flex-wrap: nowrap; overflow-x: auto; gap: 25px; padding-bottom: 15px; scroll-behavior: smooth; scrollbar-width: thin; scrollbar-color: var(--deep-red) #eee; }
+        .teacher-grid::-webkit-scrollbar { height: 8px; }
+        .teacher-grid::-webkit-scrollbar-track { background: #eee; border-radius: 10px; }
+        .teacher-grid::-webkit-scrollbar-thumb { background: var(--deep-red); border-radius: 10px; }
+        
+        .teacher-poster-card { flex: 0 0 280px; background: white; border-radius: 10px; overflow: hidden; box-shadow: 0 5px 20px rgba(0,0,0,0.08); transition: 0.3s; position: relative; cursor: pointer; }
+        
+        /* Bổ sung class khổ ngang cho Poster */
+        .teacher-poster-card.landscape-card { flex: 0 0 650px; }
+        
         .teacher-poster-card:hover { transform: translateY(-10px); }
         .teacher-img { width: 100%; height: 380px; object-fit: cover; display: block; background: #ddd; }
         .teacher-info { position: absolute; bottom: 0; left: 0; width: 100%; background: linear-gradient(transparent, rgba(183, 28, 28, 0.95) 30%); color: white; padding: 40px 20px 20px; text-align: center; }
         .teacher-name { font-size: 22px; font-weight: bold; margin-bottom: 5px; }
         .teacher-subject { font-size: 14px; text-transform: uppercase; letter-spacing: 1px; color: #ffcccc; font-weight: bold;}
 
-        /* WIDGET PROGRESS LỘ TRÌNH (Bổ sung thêm) */
         @keyframes progressLoad { from { width: 0%; } to { width: 35%; } }
 
         /* FOOTER */
         footer { background-color: var(--text-dark); color: white; text-align: center; padding: 40px 20px; margin-top: 50px; font-size: 14px; }
         footer .footer-logo { font-size: 20px; font-weight: bold; color: var(--light-red); margin-bottom: 10px; display: inline-block;}
 
-        /* ================= CẤU HÌNH NÚT SLIDER ================= */
         .slider-wrapper { position: relative; }
-        .slider-btn { display: none; position: absolute; top: 50%; transform: translateY(-50%); background: white; border: 1px solid #eee; width: 45px; height: 45px; border-radius: 50%; box-shadow: 0 4px 10px rgba(0,0,0,0.15); cursor: pointer; z-index: 10; font-size: 18px; color: var(--deep-red); align-items: center; justify-content: center;}
-        .slider-btn.prev-btn { left: -10px; }
-        .slider-btn.next-btn { right: -10px; }
+        .slider-btn { display: flex; position: absolute; top: 40%; transform: translateY(-50%); background: white; border: 1px solid #eee; width: 45px; height: 45px; border-radius: 50%; box-shadow: 0 4px 10px rgba(0,0,0,0.15); cursor: pointer; z-index: 10; font-size: 18px; color: var(--deep-red); align-items: center; justify-content: center; opacity: 0.7; transition: 0.2s;}
+        .slider-btn:hover { opacity: 1; background: var(--deep-red); color: white; }
+        .slider-btn.prev-btn { left: -15px; }
+        .slider-btn.next-btn { right: -15px; }
 
-        /* ================= THIẾT KẾ ĐÁP ỨNG (MOBILE FRIENDLY) ================= */
         @media (max-width: 768px) {
             header { padding: 0 15px; height: 65px; }
             .header-left-group { gap: 10px; }
@@ -159,26 +135,13 @@
             .logo-text { font-size: 16px; }
             .slogan-text { display: none; }
             
-            .menu-btn { padding: 5px 10px; }
-
             .hero-section { padding: 50px 15px; min-height: auto; }
             .hero-title { font-size: 22px; margin-bottom: 30px; }
-            
             .stats-grid { flex-direction: column; gap: 20px; }
             .stat-item { max-width: 100%; width: 100%; padding: 15px; }
             
-            .slider-btn { display: flex; } 
-            
-            .hall-of-fame-grid, .teacher-grid { 
-                display: flex; flex-wrap: nowrap; overflow-x: auto; 
-                scroll-snap-type: x mandatory; scroll-behavior: smooth;
-                gap: 15px; padding-bottom: 15px; 
-                -ms-overflow-style: none; scrollbar-width: none;
-            }
-            .hall-of-fame-grid::-webkit-scrollbar, .teacher-grid::-webkit-scrollbar { display: none; }
-            
             .student-card, .teacher-poster-card { flex: 0 0 85%; scroll-snap-align: center; }
-            
+            .teacher-poster-card.landscape-card { flex: 0 0 95%; }
             .student-img { height: 260px; }
             .teacher-img { height: 380px; }
             .section-title span { font-size: 16px; padding: 8px 20px; }
@@ -206,8 +169,6 @@
         
         <ul class="sidebar-menu">
             <li><a href="#" class="active-link"><i class="fas fa-home"></i> Trang chủ</a></li>
-            
-            <!-- Menu Dropdown Phòng Luyện -->
             <li class="dropdown">
                 <button class="dropdown-btn" id="phong-luyen-btn">
                     <div><i class="fas fa-laptop-code left-icon"></i> Phòng luyện thi</div>
@@ -218,13 +179,11 @@
                     <a href="danhsachde.html?kithi=tsa">Kỳ thi TSA (Bách Khoa)</a>
                 </div>
             </li>
-
-            <!-- CẬP NHẬT KHO TÀI LIỆU -> KHÓA HỌC -->
             <li><a href="#"><i class="fas fa-chalkboard-teacher"></i> Khóa học</a></li>
         </ul>
     </aside>
 
-    <!-- HEADER (Đã lược bỏ đăng nhập) -->
+    <!-- HEADER -->
     <header>
         <div class="header-left-group">
             <button class="menu-btn" id="menu-btn"><i class="fas fa-bars"></i></button>
@@ -373,15 +332,14 @@
                     </div>
                 </div>
                 <div class="teacher-poster-card">
-                    <!-- Giữ nguyên link ảnh của cô Minh Vũ -->
                     <img src="https://images.unsplash.com/photo-1580894732444-8ecded7900cd?auto=format&fit=crop&w=400&q=80" class="teacher-img" alt="Giáo viên" loading="lazy">
                     <div class="teacher-info">
                         <div class="teacher-name">Cô Minh Vũ</div>
                         <div class="teacher-subject">Chuyên gia Môn Anh</div>
                     </div>
                 </div>
-                <!-- BỔ SUNG POSTER -->
-                <div class="teacher-poster-card">
+                <!-- BỔ SUNG POSTER KHỔ NGANG -->
+                <div class="teacher-poster-card landscape-card">
                     <img src="poster.webp" class="teacher-img" alt="Poster Đồng Hành" loading="lazy">
                 </div>
             </div>
@@ -462,7 +420,7 @@
         }
         setTimeout(typeEffect, 2500); 
 
-        /* ================= 4. XỬ LÝ SLIDER TRÊN MOBILE ================= */
+        /* ================= 4. XỬ LÝ SLIDER TRÊN DESKTOP VÀ MOBILE ================= */
         const sliders = document.querySelectorAll('.slider-wrapper');
         sliders.forEach(wrapper => {
             const track = wrapper.querySelector('.slider-track');
