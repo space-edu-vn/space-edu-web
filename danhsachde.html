@@ -29,6 +29,14 @@
         .sidebar-menu { list-style: none; padding: 20px 0; flex: 1; }
         .sidebar-menu li a { display: flex; align-items: center; padding: 15px 25px; color: var(--text-dark); text-decoration: none; font-weight: 500; font-size: 16px; transition: 0.2s; }
         .sidebar-menu li a i { width: 30px; font-size: 18px; color: var(--deep-red); }
+        .sidebar-menu li.dropdown { flex-direction: column; align-items: flex-start; padding: 0; }
+        .dropdown-btn { width: 100%; display: flex; align-items: center; justify-content: space-between; padding: 15px 25px; background: none; border: none; font-size: 16px; font-weight: 500; color: var(--text-dark); cursor: pointer; transition: 0.2s; }
+        .dropdown-btn i.left-icon { width: 30px; font-size: 18px; color: var(--deep-red); text-align: left; }
+        .dropdown-btn:hover { background-color: var(--light-red); color: var(--deep-red); }
+        .dropdown-container { display: none; background-color: #f1f5f9; width: 100%; flex-direction: column; overflow: hidden; }
+        .dropdown-container a { padding: 12px 25px 12px 55px; font-size: 15px; border-left: 4px solid transparent; }
+        .dropdown-container a:hover { border-left: 4px solid var(--deep-red); background-color: #e2e8f0; }
+        .dropdown-container.active { display: flex; }
         .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 999; display: none; opacity: 0; transition: opacity 0.3s; }
         .overlay.active { display: block; opacity: 1; }
 
@@ -99,7 +107,19 @@
         </div>
         <ul class="sidebar-menu">
             <li><a href="index.html"><i class="fas fa-home"></i> Trang chủ</a></li>
-            <li><a href="spacelab.html"><i class="fas fa-flask"></i> Space Lab</a></li>
+            
+            <!-- MENU SPACE LAB -->
+            <li class="dropdown">
+                <button class="dropdown-btn" id="space-lab-btn">
+                    <div><i class="fas fa-flask left-icon"></i> Space Lab</div>
+                    <i class="fas fa-chevron-down" id="space-lab-icon"></i>
+                </button>
+                <div class="dropdown-container" id="space-lab-menu">
+                    <a href="labmath.html"><i class="fas fa-square-root-variable" style="width: 25px; text-align: center; color: #7f8c8d; margin-right: 5px;"></i> Lab Toán Học</a>
+                    <a href="labphysics.html"><i class="fas fa-magnet" style="width: 25px; text-align: center; color: #7f8c8d; margin-right: 5px;"></i> Lab Vật Lý</a>
+                </div>
+            </li>
+
             <li><a href="danhsachde.html?kithi=thptqg"><i class="fas fa-laptop-code"></i> Kỳ thi THPTQG</a></li>
             <li><a href="danhsachde.html?kithi=tsa"><i class="fas fa-laptop-code"></i> Kỳ thi TSA</a></li>
         </ul>
@@ -183,6 +203,24 @@
         menuBtn.addEventListener('click', () => { sidebar.classList.add('active'); overlay.classList.add('active'); });
         overlay.addEventListener('click', () => { sidebar.classList.remove('active'); overlay.classList.remove('active'); });
         document.getElementById('close-btn').addEventListener('click', () => { sidebar.classList.remove('active'); overlay.classList.remove('active'); });
+
+        /* ================= XỬ LÝ DROPDOWN SPACE LAB ================= */
+        const spaceLabBtn = document.getElementById('space-lab-btn');
+        const spaceLabMenu = document.getElementById('space-lab-menu');
+        const spaceLabIcon = document.getElementById('space-lab-icon');
+
+        if (spaceLabBtn) {
+            spaceLabBtn.addEventListener('click', () => {
+                spaceLabMenu.classList.toggle('active');
+                if(spaceLabMenu.classList.contains('active')) {
+                    spaceLabIcon.classList.remove('fa-chevron-down');
+                    spaceLabIcon.classList.add('fa-chevron-up');
+                } else {
+                    spaceLabIcon.classList.remove('fa-chevron-up');
+                    spaceLabIcon.classList.add('fa-chevron-down');
+                }
+            });
+        }
 
         const khoDeThi = {
             thptqg: {
@@ -361,7 +399,7 @@
             }, 500);
         });
 
-        // ================= XỬ LÝ LỊCH SỬ LÀM BÀI (Đã loại bỏ Default Popup) =================
+        // ================= XỬ LÝ LỊCH SỬ LÀM BÀI =================
         function showHistory() {
             let history = JSON.parse(localStorage.getItem('SpaceEdu_History')) || [];
             let listEl = document.getElementById('historyList');

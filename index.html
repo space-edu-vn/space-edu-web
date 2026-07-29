@@ -99,17 +99,14 @@
         .student-name { font-weight: bold; font-size: 18px; }
         .student-score { color: var(--deep-red); font-weight: 900; font-size: 22px; margin: 5px 0; }
 
-        /* ================= GIÁO VIÊN (DẠNG TRƯỢT NGANG NGAY TRÊN DESKTOP) ================= */
+        /* ================= GIÁO VIÊN ================= */
         .teacher-grid { display: flex; flex-wrap: nowrap; overflow-x: auto; gap: 25px; padding-bottom: 15px; scroll-behavior: smooth; scrollbar-width: thin; scrollbar-color: var(--deep-red) #eee; }
         .teacher-grid::-webkit-scrollbar { height: 8px; }
         .teacher-grid::-webkit-scrollbar-track { background: #eee; border-radius: 10px; }
         .teacher-grid::-webkit-scrollbar-thumb { background: var(--deep-red); border-radius: 10px; }
         
         .teacher-poster-card { flex: 0 0 280px; background: white; border-radius: 10px; overflow: hidden; box-shadow: 0 5px 20px rgba(0,0,0,0.08); transition: 0.3s; position: relative; cursor: pointer; }
-        
-        /* Bổ sung class khổ ngang cho Poster */
         .teacher-poster-card.landscape-card { flex: 0 0 650px; }
-        
         .teacher-poster-card:hover { transform: translateY(-10px); }
         .teacher-img { width: 100%; height: 380px; object-fit: cover; display: block; background: #ddd; }
         .teacher-info { position: absolute; bottom: 0; left: 0; width: 100%; background: linear-gradient(transparent, rgba(183, 28, 28, 0.95) 30%); color: white; padding: 40px 20px 20px; text-align: center; }
@@ -179,8 +176,20 @@
                     <a href="danhsachde.html?kithi=tsa">Kỳ thi TSA (Bách Khoa)</a>
                 </div>
             </li>
+            
+            <!-- MENU SPACE LAB (MỚI THÊM) -->
+            <li class="dropdown">
+                <button class="dropdown-btn" id="space-lab-btn">
+                    <div><i class="fas fa-flask left-icon"></i> Space Lab</div>
+                    <i class="fas fa-chevron-down" id="space-lab-icon"></i>
+                </button>
+                <div class="dropdown-container" id="space-lab-menu">
+                    <a href="labmath.html"><i class="fas fa-square-root-variable" style="width: 25px; text-align: center; color: #7f8c8d; margin-right: 5px;"></i> Lab Toán Học</a>
+                    <a href="labphysics.html"><i class="fas fa-magnet" style="width: 25px; text-align: center; color: #7f8c8d; margin-right: 5px;"></i> Lab Vật Lý</a>
+                </div>
+            </li>
+
             <li><a href="khoahoc.html"><i class="fas fa-chalkboard-teacher"></i> Khóa học</a></li>
-            <li><a href="spacelab.html"><i class="fas fa-flask"></i> Space Lab</a></li>
         </ul>
     </aside>
 
@@ -339,7 +348,6 @@
                         <div class="teacher-subject">Chuyên gia Môn Anh</div>
                     </div>
                 </div>
-                <!-- BỔ SUNG POSTER KHỔ NGANG -->
                 <div class="teacher-poster-card landscape-card">
                     <img src="poster.webp" class="teacher-img" alt="Poster Đồng Hành" loading="lazy">
                 </div>
@@ -421,7 +429,7 @@
         }
         setTimeout(typeEffect, 2500); 
 
-        /* ================= 4. XỬ LÝ SLIDER TRÊN DESKTOP VÀ MOBILE ================= */
+        /* ================= 4. XỬ LÝ SLIDER ================= */
         const sliders = document.querySelectorAll('.slider-wrapper');
         sliders.forEach(wrapper => {
             const track = wrapper.querySelector('.slider-track');
@@ -442,16 +450,36 @@
         const phongLuyenMenu = document.getElementById('phong-luyen-menu');
         const phongLuyenIcon = document.getElementById('phong-luyen-icon');
 
-        phongLuyenBtn.addEventListener('click', () => {
-            phongLuyenMenu.classList.toggle('active');
-            if(phongLuyenMenu.classList.contains('active')) {
-                phongLuyenIcon.classList.remove('fa-chevron-down');
-                phongLuyenIcon.classList.add('fa-chevron-up');
-            } else {
-                phongLuyenIcon.classList.remove('fa-chevron-up');
-                phongLuyenIcon.classList.add('fa-chevron-down');
-            }
-        });
+        if (phongLuyenBtn) {
+            phongLuyenBtn.addEventListener('click', () => {
+                phongLuyenMenu.classList.toggle('active');
+                if(phongLuyenMenu.classList.contains('active')) {
+                    phongLuyenIcon.classList.remove('fa-chevron-down');
+                    phongLuyenIcon.classList.add('fa-chevron-up');
+                } else {
+                    phongLuyenIcon.classList.remove('fa-chevron-up');
+                    phongLuyenIcon.classList.add('fa-chevron-down');
+                }
+            });
+        }
+
+        /* ================= 6. XỬ LÝ DROPDOWN SPACE LAB ================= */
+        const spaceLabBtn = document.getElementById('space-lab-btn');
+        const spaceLabMenu = document.getElementById('space-lab-menu');
+        const spaceLabIcon = document.getElementById('space-lab-icon');
+
+        if (spaceLabBtn) {
+            spaceLabBtn.addEventListener('click', () => {
+                spaceLabMenu.classList.toggle('active');
+                if(spaceLabMenu.classList.contains('active')) {
+                    spaceLabIcon.classList.remove('fa-chevron-down');
+                    spaceLabIcon.classList.add('fa-chevron-up');
+                } else {
+                    spaceLabIcon.classList.remove('fa-chevron-up');
+                    spaceLabIcon.classList.add('fa-chevron-down');
+                }
+            });
+        }
     </script>
 </body>
 </html>
