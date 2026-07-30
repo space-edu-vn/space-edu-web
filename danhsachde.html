@@ -14,8 +14,16 @@
         header { background-color: var(--white); height: 80px; display: flex; align-items: center; justify-content: space-between; padding: 0 30px; box-shadow: 0 2px 10px rgba(0,0,0,0.08); position: sticky; top: 0; z-index: 99; }
         .header-left-group { display: flex; align-items: center; gap: 18px; }
         .menu-btn { font-size: 24px; color: var(--deep-red); background: none; border: none; cursor: pointer; transition: 0.2s; }
-        .header-logo-img { width: 45px; height: 45px; object-fit: cover; border-radius: 50%; border: 2px solid var(--deep-red); background-color: white;}
-        .logo-text { font-size: 22px; font-weight: 900; color: var(--deep-red); text-transform: uppercase; letter-spacing: 1px;}
+/* SAU KHI SỬA THÀNH LỤC GIÁC */
+.header-logo-img { 
+    width: 45px; 
+    height: 45px; 
+    object-fit: cover; 
+    background-color: white;
+    /* Lệnh cắt ảnh thành hình lục giác (đỉnh nhọn ở trên/dưới) */
+    clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+    /* Đã xóa border để logo không bị lem viền */
+}        .logo-text { font-size: 22px; font-weight: 900; color: var(--deep-red); text-transform: uppercase; letter-spacing: 1px;}
         
         .header-right { display: flex; align-items: center; gap: 15px; }
         .btn-icon { background: #f1f5f9; border: none; width: 40px; height: 40px; border-radius: 8px; font-size: 16px; color: var(--text-dark); cursor: pointer; transition: 0.2s; }
@@ -96,9 +104,63 @@
         .history-item { background: #f8fafc; padding: 15px; border-radius: 8px; margin-bottom: 10px; border: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center; text-align: left; }
         .btn-clear { background: #e74c3c; color: white; border: none; padding: 10px 15px; border-radius: 8px; font-weight: bold; cursor: pointer; transition: 0.2s; width: 100%; margin-top: 10px;}
         .btn-clear:hover { background: #c0392b; }
+    /* ================= HIỆU ỨNG INTRO SPACE EDUCATION (CUSTOM) ================= */
+        .space-intro-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100vh;
+            background-color: white;
+            z-index: 99999; display: flex; justify-content: center; align-items: center;
+            transition: opacity 0.8s ease, visibility 0.8s ease;
+        }
+        .space-intro-overlay.hidden { opacity: 0; visibility: hidden; }
+
+        .space-intro-container { display: flex; flex-direction: column; align-items: center; }
+
+        .space-intro-logo {
+            width: 150px; height: auto;
+            opacity: 0;
+            transform: scale(0.8) translateY(30px);
+            /* Đã xóa filter: drop-shadow ở đây */
+            animation: cinematicLogo 1.2s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+            mix-blend-mode: multiply; /* Giữ lại cái này để xóa nền trắng */
+        }
+
+        @keyframes cinematicLogo {
+            0% { opacity: 0; transform: scale(0.8) translateY(40px); }
+            /* Đã xóa filter: drop-shadow ở nhịp 50% này */
+            50% { opacity: 1; transform: scale(1.05) translateY(-5px); }
+            100% { opacity: 1; transform: scale(1) translateY(0); }
+        }
+
+        .space-intro-text {
+            margin-top: 25px; display: flex; gap: 3px; overflow: hidden;
+        }
+
+        .space-intro-text span {
+            font-size: 36px; font-weight: 900; color: var(--deep-red);
+            text-transform: uppercase; letter-spacing: 2px;
+            opacity: 0; transform: translateY(30px);
+            /* Các chữ cái xuất hiện nối tiếp nhau dựa trên biến --i */
+            animation: cinematicText 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+            animation-delay: calc(0.6s + (var(--i) * 0.05s));
+        }
+
+        @keyframes cinematicText {
+            to { opacity: 1; transform: translateY(0); }
+        }
     </style>
 </head>
 <body>
+    <!-- HIỆU ỨNG INTRO ĐỘC QUYỀN SPACE EDUCATION -->
+    <div class="space-intro-overlay" id="space-intro">
+        <div class="space-intro-container">
+            <img src="logo.webp" alt="Space Logo" class="space-intro-logo">
+            <div class="space-intro-text">
+                <span style="--i: 1">S</span><span style="--i: 2">P</span><span style="--i: 3">A</span><span style="--i: 4">C</span><span style="--i: 5">E</span>
+                <span style="--i: 6; width: 15px;"></span>
+                <span style="--i: 7">E</span><span style="--i: 8">D</span><span style="--i: 9">U</span><span style="--i: 10">C</span><span style="--i: 11">A</span><span style="--i: 12">T</span><span style="--i: 13">I</span><span style="--i: 14">O</span><span style="--i: 15">N</span>
+            </div>
+        </div>
+    </div>
     <div class="overlay" id="overlay"></div>
     <aside class="sidebar" id="sidebar">
         <div class="sidebar-header">
@@ -290,7 +352,7 @@
                     { 
                         monHoc: "Tư duy Toán học", 
                         danhSach: [
-                            { id: "TSA_TOAN_01", ten: "Luyện Tư Duy Toán Học Số 01", thoiGian: 40, nguon: "Space Edu" },
+                            { id: "LABTN", ten: "Đề trải nghiệm Tư Duy Toán Học", thoiGian: 60, nguon: "LAB STUDY" },
                             { id: "TSA_TOAN_02", ten: "Luyện Tư Duy Toán Học Số 02", thoiGian: 40, nguon: "Space Edu" },
                             { id: "TSA_TOAN_03", ten: "Luyện Tư Duy Toán Học Số 03", thoiGian: 40, nguon: "Space Edu" }
                         ] 
@@ -452,6 +514,15 @@
             document.getElementById('confirmDeleteModal').classList.remove('active'); // Đóng hộp thoại cảnh báo
             showHistory(); // Cập nhật lại danh sách ngay lập tức (sẽ hiện chữ trống)
         }
+    /* ================= KÍCH HOẠT TẮT INTRO TỰ ĐỘNG ================= */
+        window.addEventListener('load', () => {
+            // Intro kéo dài tổng cộng khoảng 2.8 giây trước khi tự động mờ đi
+            setTimeout(() => {
+                const intro = document.getElementById('space-intro');
+                if(intro) intro.classList.add('hidden');
+            }, 2800); 
+        });
     </script>
+
 </body>
 </html>
