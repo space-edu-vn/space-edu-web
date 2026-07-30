@@ -481,6 +481,11 @@
                 else timeTotal--;
             }, 1000);
         }
+        
+        document.getElementById('btnSubmit').addEventListener('click', () => {
+            if(isSubmitted) return;
+            document.getElementById('submitModal').classList.add('active'); 
+        });
 
         function executeSubmit() {
             document.getElementById('submitModal').classList.remove('active');
