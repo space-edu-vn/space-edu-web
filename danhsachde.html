@@ -14,16 +14,8 @@
         header { background-color: var(--white); height: 80px; display: flex; align-items: center; justify-content: space-between; padding: 0 30px; box-shadow: 0 2px 10px rgba(0,0,0,0.08); position: sticky; top: 0; z-index: 99; }
         .header-left-group { display: flex; align-items: center; gap: 18px; }
         .menu-btn { font-size: 24px; color: var(--deep-red); background: none; border: none; cursor: pointer; transition: 0.2s; }
-/* SAU KHI SỬA THÀNH LỤC GIÁC */
-.header-logo-img { 
-    width: 45px; 
-    height: 45px; 
-    object-fit: cover; 
-    background-color: white;
-    /* Lệnh cắt ảnh thành hình lục giác (đỉnh nhọn ở trên/dưới) */
-    clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
-    /* Đã xóa border để logo không bị lem viền */
-}        .logo-text { font-size: 22px; font-weight: 900; color: var(--deep-red); text-transform: uppercase; letter-spacing: 1px;}
+        .header-logo-img { width: 45px; height: 45px; object-fit: cover; border-radius: 50%; border: 2px solid var(--deep-red); background-color: white;}
+        .logo-text { font-size: 22px; font-weight: 900; color: var(--deep-red); text-transform: uppercase; letter-spacing: 1px;}
         
         .header-right { display: flex; align-items: center; gap: 15px; }
         .btn-icon { background: #f1f5f9; border: none; width: 40px; height: 40px; border-radius: 8px; font-size: 16px; color: var(--text-dark); cursor: pointer; transition: 0.2s; }
