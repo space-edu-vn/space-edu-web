@@ -81,22 +81,7 @@
       "id": 11,
       "type": "trac-nghiem",
       "text": "Cho hai mẫu số liệu ghép nhóm $M_1, M_2$ với bảng tần số:",
-      "tables": [
-        {
-          "label": "Nhóm $M_1$",
-          "data": [
-            ["Nhóm", "$[3;4)$", "$[4;5)$", "$[5;6)$", "$[6;7)$", "$[7;8)$", "$[8;9)$"],
-            ["Tần số", "3", "5", "4", "6", "1", "4"]
-          ]
-        },
-        {
-          "label": "Nhóm $M_2$",
-          "data": [
-            ["Nhóm", "$[2;3)$", "$[3;4)$", "$[4;5)$", "$[5;6)$", "$[6;7)$", "$[7;8)$"],
-            ["Tần số", "7", "3", "5", "4", "6", "1"]
-          ]
-        }
-      ],
+      "image": "TDMT202701_q11.png",
       "options": ["$\\overline{x_1} > \\overline{x_2}$", "$\\overline{x_1} = \\overline{x_2}$", "$\\overline{x_1} < \\overline{x_2}$", "$\\overline{x_2} = 2\\overline{x_1} - 3$"],
       "correct": 0
     },
