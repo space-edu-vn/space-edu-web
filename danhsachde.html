@@ -40,10 +40,9 @@
         .header-logo-img { 
             width: 45px; 
             height: 45px; 
-            object-fit: cover; 
-            border-radius: 50%; /* Đổi thành 50% để bo tròn hoàn toàn */
-            border: 2px solid var(--deep-red); 
-            background-color: white;
+            object-fit: contain; /* Giúp ảnh hiển thị trọn vẹn không bị cắt */
+            background-color: transparent; /* Nền trong suốt */
+            /* Đã xóa border-radius và border */
         }
 
         .logo-text { font-size: 22px; font-weight: 900; color: var(--deep-red); text-transform: uppercase; letter-spacing: 1px; text-shadow: 0 0 5px rgba(183,28,28,0.5);}
@@ -149,9 +148,9 @@
         .space-intro-logo {
             width: 150px; height: auto;
             opacity: 0;
-            border-radius: 50%; /* Bo tròn logo intro */
             transform: scale(0.8) translateY(30px);
             animation: cinematicLogo 1.2s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+            /* Đã xóa clip-path gây lẹm ảnh */
         }
 
         @keyframes cinematicLogo {
