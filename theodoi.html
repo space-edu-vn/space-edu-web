@@ -24,7 +24,6 @@
 
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
         
-        /* ĐỒNG BỘ BACKGROUND KHÔNG GIAN TĨNH */
         body { 
             background-color: var(--bg-body); 
             background-image: radial-gradient(ellipse at 50% 0%, rgba(183, 28, 28, 0.15) 0%, #020617 80%);
@@ -36,7 +35,7 @@
             flex-direction: column;
         }
 
-        /* HEADER & SIDEBAR CHUẨN MỚI */
+        /* HEADER & SIDEBAR */
         header { background-color: rgba(15, 15, 20, 0.8); backdrop-filter: blur(10px); height: 80px; display: flex; align-items: center; justify-content: space-between; padding: 0 30px; box-shadow: 0 2px 15px rgba(0,0,0,0.5); position: sticky; top: 0; z-index: 99; border-bottom: 1px solid var(--border-color);}
         .header-left-group { display: flex; align-items: center; gap: 18px; }
         .menu-btn { font-size: 24px; color: var(--deep-red); background: none; border: none; cursor: pointer; transition: 0.2s; }
@@ -45,8 +44,6 @@
         .logo-text { font-size: 22px; font-weight: 900; color: var(--deep-red); text-transform: uppercase; letter-spacing: 1px; text-shadow: 0 0 5px rgba(183,28,28,0.5);}
 
         .header-right { display: flex; align-items: center; gap: 15px; }
-        .btn-icon { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); width: 40px; height: 40px; border-radius: 8px; font-size: 16px; color: var(--text-main); cursor: pointer; transition: 0.2s; display: flex; align-items: center; justify-content: center;}
-        .btn-icon:hover { background: var(--deep-red); color: white; border-color: var(--deep-red);}
 
         .sidebar { position: fixed; top: 0; left: calc(-1 * var(--sidebar-width)); width: var(--sidebar-width); height: 100vh; background-color: rgba(15, 15, 20, 0.95); backdrop-filter: blur(15px); box-shadow: 4px 0 25px rgba(0,0,0,0.8); transition: left 0.3s ease; z-index: 1000; display: flex; flex-direction: column; border-right: 1px solid var(--border-color);}
         .sidebar.active { left: 0; }
@@ -54,11 +51,11 @@
         .sidebar-logo { color: var(--deep-red); font-size: 20px; font-weight: bold; }
         .close-btn { background: none; border: none; font-size: 20px; color: var(--text-muted); cursor: pointer; }
         .sidebar-menu { list-style: none; padding: 20px 0; flex: 1; }
-        .sidebar-menu li a { display: flex; align-items: center; padding: 15px 25px; color: var(--text-main); text-decoration: none; font-weight: 500; font-size: 16px; transition: 0.2s; }
+        .sidebar-menu li a { display: flex; align-items: center; padding: 15px 25px; color: var(--text-main); text-decoration: none; font-weight: 600; font-size: 16px; transition: 0.2s; }
         .sidebar-menu li a i { width: 30px; font-size: 18px; color: var(--deep-red); }
         .sidebar-menu li a:hover, .sidebar-menu li a.active-link { background-color: var(--light-red); color: #fff; border-right: 4px solid var(--deep-red); }
         .sidebar-menu li.dropdown { flex-direction: column; align-items: flex-start; padding: 0; }
-        .dropdown-btn { width: 100%; display: flex; align-items: center; justify-content: space-between; padding: 15px 25px; background: none; border: none; font-size: 16px; font-weight: 500; color: var(--text-main); cursor: pointer; transition: 0.2s; }
+        .dropdown-btn { width: 100%; display: flex; align-items: center; justify-content: space-between; padding: 15px 25px; background: none; border: none; font-size: 16px; font-weight: 600; color: var(--text-main); cursor: pointer; transition: 0.2s; }
         .dropdown-btn i.left-icon { width: 30px; font-size: 18px; color: var(--deep-red); text-align: left; }
         .dropdown-btn:hover { background-color: var(--light-red); color: #fff; }
         .dropdown-container { display: none; background-color: rgba(0,0,0,0.3); width: 100%; flex-direction: column; overflow: hidden; border-top: 1px solid var(--border-color); border-bottom: 1px solid var(--border-color);}
@@ -76,7 +73,6 @@
         .page-title { font-size: 32px; font-weight: 900; color: var(--text-main); text-transform: uppercase; text-shadow: 0 0 20px rgba(183,28,28,0.4);}
         .page-title i { color: var(--deep-red); margin-right: 15px; }
 
-        /* TABS HIỆN ĐẠI DẠNG PILL */
         .tabs-container { display: flex; justify-content: center; gap: 15px; margin-bottom: 40px; }
         .tab-btn { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 99px; padding: 12px 35px; font-size: 16px; font-weight: bold; color: var(--text-muted); cursor: pointer; transition: all 0.3s; }
         .tab-btn:hover { background: rgba(255,255,255,0.08); color: #e2e8f0; }
@@ -86,7 +82,6 @@
         .tab-content.active { display: block; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* CHARTS GRID & GLASSMORPHISM CARD */
         .charts-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 25px; }
         .chart-card { 
             background: linear-gradient(145deg, rgba(30,41,59,0.6), rgba(15,23,42,0.9)); 
@@ -112,7 +107,6 @@
             .page-title { font-size: 24px; }
         }
 
-        /* FOOTER */
         footer { background-color: rgba(5, 5, 10, 0.95); backdrop-filter: blur(10px); border-top: 1px solid rgba(183, 28, 28, 0.3); color: #a0aec0; text-align: center; padding: 40px 20px; margin-top: 50px; font-size: 14px; position: relative; z-index: 2;}
         footer .footer-logo { font-size: 20px; font-weight: bold; color: var(--deep-red); margin-bottom: 10px; display: inline-block; text-shadow: 0 0 5px rgba(183,28,28,0.5);}
     </style>
@@ -218,7 +212,7 @@
                 <div class="chart-card full-width">
                     <div class="chart-header">
                         <div class="chart-title">Tiến độ 3 môn: Toán - Lý - Hóa</div>
-                        <div class="chart-subtitle">Thang điểm 10 (Sắp ra mắt)</div>
+                        <div class="chart-subtitle">Thang điểm 10</div>
                     </div>
                     <div class="canvas-container">
                         <canvas id="thptLineChart"></canvas>
@@ -228,7 +222,6 @@
         </div>
     </div>
 
-    <!-- BỔ SUNG FOOTER QUAN TRỌNG ĐÃ BỊ THIẾU -->
     <footer>
         <span class="footer-logo">SPACE EDUCATION</span>
         <p>&copy; 2026 Space Education. Tất cả bản quyền được bảo lưu.</p>
@@ -236,7 +229,7 @@
     </footer>
 
     <script>
-        /* ================= GIAO DIỆN CƠ BẢN ================= */
+        /* ================= GIAO DIỆN ================= */
         const menuBtn = document.getElementById('menu-btn');
         const sidebar = document.getElementById('sidebar');
         const overlay = document.getElementById('overlay');
@@ -244,7 +237,6 @@
         overlay.addEventListener('click', () => { sidebar.classList.remove('active'); overlay.classList.remove('active'); });
         document.getElementById('close-btn').addEventListener('click', () => { sidebar.classList.remove('active'); overlay.classList.remove('active'); });
 
-        /* ================= DROPDOWN PHÒNG LUYỆN ĐÃ ĐƯỢC THÊM ================= */
         const phongLuyenBtn = document.getElementById('phong-luyen-btn');
         const phongLuyenMenu = document.getElementById('phong-luyen-menu');
         if (phongLuyenBtn) {
@@ -271,14 +263,13 @@
             document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
             document.getElementById(tabId).classList.add('active');
 
-            // XỬ LÝ BUG CHART.JS: Ép biểu đồ tính toán lại kích thước khi chuyển Tab ẩn
             Object.values(charts).forEach(chart => {
                 if (chart) chart.resize();
             });
         }
 
-        /* ================= HÀM LẤY DỮ LIỆU THẬT TỪ LOCAL STORAGE ================= */
-        function getRealData() {
+        /* ================= LẤY DỮ LIỆU KỲ THI TSA ================= */
+        function getTSAData() {
             let rawHistory = JSON.parse(localStorage.getItem('SpaceEdu_History_TSA')) || [];
             let history = rawHistory.slice().reverse(); 
 
@@ -292,32 +283,23 @@
                 let percent = 0;
                 if (item.diem && item.diem.includes('/')) {
                     let parts = item.diem.split('/');
-                    if (parseInt(parts[1]) > 0) {
-                        percent = Math.round((parseInt(parts[0]) / parseInt(parts[1])) * 100);
-                    }
+                    if (parseInt(parts[1]) > 0) percent = Math.round((parseInt(parts[0]) / parseInt(parts[1])) * 100);
                 }
 
                 let dateLabel = item.thoiGianNop.split(' ')[1] || item.thoiGianNop; 
                 let name = (item.tenDe || "").toLowerCase();
 
                 if (name.includes('toán') || name.includes('toan') || name.includes('bedu')) {
-                    tsaToan.push(percent);
-                    tsaLabels.push(dateLabel); 
-                    tsaTongQuan.push(percent);
+                    tsaToan.push(percent); tsaLabels.push(dateLabel); tsaTongQuan.push(percent);
                 } 
                 else if (name.includes('đọc') || name.includes('doc') || name.includes('dh')) {
-                    tsaDoc.push(percent);
-                    tsaLabels.push(dateLabel);
-                    tsaTongQuan.push(percent);
+                    tsaDoc.push(percent); tsaLabels.push(dateLabel); tsaTongQuan.push(percent);
                 } 
                 else if (name.includes('khoa học') || name.includes('khoa')) {
-                    tsaKhoa.push(percent);
-                    tsaLabels.push(dateLabel);
-                    tsaTongQuan.push(percent);
+                    tsaKhoa.push(percent); tsaLabels.push(dateLabel); tsaTongQuan.push(percent);
                 } 
                 else {
-                    tsaTongQuan.push(percent);
-                    tsaLabels.push(dateLabel);
+                    tsaTongQuan.push(percent); tsaLabels.push(dateLabel);
                 }
             });
 
@@ -328,12 +310,48 @@
             return {
                 labels: uniqueLabels.length > 0 ? uniqueLabels : ['Chưa có dữ liệu'],
                 tongQuan: tsaTongQuan.length > 0 ? tsaTongQuan : [0],
-                toanAvg: avg(tsaToan),
-                docAvg: avg(tsaDoc),
-                khoaAvg: avg(tsaKhoa),
-                toanLast: last(tsaToan),
-                docLast: last(tsaDoc),
-                khoaLast: last(tsaKhoa)
+                toanAvg: avg(tsaToan), docAvg: avg(tsaDoc), khoaAvg: avg(tsaKhoa),
+                toanLast: last(tsaToan), docLast: last(tsaDoc), khoaLast: last(tsaKhoa)
+            };
+        }
+
+        /* ================= LẤY DỮ LIỆU KỲ THI THPT ================= */
+        function getTHPTData() {
+            let rawHistory = JSON.parse(localStorage.getItem('SpaceEdu_History')) || [];
+            let history = rawHistory.slice().reverse(); 
+
+            let finalLabels = [];
+            let finalToan = [];
+            let finalLy = [];
+            let finalHoa = [];
+
+            history.forEach(item => {
+                let score = parseFloat(item.diem) || 0; // Lấy điểm số thật (VD: 0.75)
+                let dateLabel = item.thoiGianNop.split(' ')[1] || item.thoiGianNop; 
+                let name = (item.tenDe || "").toLowerCase();
+
+                if (name.includes('toán') || name.includes('toan') || name.includes('lý') || name.includes('ly') || name.includes('hóa') || name.includes('hoa')) {
+                    
+                    if (!finalLabels.includes(dateLabel)) {
+                        finalLabels.push(dateLabel);
+                        finalToan.push(null);
+                        finalLy.push(null);
+                        finalHoa.push(null);
+                    }
+                    
+                    let idx = finalLabels.indexOf(dateLabel);
+                    
+                    if (name.includes('toán') || name.includes('toan')) finalToan[idx] = score;
+                    if (name.includes('lý') || name.includes('ly')) finalLy[idx] = score;
+                    if (name.includes('hóa') || name.includes('hoa')) finalHoa[idx] = score;
+                }
+            });
+
+            return {
+                labels: finalLabels.length > 0 ? finalLabels : ['Chưa có dữ liệu'],
+                toan: finalLabels.length > 0 ? finalToan : [0],
+                ly: finalLabels.length > 0 ? finalLy : [0],
+                hoa: finalLabels.length > 0 ? finalHoa : [0]
             };
         }
 
@@ -346,21 +364,22 @@
 
         function renderCharts() {
             const red = '#ef4444'; const redFill = 'rgba(239, 68, 68, 0.2)';
-            const blue = '#3b82f6'; const blueFill = 'rgba(59, 130, 246, 0.2)';
-            const green = '#10b981'; const greenFill = 'rgba(16, 185, 129, 0.2)';
+            const blue = '#3b82f6'; 
+            const green = '#10b981'; 
             const orange = '#f59e0b'; const orangeFill = 'rgba(245, 158, 11, 0.2)';
 
-            const realData = getRealData();
+            const tsaData = getTSAData();
+            const thptData = getTHPTData();
 
             // 1. TSA Line Chart
             const ctxTsaLine = document.getElementById('tsaLineChart').getContext('2d');
             charts.tsaLine = new Chart(ctxTsaLine, {
                 type: 'line',
                 data: {
-                    labels: realData.labels,
+                    labels: tsaData.labels,
                     datasets: [{
                         label: 'Tiến độ Tổng quan (%)',
-                        data: realData.tongQuan,
+                        data: tsaData.tongQuan,
                         borderColor: orange, backgroundColor: orangeFill,
                         borderWidth: 3, pointRadius: 5, fill: true, tension: 0.4
                     }]
@@ -376,7 +395,7 @@
                     labels: ['Tư duy Toán học', 'Tư duy Đọc hiểu', 'Tư duy Khoa học'],
                     datasets: [{
                         label: 'Lần thi gần nhất (%)',
-                        data: [realData.toanLast, realData.docLast, realData.khoaLast],
+                        data: [tsaData.toanLast, tsaData.docLast, tsaData.khoaLast],
                         backgroundColor: redFill, borderColor: red,
                         pointBackgroundColor: red, borderWidth: 2
                     }]
@@ -392,7 +411,7 @@
                     labels: ['Toán học', 'Đọc hiểu', 'Khoa học'],
                     datasets: [{
                         label: 'Điểm trung bình (%)',
-                        data: [realData.toanAvg, realData.docAvg, realData.khoaAvg],
+                        data: [tsaData.toanAvg, tsaData.docAvg, tsaData.khoaAvg],
                         backgroundColor: [red, blue, green],
                         borderRadius: 6
                     }]
@@ -401,16 +420,15 @@
             });
 
             // 4. THPT Line Chart
-            const labelsTHPT = ['Chưa có dữ liệu'];
             const ctxThptLine = document.getElementById('thptLineChart').getContext('2d');
             charts.thptLine = new Chart(ctxThptLine, {
                 type: 'line',
                 data: {
-                    labels: labelsTHPT,
+                    labels: thptData.labels,
                     datasets: [
-                        { label: 'Môn Toán', data: [0], borderColor: red, backgroundColor: red, tension: 0.4, borderWidth: 3 },
-                        { label: 'Môn Vật Lý', data: [0], borderColor: green, backgroundColor: green, tension: 0.4, borderWidth: 3 },
-                        { label: 'Môn Hóa Học', data: [0], borderColor: blue, backgroundColor: blue, tension: 0.4, borderWidth: 3 }
+                        { label: 'Môn Toán', data: thptData.toan, borderColor: red, backgroundColor: red, tension: 0.4, borderWidth: 3, spanGaps: true, pointRadius: 5 },
+                        { label: 'Môn Vật Lý', data: thptData.ly, borderColor: green, backgroundColor: green, tension: 0.4, borderWidth: 3, spanGaps: true, pointRadius: 5 },
+                        { label: 'Môn Hóa Học', data: thptData.hoa, borderColor: blue, backgroundColor: blue, tension: 0.4, borderWidth: 3, spanGaps: true, pointRadius: 5 }
                     ]
                 },
                 options: { responsive: true, maintainAspectRatio: false, scales: { y: { min: 0, max: 10 } } }
