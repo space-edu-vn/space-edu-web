@@ -10,11 +10,11 @@
         :root {
             --deep-red: #b71c1c; 
             --light-red: rgba(183, 28, 28, 0.2);
-            --text-dark: #e2e8f0; /* Chữ màu sáng */
-            --bg-gray: #05050a; /* Nền tối */
-            --white: #14141e; /* Nền khối module tối */
+            --text-dark: #e2e8f0; 
+            --bg-gray: #05050a; 
+            --white: #14141e; 
             --sidebar-width: 260px;
-            --border-color: #2a2a35; /* Viền xám đen */
+            --border-color: #2a2a35; 
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', sans-serif; }
@@ -60,7 +60,7 @@
 
         .tool-content { display: none; flex: 1; background: var(--white); border-radius: 12px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.6); border: 1px solid var(--border-color); animation: fadeIn 0.3s ease; }
         .tool-content.active { display: block; }
-        iframe { width: 100%; height: 100%; border: none; background: #fff; /* Giữ phần iframe GeoGebra màu trắng theo mặc định của ứng dụng */}
+        iframe { width: 100%; height: 100%; border: none; background: #fff; }
 
         @keyframes fadeIn { from { opacity: 0; transform: scale(0.99); } to { opacity: 1; transform: scale(1); } }
     </style>
@@ -76,6 +76,7 @@
         
         <ul class="sidebar-menu">
             <li><a href="index.html"><i class="fas fa-home"></i> Trang chủ</a></li>
+            <li><a href="theodoi.html"><i class="fas fa-chart-line"></i> Tiến độ học tập</a></li>
             <li class="dropdown">
                 <button class="dropdown-btn" id="phong-luyen-btn">
                     <div><i class="fas fa-laptop-code left-icon"></i> Phòng luyện thi</div>
@@ -83,13 +84,13 @@
                 </button>
                 <div class="dropdown-container" id="phong-luyen-menu">
                     <a href="danhsachde.html">Kỳ thi THPTQG</a>
-                    <a href="danhsachtsa.html">Kỳ thi TSA</a>
+                    <a href="danhsachtsa.html">Kỳ thi TSA (Bách Khoa)</a>
                 </div>
             </li>
             <li class="dropdown">
                 <button class="dropdown-btn" id="space-lab-btn">
                     <div><i class="fas fa-flask left-icon"></i> Space Lab</div>
-                    <i class="fas fa-chevron-down" id="space-lab-icon"></i>
+                    <i class="fas fa-chevron-up" id="space-lab-icon"></i>
                 </button>
                 <div class="dropdown-container active" id="space-lab-menu">
                     <a href="labmath.html" style="border-left: 4px solid var(--deep-red); background-color: rgba(255,255,255,0.05); color: #fff;"><i class="fas fa-square-root-variable" style="width: 25px; text-align: center; color: var(--deep-red); margin-right: 5px;"></i> Lab Toán Học</a>
@@ -97,27 +98,6 @@
                 </div>
             </li>
             <li><a href="khoahoc.html"><i class="fas fa-chalkboard-teacher"></i> Khóa học</a></li>
-            <ul class="flex-1 py-5">
-    <li><a href="#" class="flex items-center px-6 py-4 text-slate-200 hover:bg-brand-900/30 hover:text-white hover:border-r-4 border-brand-600 transition-all font-medium"><i class="fas fa-home w-8 text-brand-600 text-lg"></i> Trang chủ</a></li>
-    
-    <!-- NÚT THEO DÕI TIẾN ĐỘ ĐƯỢC THÊM VÀO ĐÂY -->
-    <li><a href="theodoi.html" class="flex items-center px-6 py-4 text-slate-200 hover:bg-brand-900/30 hover:text-white hover:border-r-4 border-brand-600 transition-all font-medium"><i class="fas fa-chart-line w-8 text-brand-600 text-lg"></i> Tiến độ học tập</a></li>
-    
-    <li class="flex flex-col">
-        <button class="w-full flex items-center justify-between px-6 py-4 text-slate-200 hover:bg-brand-900/30 hover:text-white transition-all font-medium" id="phong-luyen-btn">
-            <div class="flex items-center"><i class="fas fa-laptop-code w-8 text-brand-600 text-lg text-left"></i> Phòng luyện thi</div>
-            <i class="fas fa-chevron-down" id="phong-luyen-icon"></i>
-        </button>
-        <div class="dropdown-container" id="phong-luyen-menu">
-            <a href="danhsachde.html" class="py-3 px-6 pl-14 text-sm text-slate-300 hover:bg-white/5 hover:text-white hover:border-l-4 border-brand-600 transition-all">Kỳ thi THPTQG</a>
-            <a href="danhsachtsa.html" class="py-3 px-6 pl-14 text-sm text-slate-300 hover:bg-white/5 hover:text-white hover:border-l-4 border-brand-600 transition-all">Kỳ thi TSA (Bách Khoa)</a>
-        </div>
-    </li>
-    
-    <!-- ... (Các mục khác giữ nguyên) ... -->
-    
-    <li><a href="khoahoc.html" class="flex items-center px-6 py-4 text-slate-200 hover:bg-brand-900/30 hover:text-white hover:border-r-4 border-brand-600 transition-all font-medium"><i class="fas fa-chalkboard-teacher w-8 text-brand-600 text-lg"></i> Khóa học</a></li>
-</ul>
         </ul>
     </aside>
 
@@ -150,7 +130,6 @@
     </div>
 
     <script>
-        /* ================= 1. XỬ LÝ MENU TRỢT ================= */
         const menuBtn = document.getElementById('menu-btn');
         const closeBtn = document.getElementById('close-btn');
         const sidebar = document.getElementById('sidebar');
@@ -160,15 +139,18 @@
         closeBtn.addEventListener('click', () => { sidebar.classList.remove('active'); overlay.classList.remove('active'); });
         overlay.addEventListener('click', () => { sidebar.classList.remove('active'); overlay.classList.remove('active'); });
 
-        /* ================= 2. XỬ LÝ DROPDOWN ================= */
         document.getElementById('phong-luyen-btn').addEventListener('click', () => {
             document.getElementById('phong-luyen-menu').classList.toggle('active');
-        });
-        document.getElementById('space-lab-btn').addEventListener('click', () => {
-            document.getElementById('space-lab-menu').classList.toggle('active');
+            const icon = document.getElementById('phong-luyen-icon');
+            icon.className = document.getElementById('phong-luyen-menu').classList.contains('active') ? 'fas fa-chevron-up' : 'fas fa-chevron-down';
         });
 
-        /* ================= 3. THUẬT TOÁN CHUYỂN ĐỔI TABS ================= */
+        document.getElementById('space-lab-btn').addEventListener('click', () => {
+            document.getElementById('space-lab-menu').classList.toggle('active');
+            const icon = document.getElementById('space-lab-icon');
+            icon.className = document.getElementById('space-lab-menu').classList.contains('active') ? 'fas fa-chevron-up' : 'fas fa-chevron-down';
+        });
+
         function openTool(toolId, btnElement) {
             const tools = document.querySelectorAll('.tool-content');
             tools.forEach(tool => tool.classList.remove('active'));

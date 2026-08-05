@@ -10,11 +10,11 @@
         :root { 
             --deep-red: #b71c1c; 
             --light-red: rgba(183, 28, 28, 0.2); 
-            --text-dark: #e2e8f0; /* Chữ màu sáng */
-            --bg-gray: #05050a; /* Nền tối */
-            --white: #14141e; /* Nền khối module tối */
+            --text-dark: #e2e8f0; 
+            --bg-gray: #05050a; 
+            --white: #14141e; 
             --sidebar-width: 260px; 
-            --border-color: #2a2a35; /* Viền xám đen */
+            --border-color: #2a2a35; 
         }
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
         body { background-color: var(--bg-gray); color: var(--text-dark); overflow-x: hidden; display: flex; flex-direction: column; height: 100vh; }
@@ -51,7 +51,6 @@
         /* ================= KHU VỰC LAB VẬT LÝ ================= */
         .lab-container { flex: 1; display: flex; padding: 20px; max-width: 1600px; margin: 0 auto; width: 100%; gap: 20px; height: calc(100vh - 80px); }
         
-        /* CỘT TRÁI: MENU CHỌN BÀI (LIST) */
         .lab-sidebar { width: 320px; background: var(--white); border-radius: 12px; box-shadow: 0 8px 30px rgba(0,0,0,0.6); display: flex; flex-direction: column; border: 1px solid var(--border-color); overflow: hidden; flex-shrink: 0; }
         .lab-sidebar-header { padding: 20px; background: var(--deep-red); color: white; text-align: center; font-weight: 900; font-size: 18px; letter-spacing: 1px; box-shadow: 0 0 10px rgba(183,28,28,0.5);}
         .lab-list-container { flex: 1; overflow-y: auto; padding: 15px; }
@@ -67,7 +66,6 @@
         .sim-item.active { background: var(--light-red); color: #fff; border-color: var(--light-red); box-shadow: 0 2px 5px rgba(183, 28, 28, 0.3); }
         .sim-item.active i { color: #fff; }
 
-        /* CỘT PHẢI: IFRAME HIỂN THỊ (VIEWER) */
         .lab-viewer { flex: 1; background: var(--white); border-radius: 12px; box-shadow: 0 8px 30px rgba(0,0,0,0.6); border: 1px solid var(--border-color); overflow: hidden; position: relative; display: flex; flex-direction: column; }
         .viewer-header { padding: 15px 25px; background: rgba(0,0,0,0.2); border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; }
         .viewer-title { font-size: 18px; font-weight: 800; color: var(--text-dark); }
@@ -99,6 +97,7 @@
         
         <ul class="sidebar-menu">
             <li><a href="index.html"><i class="fas fa-home"></i> Trang chủ</a></li>
+            <li><a href="theodoi.html"><i class="fas fa-chart-line"></i> Tiến độ học tập</a></li>
             <li class="dropdown">
                 <button class="dropdown-btn" id="phong-luyen-btn">
                     <div><i class="fas fa-laptop-code left-icon"></i> Phòng luyện thi</div>
@@ -106,13 +105,13 @@
                 </button>
                 <div class="dropdown-container" id="phong-luyen-menu">
                     <a href="danhsachde.html">Kỳ thi THPTQG</a>
-                    <a href="danhsachtsa.html">Kỳ thi TSA</a>
+                    <a href="danhsachtsa.html">Kỳ thi TSA (Bách Khoa)</a>
                 </div>
             </li>
             <li class="dropdown">
                 <button class="dropdown-btn" id="space-lab-btn">
                     <div><i class="fas fa-flask left-icon"></i> Space Lab</div>
-                    <i class="fas fa-chevron-down" id="space-lab-icon"></i>
+                    <i class="fas fa-chevron-up" id="space-lab-icon"></i>
                 </button>
                 <div class="dropdown-container active" id="space-lab-menu">
                     <a href="labmath.html"><i class="fas fa-square-root-variable" style="width: 25px; text-align: center; color: #a0aec0; margin-right: 5px;"></i> Lab Toán Học</a>
@@ -120,27 +119,6 @@
                 </div>
             </li>
             <li><a href="khoahoc.html"><i class="fas fa-chalkboard-teacher"></i> Khóa học</a></li>
-            <ul class="flex-1 py-5">
-    <li><a href="#" class="flex items-center px-6 py-4 text-slate-200 hover:bg-brand-900/30 hover:text-white hover:border-r-4 border-brand-600 transition-all font-medium"><i class="fas fa-home w-8 text-brand-600 text-lg"></i> Trang chủ</a></li>
-    
-    <!-- NÚT THEO DÕI TIẾN ĐỘ ĐƯỢC THÊM VÀO ĐÂY -->
-    <li><a href="theodoi.html" class="flex items-center px-6 py-4 text-slate-200 hover:bg-brand-900/30 hover:text-white hover:border-r-4 border-brand-600 transition-all font-medium"><i class="fas fa-chart-line w-8 text-brand-600 text-lg"></i> Tiến độ học tập</a></li>
-    
-    <li class="flex flex-col">
-        <button class="w-full flex items-center justify-between px-6 py-4 text-slate-200 hover:bg-brand-900/30 hover:text-white transition-all font-medium" id="phong-luyen-btn">
-            <div class="flex items-center"><i class="fas fa-laptop-code w-8 text-brand-600 text-lg text-left"></i> Phòng luyện thi</div>
-            <i class="fas fa-chevron-down" id="phong-luyen-icon"></i>
-        </button>
-        <div class="dropdown-container" id="phong-luyen-menu">
-            <a href="danhsachde.html" class="py-3 px-6 pl-14 text-sm text-slate-300 hover:bg-white/5 hover:text-white hover:border-l-4 border-brand-600 transition-all">Kỳ thi THPTQG</a>
-            <a href="danhsachtsa.html" class="py-3 px-6 pl-14 text-sm text-slate-300 hover:bg-white/5 hover:text-white hover:border-l-4 border-brand-600 transition-all">Kỳ thi TSA (Bách Khoa)</a>
-        </div>
-    </li>
-    
-    <!-- ... (Các mục khác giữ nguyên) ... -->
-    
-    <li><a href="khoahoc.html" class="flex items-center px-6 py-4 text-slate-200 hover:bg-brand-900/30 hover:text-white hover:border-r-4 border-brand-600 transition-all font-medium"><i class="fas fa-chalkboard-teacher w-8 text-brand-600 text-lg"></i> Khóa học</a></li>
-</ul>
         </ul>
     </aside>
 
@@ -188,9 +166,14 @@
 
         document.getElementById('phong-luyen-btn').addEventListener('click', () => {
             document.getElementById('phong-luyen-menu').classList.toggle('active');
+            const icon = document.getElementById('phong-luyen-icon');
+            icon.className = document.getElementById('phong-luyen-menu').classList.contains('active') ? 'fas fa-chevron-up' : 'fas fa-chevron-down';
         });
+
         document.getElementById('space-lab-btn').addEventListener('click', () => {
             document.getElementById('space-lab-menu').classList.toggle('active');
+            const icon = document.getElementById('space-lab-icon');
+            icon.className = document.getElementById('space-lab-menu').classList.contains('active') ? 'fas fa-chevron-up' : 'fas fa-chevron-down';
         });
 
         const phetData = [
