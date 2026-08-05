@@ -54,11 +54,11 @@
         .sidebar-logo { color: var(--deep-red); font-size: 20px; font-weight: bold; }
         .close-btn { background: none; border: none; font-size: 20px; color: var(--text-muted); cursor: pointer; }
         .sidebar-menu { list-style: none; padding: 20px 0; flex: 1; }
-        .sidebar-menu li a { display: flex; align-items: center; padding: 15px 25px; color: var(--text-main); text-decoration: none; font-weight: 600; font-size: 16px; transition: 0.2s; }
+        .sidebar-menu li a { display: flex; align-items: center; padding: 15px 25px; color: var(--text-main); text-decoration: none; font-weight: 500; font-size: 16px; transition: 0.2s; }
         .sidebar-menu li a i { width: 30px; font-size: 18px; color: var(--deep-red); }
         .sidebar-menu li a:hover, .sidebar-menu li a.active-link { background-color: var(--light-red); color: #fff; border-right: 4px solid var(--deep-red); }
         .sidebar-menu li.dropdown { flex-direction: column; align-items: flex-start; padding: 0; }
-        .dropdown-btn { width: 100%; display: flex; align-items: center; justify-content: space-between; padding: 15px 25px; background: none; border: none; font-size: 16px; font-weight: 600; color: var(--text-main); cursor: pointer; transition: 0.2s; }
+        .dropdown-btn { width: 100%; display: flex; align-items: center; justify-content: space-between; padding: 15px 25px; background: none; border: none; font-size: 16px; font-weight: 500; color: var(--text-main); cursor: pointer; transition: 0.2s; }
         .dropdown-btn i.left-icon { width: 30px; font-size: 18px; color: var(--deep-red); text-align: left; }
         .dropdown-btn:hover { background-color: var(--light-red); color: #fff; }
         .dropdown-container { display: none; background-color: rgba(0,0,0,0.3); width: 100%; flex-direction: column; overflow: hidden; border-top: 1px solid var(--border-color); border-bottom: 1px solid var(--border-color);}
@@ -111,6 +111,10 @@
             .charts-grid { grid-template-columns: 1fr; }
             .page-title { font-size: 24px; }
         }
+
+        /* FOOTER */
+        footer { background-color: rgba(5, 5, 10, 0.95); backdrop-filter: blur(10px); border-top: 1px solid rgba(183, 28, 28, 0.3); color: #a0aec0; text-align: center; padding: 40px 20px; margin-top: 50px; font-size: 14px; position: relative; z-index: 2;}
+        footer .footer-logo { font-size: 20px; font-weight: bold; color: var(--deep-red); margin-bottom: 10px; display: inline-block; text-shadow: 0 0 5px rgba(183,28,28,0.5);}
     </style>
 </head>
 <body>
@@ -126,6 +130,16 @@
             <li><a href="index.html"><i class="fas fa-home"></i> Trang chủ</a></li>
             <li><a href="theodoi.html" class="active-link"><i class="fas fa-chart-line"></i> Tiến độ học tập</a></li>
             <li class="dropdown">
+                <button class="dropdown-btn" id="phong-luyen-btn">
+                    <div><i class="fas fa-laptop-code left-icon"></i> Phòng luyện thi</div>
+                    <i class="fas fa-chevron-down" id="phong-luyen-icon"></i>
+                </button>
+                <div class="dropdown-container" id="phong-luyen-menu">
+                    <a href="danhsachde.html">Kỳ thi THPTQG</a>
+                    <a href="danhsachtsa.html">Kỳ thi TSA (Bách Khoa)</a>
+                </div>
+            </li>
+            <li class="dropdown">
                 <button class="dropdown-btn" id="space-lab-btn">
                     <div><i class="fas fa-flask left-icon"></i> Space Lab</div>
                     <i class="fas fa-chevron-down" id="space-lab-icon"></i>
@@ -135,8 +149,6 @@
                     <a href="labphysics.html"><i class="fas fa-magnet" style="width: 25px; text-align: center; color: var(--text-muted); margin-right: 5px;"></i> Lab Vật Lý</a>
                 </div>
             </li>
-            <li><a href="danhsachde.html"><i class="fas fa-laptop-code"></i> Kỳ thi THPTQG</a></li>
-            <li><a href="danhsachtsa.html"><i class="fas fa-laptop-code"></i> Kỳ thi TSA</a></li>
             <li><a href="khoahoc.html"><i class="fas fa-chalkboard-teacher"></i> Khóa học</a></li>
         </ul>
     </aside>
@@ -148,7 +160,6 @@
             <div class="logo-text">SPACE EDUCATION</div>
         </div>
         <div class="header-right">
-            <!-- Đã gỡ bỏ nút chuyển theme -->
             <div style="display:flex; align-items:center; color:#e2e8f0; font-weight:bold;"><i class="far fa-user-circle" style="margin-right: 8px; font-size: 20px;"></i> Học viên</div>
         </div>
     </header>
@@ -166,7 +177,6 @@
         <!-- ================= TAB KỲ THI TSA ================= -->
         <div id="tsa-tab" class="tab-content active">
             <div class="charts-grid">
-                
                 <!-- BÀI THI TỔNG QUAN -->
                 <div class="chart-card full-width">
                     <div class="chart-header">
@@ -199,14 +209,12 @@
                         <canvas id="tsaBarChart"></canvas>
                     </div>
                 </div>
-
             </div>
         </div>
 
         <!-- ================= TAB KỲ THI THPT ================= -->
         <div id="thpt-tab" class="tab-content">
             <div class="charts-grid">
-                
                 <div class="chart-card full-width">
                     <div class="chart-header">
                         <div class="chart-title">Tiến độ 3 môn: Toán - Lý - Hóa</div>
@@ -216,11 +224,16 @@
                         <canvas id="thptLineChart"></canvas>
                     </div>
                 </div>
-
             </div>
         </div>
-
     </div>
+
+    <!-- BỔ SUNG FOOTER QUAN TRỌNG ĐÃ BỊ THIẾU -->
+    <footer>
+        <span class="footer-logo">SPACE EDUCATION</span>
+        <p>&copy; 2026 Space Education. Tất cả bản quyền được bảo lưu.</p>
+        <p style="opacity: 0.7; margin-top: 5px;">Hệ thống luyện thi bám sát chương trình mới của Bộ Giáo Dục.</p>
+    </footer>
 
     <script>
         /* ================= GIAO DIỆN CƠ BẢN ================= */
@@ -230,6 +243,17 @@
         menuBtn.addEventListener('click', () => { sidebar.classList.add('active'); overlay.classList.add('active'); });
         overlay.addEventListener('click', () => { sidebar.classList.remove('active'); overlay.classList.remove('active'); });
         document.getElementById('close-btn').addEventListener('click', () => { sidebar.classList.remove('active'); overlay.classList.remove('active'); });
+
+        /* ================= DROPDOWN PHÒNG LUYỆN ĐÃ ĐƯỢC THÊM ================= */
+        const phongLuyenBtn = document.getElementById('phong-luyen-btn');
+        const phongLuyenMenu = document.getElementById('phong-luyen-menu');
+        if (phongLuyenBtn) {
+            phongLuyenBtn.addEventListener('click', () => {
+                phongLuyenMenu.classList.toggle('active');
+                const icon = document.getElementById('phong-luyen-icon');
+                icon.className = phongLuyenMenu.classList.contains('active') ? 'fas fa-chevron-up' : 'fas fa-chevron-down';
+            });
+        }
 
         const spaceLabBtn = document.getElementById('space-lab-btn');
         const spaceLabMenu = document.getElementById('space-lab-menu');
@@ -246,6 +270,11 @@
             event.target.classList.add('active');
             document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
             document.getElementById(tabId).classList.add('active');
+
+            // XỬ LÝ BUG CHART.JS: Ép biểu đồ tính toán lại kích thước khi chuyển Tab ẩn
+            Object.values(charts).forEach(chart => {
+                if (chart) chart.resize();
+            });
         }
 
         /* ================= HÀM LẤY DỮ LIỆU THẬT TỪ LOCAL STORAGE ================= */
@@ -309,7 +338,6 @@
         }
 
         /* ================= KHỞI TẠO BIỂU ĐỒ ================= */
-        // Khóa màu text và lưới sang Dark Mode hoàn toàn
         Chart.defaults.font.family = "'Segoe UI', sans-serif";
         Chart.defaults.color = '#94a3b8';
         Chart.defaults.scale.grid.color = 'rgba(255, 255, 255, 0.05)';
