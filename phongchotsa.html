@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="vi" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Phòng Chờ TSA - Space Education</title>
+    <link rel="icon" href="logo.webp" type="image/webp">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --deep-red: #b71c1c; 
+            --light-red: rgba(183, 28, 28, 0.1); 
+            --text-main: #1f2937;
+            --text-muted: #6b7280;
+            --bg-body: #fdfbfb;
+            --border-color: #e5e7eb;
+            --card-bg: #ffffff;
+            --item-bg: #fafafa;
+        }
+
+        [data-theme="dark"] {
+            --bg-body: #0a0a10;
+            --text-main: #f9fafb;
+            --text-muted: #9ca3af;
+            --border-color: #374151;
+            --card-bg: #14141e;
+            --item-bg: #1e1e2d;
+            --light-red: rgba(183, 28, 28, 0.2);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', sans-serif; }
+        body { background-color: var(--bg-body); color: var(--text-main); min-height: 100vh; display: flex; align-items: center; justify-content: center; position: relative; overflow-x: hidden; transition: background-color 0.3s, color 0.3s;}
+
+        /* NÚT THEME TOGGLE */
+        .theme-toggle { position: absolute; top: 30px; right: 30px; background: var(--card-bg); border: 1px solid var(--border-color); color: var(--text-main); width: 45px; height: 45px; border-radius: 12px; font-size: 20px; cursor: pointer; transition: 0.3s; z-index: 100; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
+        .theme-toggle:hover { color: var(--deep-red); border-color: var(--deep-red); transform: scale(1.05); }
+
+        /* HIỆU ỨNG MỞ CỬA INTRO */
+        .door-container { position: fixed; top: 0; left: 0; width: 100%; height: 100vh; z-index: 99999; display: flex; pointer-events: none; }
+        .door { width: 50%; height: 100%; background-color: #0a0a10; transition: transform 1.2s cubic-bezier(0.77, 0, 0.175, 1); position: relative; } 
+        .door-left { transform-origin: left; }
+        .door-right { transform-origin: right; }
+        .intro-logo-wrapper { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 100000; transition: opacity 0.4s ease, transform 0.4s ease; display: flex; flex-direction: column; align-items: center; }
+        .spin-logo { width: 140px; height: 140px; object-fit: contain; animation: spin 1.5s linear infinite; filter: drop-shadow(0 0 20px rgba(183, 28, 28, 0.6)); }        
+        @keyframes spin { 100% { transform: rotate(360deg); } }
+        body.logo-fade .intro-logo-wrapper { opacity: 0; transform: translate(-50%, -50%) scale(1.5); }
+        body.loaded .door-left { transform: translateX(-100%); }
+        body.loaded .door-right { transform: translateX(100%); }
+        body.loaded .door-container { visibility: hidden; transition: visibility 0s 1.2s; }
+
+        /* BACKGROUND */
+        .bg-pattern { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; background-image: radial-gradient(var(--deep-red) 1px, transparent 1px); background-size: 40px 40px; opacity: 0.05; }
+
+        /* MAIN LOBBY CARD */
+        .lobby-wrapper { width: 100%; max-width: 900px; padding: 20px; z-index: 10; animation: fadeIn 1.5s ease; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        .lobby-card { background: var(--card-bg); border-radius: 20px; box-shadow: 0 20px 50px rgba(0,0,0,0.08); padding: 40px 50px; border: 1px solid var(--border-color); transition: background-color 0.3s; }
+
+        /* HEADER CARD */
+        .card-header { display: flex; align-items: center; justify-content: center; gap: 15px; margin-bottom: 40px; border-bottom: 2px dashed var(--light-red); padding-bottom: 30px; }
+        .card-header img { width: 55px; height: 55px; object-fit: contain; }
+        .card-header h1 { font-size: 28px; font-weight: 900; color: var(--deep-red); letter-spacing: 2px; }
+
+        .title-row { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 25px; flex-wrap: wrap; gap: 10px;}
+        .title-row h2 { font-size: 22px; font-weight: 800; color: var(--text-main); }
+        .badge-group { display: flex; gap: 10px; align-items: center;}
+        .badge-code { font-size: 13px; font-weight: 600; color: var(--text-main); background: var(--border-color); padding: 6px 15px; border-radius: 20px; display: flex; align-items: center; gap: 5px;}
+        .badge-info { font-size: 13px; font-weight: 600; color: var(--deep-red); background: var(--light-red); padding: 6px 15px; border-radius: 20px; }
+
+        /* DANH SÁCH BÀI THI */
+        .exam-list { display: flex; flex-direction: column; gap: 20px; margin-bottom: 40px; }
+        .exam-item { display: flex; justify-content: space-between; align-items: center; padding: 20px 25px; border: 1px solid var(--border-color); border-radius: 12px; transition: 0.3s; background: var(--item-bg); }
+        .exam-item.active { border-color: var(--deep-red); background: var(--card-bg); box-shadow: 0 5px 15px rgba(183, 28, 28, 0.1); }
+        .exam-item.locked { opacity: 0.6; pointer-events: none; }
+        .exam-item.completed { border-color: #10b981; background: rgba(16, 185, 129, 0.05); }
+
+        .exam-info h3 { font-size: 18px; font-weight: 700; margin-bottom: 8px; color: var(--text-main); }
+        .exam-item.active .exam-info h3 { color: var(--deep-red); }
+        .exam-item.completed .exam-info h3 { color: #10b981; text-decoration: line-through; }
+        
+        .exam-meta { font-size: 14px; color: var(--text-muted); font-weight: 500; display: flex; gap: 20px; }
+        .status { font-weight: 700; }
+        .status.chuathi { color: var(--text-muted); }
+        .status.dangthi { color: var(--deep-red); }
+        .status.dathi { color: #10b981; }
+
+        /* BUTTONS */
+        .btn-action { padding: 12px 30px; border-radius: 8px; font-size: 15px; font-weight: bold; border: none; cursor: pointer; transition: 0.2s; display: flex; align-items: center; gap: 8px; text-decoration: none;}
+        .btn-start { background: var(--deep-red); color: white; box-shadow: 0 4px 10px rgba(183, 28, 28, 0.3); }
+        .btn-start:hover { background: #991b1b; transform: translateY(-2px); }
+        .btn-locked { background: var(--border-color); color: var(--text-muted); cursor: not-allowed; }
+        .btn-done { background: #10b981; color: white; cursor: default; }
+
+        /* FOOTER CARD */
+        .card-footer { display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--border-color); padding-top: 25px; }
+        .link-back { color: var(--text-main); text-decoration: none; font-weight: 600; font-size: 14px; transition: 0.2s; border-bottom: 2px solid transparent;}
+        .link-back:hover { color: var(--deep-red); border-color: var(--deep-red); }
+        .btn-finish { background: transparent; color: var(--deep-red); border: 2px solid var(--deep-red); padding: 10px 25px; border-radius: 8px; font-weight: bold; cursor: pointer; transition: 0.2s; }
+        .btn-finish:hover { background: var(--light-red); }
+
+        /* MODAL KẾT THÚC KÍP THI */
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 10000; display: flex; align-items: center; justify-content: center; opacity: 0; visibility: hidden; transition: 0.3s ease; }
+        .modal-overlay.active { opacity: 1; visibility: visible; }
+        .modal-box { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 15px; width: 90%; max-width: 400px; padding: 30px 25px; text-align: center; transform: translateY(-20px); transition: 0.3s ease; box-shadow: 0 10px 30px rgba(0,0,0,0.5);}
+        .modal-overlay.active .modal-box { transform: translateY(0); }
+        .modal-buttons { display: flex; justify-content: center; gap: 15px; margin-top: 20px;}
+        .modal-buttons button { padding: 12px 0; width: 120px; font-size: 16px; font-weight: bold; border-radius: 8px; cursor: pointer; border: none; transition: 0.2s;}
+        .btn-modal-cancel { background: var(--item-bg); color: var(--text-main); border: 1px solid var(--border-color);}
+        .btn-modal-cancel:hover { background: var(--border-color); }
+        .btn-modal-confirm { background: var(--deep-red); color: white; }
+        .btn-modal-confirm:hover { filter: brightness(1.1); box-shadow: 0 0 15px var(--deep-red);}
+
+        @media (max-width: 768px) {
+            .lobby-card { padding: 30px 20px; }
+            .exam-item { flex-direction: column; align-items: flex-start; gap: 15px; }
+            .btn-action { width: 100%; justify-content: center; }
+            .theme-toggle { top: 15px; right: 15px; }
+        }
+    </style>
+</head>
+<body>
+
+    <button class="theme-toggle" id="themeToggle" onclick="toggleTheme()" title="Chế độ Tối/Sáng">
+        <i class="fa-solid fa-moon"></i>
+    </button>
+
+    <div class="door-container">
+        <div class="door door-left"></div>
+        <div class="door door-right"></div>
+        <div class="intro-logo-wrapper" id="intro-logo">
+            <img src="logo.webp" onerror="this.src='https://ui-avatars.com/api/?name=SE&background=fff&color=b71c1c&size=150&rounded=true'" alt="Loading Logo" class="spin-logo">
+        </div>
+    </div>
+
+    <div class="bg-pattern"></div>
+
+    <div class="lobby-wrapper">
+        <div class="lobby-card">
+            
+            <div class="card-header">
+                <img src="logo.webp" onerror="this.src='https://ui-avatars.com/api/?name=SE&background=fff&color=b71c1c&size=100&rounded=true'" alt="Space Logo">
+                <h1>SPACE EDUCATION</h1>
+            </div>
+
+            <div class="title-row">
+                <h2>Danh sách bài thi</h2>
+                <div class="badge-group">
+                    <span class="badge-code" id="ui-exam-code"><i class="fas fa-barcode"></i> Mã đề: ---</span>
+                    <span class="badge-info">Cấu trúc TSA Chuẩn</span>
+                </div>
+            </div>
+
+            <div class="exam-list">
+                <!-- BÀI 1: TOÁN -->
+                <div class="exam-item active" id="item-toan">
+                    <div class="exam-info">
+                        <h3>1. Tư duy Toán học</h3>
+                        <div class="exam-meta">
+                            <span>Thời gian: 75 phút</span>
+                            <span>Trạng thái: <span class="status dangthi" id="status-toan">Sẵn sàng</span></span>
+                        </div>
+                    </div>
+                    <a href="#" class="btn-action btn-start" id="btn-toan">Làm ngay</a>
+                </div>
+
+                <!-- BÀI 2: ĐỌC HIỂU -->
+                <div class="exam-item locked" id="item-doc">
+                    <div class="exam-info">
+                        <h3>2. Tư duy Đọc hiểu</h3>
+                        <div class="exam-meta">
+                            <span>Thời gian: 30 phút</span>
+                            <span>Trạng thái: <span class="status chuathi" id="status-doc">Chưa mở</span></span>
+                        </div>
+                    </div>
+                    <button class="btn-action btn-locked" id="btn-doc"><i class="fas fa-lock"></i> Khóa</button>
+                </div>
+
+                <!-- BÀI 3: KHOA HỌC -->
+                <div class="exam-item locked" id="item-khoa">
+                    <div class="exam-info">
+                        <h3>3. Tư duy Khoa học/Giải quyết vấn đề</h3>
+                        <div class="exam-meta">
+                            <span>Thời gian: 60 phút</span>
+                            <span>Trạng thái: <span class="status chuathi" id="status-khoa">Chưa mở</span></span>
+                        </div>
+                    </div>
+                    <button class="btn-action btn-locked" id="btn-khoa"><i class="fas fa-lock"></i> Khóa</button>
+                </div>
+            </div>
+
+            <div class="card-footer">
+                <a href="danhsachtsa.html" class="link-back"><i class="fas fa-arrow-left"></i> Về trang luyện đề</a>
+                <button class="btn-finish" onclick="requestFinishSession()">Kết thúc kíp thi</button>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- MODAL XÁC NHẬN KẾT THÚC KÍP THI -->
+    <div class="modal-overlay" id="finishModal">
+        <div class="modal-box">
+            <i class="fas fa-sign-out-alt" style="font-size: 50px; color: var(--deep-red); margin-bottom: 15px;"></i>
+            <h3 style="font-size: 22px; font-weight: 900; margin-bottom: 10px; color: var(--text-main);">KẾT THÚC KÍP THI?</h3>
+            <p style="color: var(--text-muted);">Bạn có chắc chắn muốn kết thúc kíp thi và quay về danh sách? Tiến trình hiện tại sẽ bị xóa.</p>
+            <div class="modal-buttons">
+                <button class="btn-modal-cancel" onclick="closeModal()">Trở lại</button>
+                <button class="btn-modal-confirm" onclick="executeFinishSession()">Đồng ý</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ================= TỪ ĐIỂN CẤU TRÚC THƯ MỤC MỚI ================= //
+        // Các file JSON giờ đây sẽ nằm gọn trong: dethi/tsactc/toan, dochieu, khoahoc
+        const examMapping = {
+            "TSA_CCT_01": { toan: "BEDU01", doc: "DH01", khoa: "TSA_KHOA_01" },
+            "TSA_CCT_02": { toan: "BEDU02", doc: "TSA_DOC_02", khoa: "TSA_KHOA_02" },
+            "TSA_CCT_03": { toan: "BEDU03", doc: "TSA_DOC_03", khoa: "TSA_KHOA_03" }
+        };
+
+        const urlParams = new URLSearchParams(window.location.search);
+        const currentExamCode = urlParams.get('id') || 'TSA_CCT_01'; 
+        const currentConfig = examMapping[currentExamCode] || examMapping["TSA_CCT_01"];
+
+        function initTheme() {
+            const savedTheme = localStorage.getItem("spaceEduTheme") || "light";
+            document.documentElement.setAttribute("data-theme", savedTheme);
+            updateThemeIcon(savedTheme);
+        }
+
+        function toggleTheme() {
+            const currentTheme = document.documentElement.getAttribute("data-theme");
+            const newTheme = currentTheme === "dark" ? "light" : "dark";
+            document.documentElement.setAttribute("data-theme", newTheme);
+            localStorage.setItem("spaceEduTheme", newTheme);
+            updateThemeIcon(newTheme);
+        }
+
+        function updateThemeIcon(theme) {
+            const icon = document.querySelector("#themeToggle i");
+            if(theme === "dark") {
+                icon.className = "fa-solid fa-sun"; 
+            } else {
+                icon.className = "fa-solid fa-moon"; 
+            }
+        }
+
+        window.addEventListener('load', () => {
+            initTheme();
+            setTimeout(() => {
+                document.body.classList.add('logo-fade');
+                setTimeout(() => { document.body.classList.add('loaded'); }, 400);
+            }, 1000); 
+        });
+
+        document.addEventListener("DOMContentLoaded", () => {
+            document.getElementById('ui-exam-code').innerHTML = `<i class="fas fa-barcode"></i> Mã đề: ${currentExamCode}`;
+
+            let sessionState = JSON.parse(localStorage.getItem('Space_TSA_Session'));
+            if (!sessionState || sessionState.examCode !== currentExamCode) {
+                sessionState = { examCode: currentExamCode, toan: 'pending', doc: 'locked', khoa: 'locked' };
+                localStorage.setItem('Space_TSA_Session', JSON.stringify(sessionState));
+            }
+            updateUIBasedOnState(sessionState);
+        });
+
+        function updateUIBasedOnState(state) {
+            // Môn TOÁN (Trỏ vào folder tsactc/toan)
+            const itemToan = document.getElementById('item-toan');
+            const btnToan = document.getElementById('btn-toan');
+            const statusToan = document.getElementById('status-toan');
+
+            if (state.toan === 'done') {
+                itemToan.className = 'exam-item completed';
+                btnToan.className = 'btn-action btn-done';
+                btnToan.innerHTML = '<i class="fas fa-check"></i> Đã nộp';
+                btnToan.href = "javascript:void(0)";
+                statusToan.className = 'status dathi';
+                statusToan.innerText = 'Hoàn thành';
+            } else {
+                btnToan.href = `toantsa.html?folder=tsactc/toan&id=${currentConfig.toan}&mode=full`;
+            }
+
+            // Môn ĐỌC HIỂU (Trỏ vào folder tsactc/dochieu)
+            const itemDoc = document.getElementById('item-doc');
+            const btnDoc = document.getElementById('btn-doc');
+            const statusDoc = document.getElementById('status-doc');
+
+            if (state.doc === 'pending') {
+                itemDoc.className = 'exam-item active';
+                btnDoc.className = 'btn-action btn-start';
+                btnDoc.innerText = 'Làm ngay';
+                btnDoc.onclick = () => window.location.href = `khdh.html?folder=tsactc/dochieu&id=${currentConfig.doc}&mode=full`; 
+                statusDoc.className = 'status dangthi';
+                statusDoc.innerText = 'Sẵn sàng';
+            } else if (state.doc === 'done') {
+                itemDoc.className = 'exam-item completed';
+                btnDoc.className = 'btn-action btn-done';
+                btnDoc.innerHTML = '<i class="fas fa-check"></i> Đã nộp';
+                btnDoc.onclick = null;
+                statusDoc.className = 'status dathi';
+                statusDoc.innerText = 'Hoàn thành';
+            }
+
+            // Môn KHOA HỌC (Trỏ vào folder tsactc/khoahoc)
+            const itemKhoa = document.getElementById('item-khoa');
+            const btnKhoa = document.getElementById('btn-khoa');
+            const statusKhoa = document.getElementById('status-khoa');
+
+            if (state.khoa === 'pending') {
+                itemKhoa.className = 'exam-item active';
+                btnKhoa.className = 'btn-action btn-start';
+                btnKhoa.innerText = 'Làm ngay';
+                btnKhoa.onclick = () => window.location.href = `khdh.html?folder=tsactc/khoahoc&id=${currentConfig.khoa}&mode=full`; 
+                statusKhoa.className = 'status dangthi';
+                statusKhoa.innerText = 'Sẵn sàng';
+            } else if (state.khoa === 'done') {
+                itemKhoa.className = 'exam-item completed';
+                btnKhoa.className = 'btn-action btn-done';
+                btnKhoa.innerHTML = '<i class="fas fa-check"></i> Đã nộp';
+                btnKhoa.onclick = null;
+                statusKhoa.className = 'status dathi';
+                statusKhoa.innerText = 'Hoàn thành';
+            }
+        }
+
+        function requestFinishSession() { document.getElementById('finishModal').classList.add('active'); }
+        function closeModal() { document.getElementById('finishModal').classList.remove('active'); }
+        function executeFinishSession() {
+            localStorage.removeItem('Space_TSA_Session');
+            window.location.href = "danhsachtsa.html";
+        }
+    </script>
+</body>
+</html>

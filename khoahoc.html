@@ -11,44 +11,32 @@
         :root {
             --deep-red: #b71c1c; 
             --light-red: rgba(183, 28, 28, 0.2);
-            --text-dark: #e2e8f0; /* Chữ màu sáng */
-            --bg-gray: transparent; /* Nền trong suốt để lộ Vanta */
-            --white: rgba(20, 20, 30, 0.85); /* Nền kính mờ */
-            --sidebar-width: 260px;
+            --text-dark: #f8fafc; 
+            --sidebar-width: 280px;
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
         
-        /* ĐỒNG BỘ MÀU NỀN TỐI VỚI QUẢ CẦU VŨ TRỤ */
-        body { background-color: #18112e; color: var(--text-dark); overflow-x: hidden; }
-
-        /* ================= BACKGROUND VANTA TOÀN MÀN HÌNH ================= */
-        #vanta-bg {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            z-index: -1; 
+        /* ĐỒNG BỘ BACKGROUND KHÔNG GIAN TĨNH, BỎ HOÀN TOÀN VANTA */
+        body { 
+            background: #020617; 
+            background-image: radial-gradient(ellipse at 50% 0%, rgba(183, 28, 28, 0.15) 0%, #020617 80%);
+            background-attachment: fixed;
+            color: var(--text-dark); 
+            overflow-x: hidden; 
         }
 
-        /* ================= HEADER & SIDEBAR (DARK MODE) ================= */
-        header { background-color: rgba(15, 15, 20, 0.9); backdrop-filter: blur(10px); height: 80px; display: flex; align-items: center; padding: 0 30px; box-shadow: 0 2px 15px rgba(0,0,0,0.5); position: sticky; top: 0; z-index: 99; border-bottom: 1px solid rgba(183, 28, 28, 0.3);}
+        /* HEADER & SIDEBAR CHUẨN MỚI */
+        header { background-color: rgba(15, 15, 20, 0.8); backdrop-filter: blur(10px); height: 80px; display: flex; align-items: center; justify-content: space-between; padding: 0 30px; box-shadow: 0 2px 15px rgba(0,0,0,0.5); position: sticky; top: 0; z-index: 99; border-bottom: 1px solid rgba(255, 255, 255, 0.05);}
         .header-left-group { display: flex; align-items: center; gap: 18px; }
         .menu-btn { font-size: 24px; color: var(--deep-red); background: none; border: none; cursor: pointer; transition: 0.2s; }
         .menu-btn:hover { transform: scale(1.1); text-shadow: 0 0 10px var(--deep-red); }
-        
-        /* LOGO BO TRÒN */
-        .header-logo-img { 
-            width: 45px; 
-            height: 45px; 
-            object-fit: contain; /* Giúp ảnh hiển thị trọn vẹn không bị cắt */
-            background-color: transparent; /* Nền trong suốt */
-            /* Đã xóa border-radius và border */
-        }        
+        .header-logo-img { width: 45px; height: 45px; object-fit: contain; background-color: transparent; }        
         .logo-text-group { display: flex; flex-direction: column; justify-content: center; }
         .logo-text { font-size: 22px; font-weight: 900; color: var(--deep-red); text-transform: uppercase; letter-spacing: 1px; line-height: 1.2; text-shadow: 0 0 5px rgba(183,28,28,0.5);}
-        .slogan-text { font-size: 13px; font-style: italic; color: #a0aec0; font-weight: 500; }
+        .slogan-text { font-size: 13px; font-style: italic; color: #94a3b8; font-weight: 500; }
+        
+        .header-right { display: flex; align-items: center; gap: 15px; }
 
         .sidebar { position: fixed; top: 0; left: calc(-1 * var(--sidebar-width)); width: var(--sidebar-width); height: 100vh; background-color: rgba(15, 15, 20, 0.95); backdrop-filter: blur(15px); box-shadow: 4px 0 25px rgba(0,0,0,0.8); transition: left 0.3s ease; z-index: 1000; display: flex; flex-direction: column; border-right: 1px solid rgba(255,255,255,0.05);}
         .sidebar.active { left: 0; }
@@ -69,46 +57,60 @@
         .dropdown-container a:hover { border-left: 4px solid var(--deep-red); background-color: rgba(255,255,255,0.05); color: #fff; }
         .dropdown-container.active { display: flex; }
 
-        .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 999; display: none; opacity: 0; transition: opacity 0.3s; }
+        .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 999; display: none; opacity: 0; transition: opacity 0.3s; backdrop-filter: blur(2px);}
         .overlay.active { display: block; opacity: 1; }
 
         /* ================= KHU VỰC KHÓA HỌC ================= */
-        .course-container { max-width: 1200px; margin: 0 auto; padding: 40px 20px; position: relative; z-index: 2; }
+        .course-container { max-width: 1250px; margin: 0 auto; padding: 60px 20px; position: relative; z-index: 2; }
         
         .page-header { text-align: center; margin-bottom: 50px; }
-        .page-header h1 { font-size: 32px; font-weight: 900; color: #fff; text-transform: uppercase; margin-bottom: 10px; text-shadow: 0 0 10px rgba(183,28,28,0.8);}
-        .page-header p { font-size: 16px; color: #a0aec0; }
+        .page-header h1 { font-size: 32px; font-weight: 900; color: #fff; text-transform: uppercase; margin-bottom: 15px; text-shadow: 0 0 20px rgba(183,28,28,0.4);}
+        .page-header p { font-size: 18px; color: #94a3b8; }
 
-        /* BỘ LỌC MÔN HỌC */
-        .filter-container { display: flex; justify-content: center; gap: 15px; margin-bottom: 40px; flex-wrap: wrap; }
-        .filter-btn { padding: 10px 25px; font-size: 16px; font-weight: bold; background: rgba(30, 30, 40, 0.8); border: 1px solid rgba(255,255,255,0.2); border-radius: 30px; cursor: pointer; transition: 0.3s; color: #a0aec0; backdrop-filter: blur(5px);}
-        .filter-btn:hover { border-color: var(--deep-red); color: #fff; box-shadow: 0 0 10px rgba(183,28,28,0.3);}
-        .filter-btn.active { background: var(--deep-red); color: white; border-color: var(--deep-red); box-shadow: 0 0 15px rgba(183, 28, 28, 0.5); }
+        /* BỘ LỌC ĐƯỢC CHUYỂN SANG DẠNG PILL */
+        .filter-container { display: flex; justify-content: center; gap: 15px; margin-bottom: 50px; flex-wrap: wrap; }
+        .filter-btn { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 99px; padding: 12px 35px; font-size: 16px; font-weight: bold; color: #94a3b8; cursor: pointer; transition: all 0.3s; }
+        .filter-btn:hover { background: rgba(255,255,255,0.08); color: #e2e8f0; }
+        .filter-btn.active { background: var(--deep-red); color: #fff; border-color: var(--deep-red); box-shadow: 0 4px 15px rgba(183,28,28,0.4);}
 
-        /* LƯỚI KHÓA HỌC */
-        .course-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 30px; }
+        /* LƯỚI KHÓA HỌC (ĐỒNG BỘ HIỆU ỨNG GLASSMORPHISM) */
+        .course-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 35px; }
         
-        .course-card { background: rgba(30, 30, 40, 0.8); backdrop-filter: blur(8px); border-radius: 15px; overflow: hidden; box-shadow: 0 8px 30px rgba(0,0,0,0.6); transition: 0.3s; display: flex; flex-direction: column; border: 1px solid rgba(255,255,255,0.1); position: relative;}
-        .course-card:hover { transform: translateY(-8px); box-shadow: 0 10px 25px rgba(183, 28, 28, 0.3); border-color: var(--deep-red);}
+        .course-card { 
+            background: linear-gradient(145deg, rgba(30,41,59,0.6), rgba(15,23,42,0.9)); 
+            border-radius: 20px; 
+            overflow: hidden; 
+            border: 1px solid rgba(255,255,255,0.08); 
+            display: flex; flex-direction: column; 
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); 
+            position: relative;
+        }
+        .course-card::before {
+            content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 3px; 
+            background: linear-gradient(90deg, transparent, var(--deep-red), transparent); 
+            opacity: 0; transition: 0.3s; z-index: 10;
+        }
+        .course-card:hover::before { opacity: 1; }
+        .course-card:hover { transform: translateY(-8px); box-shadow: 0 20px 40px -10px rgba(183,28,28,0.4); border-color: rgba(183,28,28,0.3);}
         
-        .course-badge { position: absolute; top: 15px; right: 15px; background: #e74c3c; color: white; padding: 5px 12px; font-size: 12px; font-weight: bold; border-radius: 20px; z-index: 2; box-shadow: 0 2px 10px rgba(231,76,60,0.5);}
+        .course-badge { position: absolute; top: 15px; right: 15px; background: #ef4444; color: white; padding: 6px 14px; font-size: 12px; font-weight: 800; border-radius: 20px; z-index: 2; box-shadow: 0 4px 15px rgba(239,68,68,0.4);}
         
-        .course-img-wrapper { position: relative; width: 100%; height: 200px; overflow: hidden; background: #222;}
-        .course-img { width: 100%; height: 100%; object-fit: cover; transition: 0.5s; opacity: 0.9;}
-        .course-card:hover .course-img { transform: scale(1.05); opacity: 1;}
+        .course-img-wrapper { position: relative; width: 100%; height: 220px; overflow: hidden; background: #0f172a;}
+        .course-img { width: 100%; height: 100%; object-fit: cover; transition: 0.7s ease; opacity: 0.85;}
+        .course-card:hover .course-img { transform: scale(1.08); opacity: 1;}
         
-        .course-content { padding: 25px; flex: 1; display: flex; flex-direction: column; }
-        .course-subject { font-size: 13px; font-weight: bold; color: #ff4d4d; text-transform: uppercase; margin-bottom: 8px; letter-spacing: 1px;}
-        .course-title { font-size: 20px; font-weight: 900; color: #fff; margin-bottom: 15px; line-height: 1.4; }
+        .course-content { padding: 30px 25px; flex: 1; display: flex; flex-direction: column; }
+        .course-subject { font-size: 13px; font-weight: 800; color: #ef4444; text-transform: uppercase; margin-bottom: 10px; letter-spacing: 1px;}
+        .course-title { font-size: 20px; font-weight: 900; color: #f8fafc; margin-bottom: 20px; line-height: 1.4; }
         
-        .course-meta { display: flex; flex-direction: column; gap: 8px; margin-bottom: 20px; font-size: 14px; color: #cbd5e1; }
-        .course-meta span i { color: var(--deep-red); width: 20px; text-align: center; margin-right: 5px; }
+        .course-meta { display: flex; flex-direction: column; gap: 10px; margin-bottom: 25px; font-size: 14px; color: #cbd5e1; }
+        .course-meta span i { color: #ef4444; width: 22px; text-align: left; }
 
-        .course-footer { margin-top: auto; display: flex; justify-content: space-between; align-items: center; padding-top: 20px; border-top: 1px dashed rgba(255,255,255,0.2); }
-        .course-price { font-size: 22px; font-weight: 900; color: #ff4d4d; text-shadow: 0 0 5px rgba(255,77,77,0.4);}
+        .course-footer { margin-top: auto; display: flex; flex-direction: column; gap: 15px; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.05); }
+        .course-price { font-size: 24px; font-weight: 900; color: #ef4444; text-align: center;}
         
-        .btn-enroll { display: inline-block; background: var(--deep-red); color: white; padding: 10px 20px; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; transition: 0.2s; text-decoration: none; text-align: center; }
-        .btn-enroll:hover { filter: brightness(1.1); transform: scale(1.05); box-shadow: 0 0 15px rgba(183,28,28,0.6);}
+        .btn-enroll { width: 100%; background: rgba(183,28,28,0.1); color: #ef4444; border: 1px solid rgba(183,28,28,0.3); padding: 14px; border-radius: 12px; font-weight: bold; cursor: pointer; transition: all 0.2s; font-size: 16px; display: flex; justify-content: center; align-items: center; text-decoration: none;}
+        .course-card:hover .btn-enroll { background: var(--deep-red); color: white; border-color: var(--deep-red);}
 
         /* FOOTER */
         footer { background-color: rgba(5, 5, 10, 0.95); backdrop-filter: blur(10px); border-top: 1px solid rgba(183, 28, 28, 0.3); color: #a0aec0; text-align: center; padding: 40px 20px; margin-top: 50px; font-size: 14px; position: relative; z-index: 2;}
@@ -128,8 +130,7 @@
 </head>
 <body>
 
-    <!-- BACKGROUND VANTA QUẢ CẦU CHẠY NGẦM -->
-    <div id="vanta-bg"></div>
+    <!-- ĐÃ GỠ BỎ VANTA BG -->
 
     <!-- SIDEBAR -->
     <div class="overlay" id="overlay"></div>
@@ -147,8 +148,8 @@
                     <i class="fas fa-chevron-down" id="phong-luyen-icon"></i>
                 </button>
                 <div class="dropdown-container" id="phong-luyen-menu">
-                    <a href="danhsachde.html?kithi=thptqg">Kỳ thi THPTQG</a>
-                    <a href="danhsachde.html?kithi=tsa">Kỳ thi TSA (Bách Khoa)</a>
+                    <a href="danhsachde.html">Kỳ thi THPTQG</a>
+                    <a href="danhsachtsa.html">Kỳ thi TSA (Bách Khoa)</a>
                 </div>
             </li>
             <li class="dropdown">
@@ -198,7 +199,7 @@
             
             <!-- Khóa TSA -->
             <div class="course-card" data-category="tsa">
-                <div class="course-badge" style="background: #e74c3c;">HOT NHẤT</div>
+                <div class="course-badge">HOT NHẤT</div>
                 <div class="course-img-wrapper">
                     <img src="https://images.unsplash.com/photo-1434030216411-0b793f4b4173?auto=format&fit=crop&w=600&q=80" alt="Đánh giá tư duy TSA" class="course-img">
                 </div>
@@ -212,14 +213,14 @@
                     </div>
                     <div class="course-footer">
                         <span class="course-price">2.000.000đ</span>
-                        <a href="https://space-edu-vn.github.io/space-tdm/" target="_blank" class="btn-enroll">Đăng Ký</a>
+                        <a href="https://space-edu-vn.github.io/space-tdm/" target="_blank" class="btn-enroll">Đăng Ký Khóa Học <i class="fas fa-arrow-right" style="margin-left: 8px;"></i></a>
                     </div>
                 </div>
             </div>
 
             <!-- Khóa Toán -->
             <div class="course-card" data-category="toan">
-                <div class="course-badge" style="background: #e74c3c;">HOT 2026</div>
+                <div class="course-badge">HOT 2026</div>
                 <div class="course-img-wrapper">
                     <img src="https://images.unsplash.com/photo-1635070041078-e363dbe005cb?auto=format&fit=crop&w=600&q=80" alt="Toán Học" class="course-img">
                 </div>
@@ -233,7 +234,7 @@
                     </div>
                     <div class="course-footer">
                         <span class="course-price">1.500.000đ</span>
-                        <a href="#" class="btn-enroll">Đăng Ký</a>
+                        <a href="#" class="btn-enroll">Đăng Ký Khóa Học <i class="fas fa-arrow-right" style="margin-left: 8px;"></i></a>
                     </div>
                 </div>
             </div>
@@ -253,14 +254,14 @@
                     </div>
                     <div class="course-footer">
                         <span class="course-price">1.200.000đ</span>
-                        <a href="#" class="btn-enroll">Đăng Ký</a>
+                        <a href="#" class="btn-enroll">Đăng Ký Khóa Học <i class="fas fa-arrow-right" style="margin-left: 8px;"></i></a>
                     </div>
                 </div>
             </div>
 
             <!-- Khóa Hóa -->
             <div class="course-card" data-category="hoa">
-                <div class="course-badge" style="background: #e74c3c;">ĐIỂM 9+</div>
+                <div class="course-badge">ĐIỂM 9+</div>
                 <div class="course-img-wrapper">
                     <img src="https://images.unsplash.com/photo-1603126857599-f6e1578248ce?auto=format&fit=crop&w=600&q=80" alt="Hóa Học" class="course-img">
                 </div>
@@ -274,28 +275,28 @@
                     </div>
                     <div class="course-footer">
                         <span class="course-price">1.200.000đ</span>
-                        <a href="#" class="btn-enroll">Đăng Ký</a>
+                        <a href="#" class="btn-enroll">Đăng Ký Khóa Học <i class="fas fa-arrow-right" style="margin-left: 8px;"></i></a>
                     </div>
                 </div>
             </div>
 
             <!-- Khóa Công nghệ / Lập trình -->
             <div class="course-card" data-category="it">
-                <div class="course-badge" style="background: #27ae60;">NEW</div>
+                <div class="course-badge" style="background: #10b981;">NEW</div>
                 <div class="course-img-wrapper">
                     <img src="https://images.unsplash.com/photo-1555066931-4365d14bab8c?auto=format&fit=crop&w=600&q=80" alt="Khoa học Máy tính" class="course-img">
                 </div>
                 <div class="course-content">
-                    <div class="course-subject">Định Hướng Nghề Nghiệp</div>
+                    <div class="course-subject" style="color: #10b981;">Định Hướng Nghề Nghiệp</div>
                     <h3 class="course-title">Tư Duy Lập Trình & Khoa Học Máy Tính</h3>
                     <div class="course-meta">
-                        <span><i class="fas fa-chalkboard-teacher"></i> Đội ngũ kỹ thuật Space Education</span>
-                        <span><i class="far fa-clock"></i> 30 Buổi học</span>
-                        <span><i class="fas fa-users"></i> 400+ Học viên</span>
+                        <span><i class="fas fa-chalkboard-teacher" style="color: #10b981;"></i> Đội ngũ kỹ thuật Space Education</span>
+                        <span><i class="far fa-clock" style="color: #10b981;"></i> 30 Buổi học</span>
+                        <span><i class="fas fa-users" style="color: #10b981;"></i> 400+ Học viên</span>
                     </div>
                     <div class="course-footer">
-                        <span class="course-price" style="color: #2ecc71; text-shadow: 0 0 5px rgba(46,204,113,0.4);">Miễn phí</span>
-                        <a href="#" class="btn-enroll" style="background-color: #27ae60; box-shadow: 0 0 10px rgba(39,174,96,0.4);">Tham Gia</a>
+                        <span class="course-price" style="color: #10b981;">Miễn phí</span>
+                        <a href="#" class="btn-enroll" style="border-color: rgba(16, 185, 129, 0.3); color: #10b981; background: rgba(16, 185, 129, 0.1);" onmouseover="this.style.background='#10b981'; this.style.color='#fff';" onmouseout="this.style.background='rgba(16, 185, 129, 0.1)'; this.style.color='#10b981';">Tham Gia Ngay <i class="fas fa-arrow-right" style="margin-left: 8px;"></i></a>
                     </div>
                 </div>
             </div>
@@ -310,26 +311,8 @@
         <p style="opacity: 0.7; margin-top: 5px;">Hệ thống luyện thi bám sát chương trình mới của Bộ Giáo Dục.</p>
     </footer>
 
-    <!-- KỊCH BẢN JAVASCRIPT & VANTA GLOBE -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/vanta@latest/dist/vanta.globe.min.js"></script>
+    <!-- ĐÃ GỠ BỎ KỊCH BẢN JAVASCRIPT GỌI VANTA -->
     <script>
-        window.addEventListener('DOMContentLoaded', () => {
-            VANTA.GLOBE({
-                el: "#vanta-bg",
-                mouseControls: true,
-                touchControls: true,
-                gyroControls: false,
-                minHeight: 200.00,
-                minWidth: 200.00,
-                scale: 1.00,
-                scaleMobile: 1.00,
-                color: 0xf40051,
-                size: 1.10,
-                backgroundColor: 0x18112e /* ĐỒNG BỘ NỀN VANTA VỚI TOÀN TRANG */
-            });
-        });
-
         /* ================= XỬ LÝ MENU TRƯỢT ================= */
         const menuBtn = document.getElementById('menu-btn');
         const closeBtn = document.getElementById('close-btn');

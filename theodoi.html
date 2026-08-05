@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Theo Dõi Quá Trình - Space Education</title>
+    <link rel="icon" href="logo.webp" type="image/webp">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Tích hợp Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <style>
+        :root {
+            --deep-red: #b71c1c; 
+            --light-red: rgba(183, 28, 28, 0.15); 
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --bg-body: #020617;
+            --border-color: rgba(255,255,255,0.05);
+            --card-bg: rgba(15, 23, 42, 0.6);
+            --sidebar-width: 280px;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        
+        /* ĐỒNG BỘ BACKGROUND KHÔNG GIAN TĨNH */
+        body { 
+            background-color: var(--bg-body); 
+            background-image: radial-gradient(ellipse at 50% 0%, rgba(183, 28, 28, 0.15) 0%, #020617 80%);
+            background-attachment: fixed;
+            color: var(--text-main); 
+            min-height: 100vh; 
+            overflow-x: hidden; 
+            display: flex; 
+            flex-direction: column;
+        }
+
+        /* HEADER & SIDEBAR CHUẨN MỚI */
+        header { background-color: rgba(15, 15, 20, 0.8); backdrop-filter: blur(10px); height: 80px; display: flex; align-items: center; justify-content: space-between; padding: 0 30px; box-shadow: 0 2px 15px rgba(0,0,0,0.5); position: sticky; top: 0; z-index: 99; border-bottom: 1px solid var(--border-color);}
+        .header-left-group { display: flex; align-items: center; gap: 18px; }
+        .menu-btn { font-size: 24px; color: var(--deep-red); background: none; border: none; cursor: pointer; transition: 0.2s; }
+        .menu-btn:hover { transform: scale(1.1); text-shadow: 0 0 10px var(--deep-red); }
+        .header-logo-img { width: 45px; height: 45px; object-fit: contain; }
+        .logo-text { font-size: 22px; font-weight: 900; color: var(--deep-red); text-transform: uppercase; letter-spacing: 1px; text-shadow: 0 0 5px rgba(183,28,28,0.5);}
+
+        .header-right { display: flex; align-items: center; gap: 15px; }
+        .btn-icon { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); width: 40px; height: 40px; border-radius: 8px; font-size: 16px; color: var(--text-main); cursor: pointer; transition: 0.2s; display: flex; align-items: center; justify-content: center;}
+        .btn-icon:hover { background: var(--deep-red); color: white; border-color: var(--deep-red);}
+
+        .sidebar { position: fixed; top: 0; left: calc(-1 * var(--sidebar-width)); width: var(--sidebar-width); height: 100vh; background-color: rgba(15, 15, 20, 0.95); backdrop-filter: blur(15px); box-shadow: 4px 0 25px rgba(0,0,0,0.8); transition: left 0.3s ease; z-index: 1000; display: flex; flex-direction: column; border-right: 1px solid var(--border-color);}
+        .sidebar.active { left: 0; }
+        .sidebar-header { padding: 20px; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; }
+        .sidebar-logo { color: var(--deep-red); font-size: 20px; font-weight: bold; }
+        .close-btn { background: none; border: none; font-size: 20px; color: var(--text-muted); cursor: pointer; }
+        .sidebar-menu { list-style: none; padding: 20px 0; flex: 1; }
+        .sidebar-menu li a { display: flex; align-items: center; padding: 15px 25px; color: var(--text-main); text-decoration: none; font-weight: 600; font-size: 16px; transition: 0.2s; }
+        .sidebar-menu li a i { width: 30px; font-size: 18px; color: var(--deep-red); }
+        .sidebar-menu li a:hover, .sidebar-menu li a.active-link { background-color: var(--light-red); color: #fff; border-right: 4px solid var(--deep-red); }
+        .sidebar-menu li.dropdown { flex-direction: column; align-items: flex-start; padding: 0; }
+        .dropdown-btn { width: 100%; display: flex; align-items: center; justify-content: space-between; padding: 15px 25px; background: none; border: none; font-size: 16px; font-weight: 600; color: var(--text-main); cursor: pointer; transition: 0.2s; }
+        .dropdown-btn i.left-icon { width: 30px; font-size: 18px; color: var(--deep-red); text-align: left; }
+        .dropdown-btn:hover { background-color: var(--light-red); color: #fff; }
+        .dropdown-container { display: none; background-color: rgba(0,0,0,0.3); width: 100%; flex-direction: column; overflow: hidden; border-top: 1px solid var(--border-color); border-bottom: 1px solid var(--border-color);}
+        .dropdown-container a { padding: 12px 25px 12px 55px; font-size: 15px; border-left: 4px solid transparent; }
+        .dropdown-container a:hover { border-left: 4px solid var(--deep-red); color: #fff; background: rgba(255,255,255,0.05);}
+        .dropdown-container.active { display: flex; }
+
+        .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 999; display: none; opacity: 0; transition: opacity 0.3s; backdrop-filter: blur(2px);}
+        .overlay.active { display: block; opacity: 1; }
+
+        /* DASHBOARD LAYOUT */
+        .dashboard-container { flex: 1; padding: 40px 20px; max-width: 1200px; margin: 0 auto; width: 100%; position: relative; z-index: 2;}
+        
+        .page-header { display: flex; justify-content: center; align-items: center; margin-bottom: 40px;}
+        .page-title { font-size: 32px; font-weight: 900; color: var(--text-main); text-transform: uppercase; text-shadow: 0 0 20px rgba(183,28,28,0.4);}
+        .page-title i { color: var(--deep-red); margin-right: 15px; }
+
+        /* TABS HIỆN ĐẠI DẠNG PILL */
+        .tabs-container { display: flex; justify-content: center; gap: 15px; margin-bottom: 40px; }
+        .tab-btn { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 99px; padding: 12px 35px; font-size: 16px; font-weight: bold; color: var(--text-muted); cursor: pointer; transition: all 0.3s; }
+        .tab-btn:hover { background: rgba(255,255,255,0.08); color: #e2e8f0; }
+        .tab-btn.active { background: var(--deep-red); color: #fff; border-color: var(--deep-red); box-shadow: 0 4px 15px rgba(183,28,28,0.4);}
+
+        .tab-content { display: none; animation: fadeIn 0.4s ease; }
+        .tab-content.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* CHARTS GRID & GLASSMORPHISM CARD */
+        .charts-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 25px; }
+        .chart-card { 
+            background: linear-gradient(145deg, rgba(30,41,59,0.6), rgba(15,23,42,0.9)); 
+            border-radius: 20px; 
+            padding: 30px; 
+            border: 1px solid rgba(255,255,255,0.08); 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.4); 
+            display: flex; 
+            flex-direction: column;
+            transition: all 0.3s ease;
+        }
+        .chart-card:hover { border-color: rgba(183,28,28,0.3); box-shadow: 0 15px 35px -10px rgba(183,28,28,0.3); }
+        .chart-card.full-width { grid-column: 1 / -1; }
+        
+        .chart-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 15px;}
+        .chart-title { font-size: 18px; font-weight: 800; color: var(--text-main); text-transform: uppercase; letter-spacing: 0.5px;}
+        .chart-subtitle { font-size: 14px; color: var(--deep-red); font-weight: 700; background: rgba(183,28,28,0.1); padding: 5px 12px; border-radius: 20px; }
+
+        .canvas-container { position: relative; width: 100%; height: 350px; flex: 1; display: flex; align-items: center; justify-content: center;}
+        
+        @media (max-width: 900px) {
+            .charts-grid { grid-template-columns: 1fr; }
+            .page-title { font-size: 24px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="overlay" id="overlay"></div>
+    
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <div class="sidebar-logo">SPACE EDU</div>
+            <button class="close-btn" id="close-btn"><i class="fas fa-times"></i></button>
+        </div>
+        <ul class="sidebar-menu">
+            <li><a href="index.html"><i class="fas fa-home"></i> Trang chủ</a></li>
+            <li><a href="theodoi.html" class="active-link"><i class="fas fa-chart-line"></i> Tiến độ học tập</a></li>
+            <li class="dropdown">
+                <button class="dropdown-btn" id="space-lab-btn">
+                    <div><i class="fas fa-flask left-icon"></i> Space Lab</div>
+                    <i class="fas fa-chevron-down" id="space-lab-icon"></i>
+                </button>
+                <div class="dropdown-container" id="space-lab-menu">
+                    <a href="labmath.html"><i class="fas fa-square-root-variable" style="width: 25px; text-align: center; color: var(--text-muted); margin-right: 5px;"></i> Lab Toán Học</a>
+                    <a href="labphysics.html"><i class="fas fa-magnet" style="width: 25px; text-align: center; color: var(--text-muted); margin-right: 5px;"></i> Lab Vật Lý</a>
+                </div>
+            </li>
+            <li><a href="danhsachde.html"><i class="fas fa-laptop-code"></i> Kỳ thi THPTQG</a></li>
+            <li><a href="danhsachtsa.html"><i class="fas fa-laptop-code"></i> Kỳ thi TSA</a></li>
+            <li><a href="khoahoc.html"><i class="fas fa-chalkboard-teacher"></i> Khóa học</a></li>
+        </ul>
+    </aside>
+
+    <header>
+        <div class="header-left-group">
+            <button class="menu-btn" id="menu-btn"><i class="fas fa-bars"></i></button>
+            <img src="logo.webp" class="header-logo-img" onerror="this.src='https://cdn-icons-png.flaticon.com/512/3242/3242257.png'">
+            <div class="logo-text">SPACE EDUCATION</div>
+        </div>
+        <div class="header-right">
+            <!-- Đã gỡ bỏ nút chuyển theme -->
+            <div style="display:flex; align-items:center; color:#e2e8f0; font-weight:bold;"><i class="far fa-user-circle" style="margin-right: 8px; font-size: 20px;"></i> Học viên</div>
+        </div>
+    </header>
+
+    <div class="dashboard-container">
+        <div class="page-header">
+            <h1 class="page-title"><i class="fas fa-chart-pie text-brand-500"></i> Báo Cáo Tiến Độ Học Tập</h1>
+        </div>
+
+        <div class="tabs-container">
+            <button class="tab-btn active" onclick="switchTab('tsa-tab')">Tiến độ thi TSA</button>
+            <button class="tab-btn" onclick="switchTab('thpt-tab')">Tiến độ thi THPT</button>
+        </div>
+
+        <!-- ================= TAB KỲ THI TSA ================= -->
+        <div id="tsa-tab" class="tab-content active">
+            <div class="charts-grid">
+                
+                <!-- BÀI THI TỔNG QUAN -->
+                <div class="chart-card full-width">
+                    <div class="chart-header">
+                        <div class="chart-title">Tiến độ điểm Tổng quan</div>
+                        <div class="chart-subtitle">Thang điểm 100%</div>
+                    </div>
+                    <div class="canvas-container">
+                        <canvas id="tsaLineChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- ĐÁNH GIÁ ĐỘ LỆCH MÔN (RADAR) -->
+                <div class="chart-card">
+                    <div class="chart-header">
+                        <div class="chart-title">Phân tích Phổ năng lực</div>
+                        <div class="chart-subtitle">Độ lệch 3 phân môn</div>
+                    </div>
+                    <div class="canvas-container">
+                        <canvas id="tsaRadarChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- ĐIỂM TRUNG BÌNH BAR CHART -->
+                <div class="chart-card">
+                    <div class="chart-header">
+                        <div class="chart-title">Hiệu suất trung bình</div>
+                        <div class="chart-subtitle">So sánh môn học</div>
+                    </div>
+                    <div class="canvas-container">
+                        <canvas id="tsaBarChart"></canvas>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- ================= TAB KỲ THI THPT ================= -->
+        <div id="thpt-tab" class="tab-content">
+            <div class="charts-grid">
+                
+                <div class="chart-card full-width">
+                    <div class="chart-header">
+                        <div class="chart-title">Tiến độ 3 môn: Toán - Lý - Hóa</div>
+                        <div class="chart-subtitle">Thang điểm 10 (Sắp ra mắt)</div>
+                    </div>
+                    <div class="canvas-container">
+                        <canvas id="thptLineChart"></canvas>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        /* ================= GIAO DIỆN CƠ BẢN ================= */
+        const menuBtn = document.getElementById('menu-btn');
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('overlay');
+        menuBtn.addEventListener('click', () => { sidebar.classList.add('active'); overlay.classList.add('active'); });
+        overlay.addEventListener('click', () => { sidebar.classList.remove('active'); overlay.classList.remove('active'); });
+        document.getElementById('close-btn').addEventListener('click', () => { sidebar.classList.remove('active'); overlay.classList.remove('active'); });
+
+        const spaceLabBtn = document.getElementById('space-lab-btn');
+        const spaceLabMenu = document.getElementById('space-lab-menu');
+        if (spaceLabBtn) {
+            spaceLabBtn.addEventListener('click', () => {
+                spaceLabMenu.classList.toggle('active');
+                const icon = document.getElementById('space-lab-icon');
+                icon.className = spaceLabMenu.classList.contains('active') ? 'fas fa-chevron-up' : 'fas fa-chevron-down';
+            });
+        }
+
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+            document.getElementById(tabId).classList.add('active');
+        }
+
+        /* ================= HÀM LẤY DỮ LIỆU THẬT TỪ LOCAL STORAGE ================= */
+        function getRealData() {
+            let rawHistory = JSON.parse(localStorage.getItem('SpaceEdu_History_TSA')) || [];
+            let history = rawHistory.slice().reverse(); 
+
+            let tsaLabels = [];
+            let tsaTongQuan = [];
+            let tsaToan = [];
+            let tsaDoc = [];
+            let tsaKhoa = [];
+
+            history.forEach(item => {
+                let percent = 0;
+                if (item.diem && item.diem.includes('/')) {
+                    let parts = item.diem.split('/');
+                    if (parseInt(parts[1]) > 0) {
+                        percent = Math.round((parseInt(parts[0]) / parseInt(parts[1])) * 100);
+                    }
+                }
+
+                let dateLabel = item.thoiGianNop.split(' ')[1] || item.thoiGianNop; 
+                let name = (item.tenDe || "").toLowerCase();
+
+                if (name.includes('toán') || name.includes('toan') || name.includes('bedu')) {
+                    tsaToan.push(percent);
+                    tsaLabels.push(dateLabel); 
+                    tsaTongQuan.push(percent);
+                } 
+                else if (name.includes('đọc') || name.includes('doc') || name.includes('dh')) {
+                    tsaDoc.push(percent);
+                    tsaLabels.push(dateLabel);
+                    tsaTongQuan.push(percent);
+                } 
+                else if (name.includes('khoa học') || name.includes('khoa')) {
+                    tsaKhoa.push(percent);
+                    tsaLabels.push(dateLabel);
+                    tsaTongQuan.push(percent);
+                } 
+                else {
+                    tsaTongQuan.push(percent);
+                    tsaLabels.push(dateLabel);
+                }
+            });
+
+            const avg = (arr) => arr.length ? Math.round(arr.reduce((a, b) => a + b, 0) / arr.length) : 0;
+            const last = (arr) => arr.length ? arr[arr.length - 1] : 0;
+            const uniqueLabels = [...new Set(tsaLabels)];
+
+            return {
+                labels: uniqueLabels.length > 0 ? uniqueLabels : ['Chưa có dữ liệu'],
+                tongQuan: tsaTongQuan.length > 0 ? tsaTongQuan : [0],
+                toanAvg: avg(tsaToan),
+                docAvg: avg(tsaDoc),
+                khoaAvg: avg(tsaKhoa),
+                toanLast: last(tsaToan),
+                docLast: last(tsaDoc),
+                khoaLast: last(tsaKhoa)
+            };
+        }
+
+        /* ================= KHỞI TẠO BIỂU ĐỒ ================= */
+        // Khóa màu text và lưới sang Dark Mode hoàn toàn
+        Chart.defaults.font.family = "'Segoe UI', sans-serif";
+        Chart.defaults.color = '#94a3b8';
+        Chart.defaults.scale.grid.color = 'rgba(255, 255, 255, 0.05)';
+
+        let charts = {};
+
+        function renderCharts() {
+            const red = '#ef4444'; const redFill = 'rgba(239, 68, 68, 0.2)';
+            const blue = '#3b82f6'; const blueFill = 'rgba(59, 130, 246, 0.2)';
+            const green = '#10b981'; const greenFill = 'rgba(16, 185, 129, 0.2)';
+            const orange = '#f59e0b'; const orangeFill = 'rgba(245, 158, 11, 0.2)';
+
+            const realData = getRealData();
+
+            // 1. TSA Line Chart
+            const ctxTsaLine = document.getElementById('tsaLineChart').getContext('2d');
+            charts.tsaLine = new Chart(ctxTsaLine, {
+                type: 'line',
+                data: {
+                    labels: realData.labels,
+                    datasets: [{
+                        label: 'Tiến độ Tổng quan (%)',
+                        data: realData.tongQuan,
+                        borderColor: orange, backgroundColor: orangeFill,
+                        borderWidth: 3, pointRadius: 5, fill: true, tension: 0.4
+                    }]
+                },
+                options: { responsive: true, maintainAspectRatio: false, scales: { y: { min: 0, max: 100 } } }
+            });
+
+            // 2. TSA Radar Chart
+            const ctxTsaRadar = document.getElementById('tsaRadarChart').getContext('2d');
+            charts.tsaRadar = new Chart(ctxTsaRadar, {
+                type: 'radar',
+                data: {
+                    labels: ['Tư duy Toán học', 'Tư duy Đọc hiểu', 'Tư duy Khoa học'],
+                    datasets: [{
+                        label: 'Lần thi gần nhất (%)',
+                        data: [realData.toanLast, realData.docLast, realData.khoaLast],
+                        backgroundColor: redFill, borderColor: red,
+                        pointBackgroundColor: red, borderWidth: 2
+                    }]
+                },
+                options: { responsive: true, maintainAspectRatio: false, scales: { r: { min: 0, max: 100, ticks: { display: false } } } }
+            });
+
+            // 3. TSA Bar Chart
+            const ctxTsaBar = document.getElementById('tsaBarChart').getContext('2d');
+            charts.tsaBar = new Chart(ctxTsaBar, {
+                type: 'bar',
+                data: {
+                    labels: ['Toán học', 'Đọc hiểu', 'Khoa học'],
+                    datasets: [{
+                        label: 'Điểm trung bình (%)',
+                        data: [realData.toanAvg, realData.docAvg, realData.khoaAvg],
+                        backgroundColor: [red, blue, green],
+                        borderRadius: 6
+                    }]
+                },
+                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { min: 0, max: 100 } } }
+            });
+
+            // 4. THPT Line Chart
+            const labelsTHPT = ['Chưa có dữ liệu'];
+            const ctxThptLine = document.getElementById('thptLineChart').getContext('2d');
+            charts.thptLine = new Chart(ctxThptLine, {
+                type: 'line',
+                data: {
+                    labels: labelsTHPT,
+                    datasets: [
+                        { label: 'Môn Toán', data: [0], borderColor: red, backgroundColor: red, tension: 0.4, borderWidth: 3 },
+                        { label: 'Môn Vật Lý', data: [0], borderColor: green, backgroundColor: green, tension: 0.4, borderWidth: 3 },
+                        { label: 'Môn Hóa Học', data: [0], borderColor: blue, backgroundColor: blue, tension: 0.4, borderWidth: 3 }
+                    ]
+                },
+                options: { responsive: true, maintainAspectRatio: false, scales: { y: { min: 0, max: 10 } } }
+            });
+        }
+
+        window.addEventListener('load', () => {
+            renderCharts();
+        });
+    </script>
+</body>
+</html>

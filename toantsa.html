@@ -1,0 +1,766 @@
+<!DOCTYPE html>
+<html lang="vi" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Phòng Thi Toán TSA - Space Edu</title>
+    <link rel="icon" href="logo.webp" type="image/webp">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']],
+                processEscapes: true
+            },
+            svg: { fontCache: 'global' }
+        };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    
+    <style>
+        :root {
+            --primary-color: #dc2626;    
+            --primary-hover: #b91c1c;    
+            --bg-body: #f4f7f6;
+            --bg-panel: #ffffff;
+            --text-main: #1f2937;
+            --text-muted: #6b7280;
+            --border-color: #e5e7eb;
+            --btn-active: #dc2626;       
+            --btn-answered: #f59e0b;     
+            --correct-color: #10b981;    
+            --wrong-color: #991b1b;      
+            --bg-hover: #fef2f2;         
+            --bg-secondary: #f3f4f6;
+        }
+
+        [data-theme="dark"] {
+            --bg-body: #111827;
+            --bg-panel: #1f2937;
+            --text-main: #f9fafb;
+            --text-muted: #9ca3af;
+            --border-color: #374151;
+            --btn-active: #ef4444;       
+            --bg-hover: #450a0a;         
+            --bg-secondary: #111827;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', sans-serif; }
+        body { background-color: var(--bg-body); color: var(--text-main); height: 100vh; display: flex; flex-direction: column; overflow: hidden; transition: background-color 0.3s, color 0.3s; }
+
+        /* HEADER */
+        header { background-color: var(--bg-panel); height: 60px; padding: 0 24px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--border-color); flex-shrink: 0; z-index: 10; transition: 0.3s; }
+        .header-left { display: flex; align-items: center; gap: 15px; }
+        .logo { height: 35px; }
+        .exam-title { font-size: 18px; font-weight: 700; color: var(--text-main); }
+        .exam-code { color: var(--primary-color); }
+        
+        .header-right { display: flex; align-items: center; gap: 15px; }
+        .btn-icon { background: none; border: none; font-size: 18px; color: var(--text-muted); cursor: pointer; transition: 0.2s; padding: 8px; border-radius: 8px;}
+        .btn-icon:hover { background: var(--bg-hover); color: var(--text-main); }
+        .btn-exit { color: var(--text-muted); text-decoration: none; font-size: 14px; font-weight: 500; display: flex; align-items: center; gap: 6px; padding-left: 10px; border-left: 1px solid var(--border-color); transition: 0.3s;}
+        .btn-exit:hover { color: var(--primary-color); }
+
+        /* MAIN LAYOUT */
+        .main-container { display: flex; flex: 1; overflow: hidden; }
+
+        /* LEFT PANEL */
+        .left-panel { flex: 1; padding: 30px; overflow-y: auto; background-color: var(--bg-body); display: flex; flex-direction: column; transition: 0.3s; }
+        .question-card { background: var(--bg-panel); border-radius: 12px; padding: 24px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); border: 1px solid var(--border-color); margin-bottom: 20px; transition: 0.3s; }
+        .question-header { display: flex; gap: 15px; margin-bottom: 20px; }
+        .question-number { width: 40px; height: 40px; border-radius: 50%; background: var(--bg-secondary); display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 18px; color: var(--text-main); flex-shrink: 0; }
+        .question-content { font-size: 16px; line-height: 1.6; padding-top: 8px; width: 100%; }
+        .question-image { max-width: 100%; max-height: 350px; margin: 15px 0; border-radius: 8px; border: 1px solid var(--border-color); object-fit: contain; background: var(--bg-body); display: block; }
+        
+        /* ANSWERS: TRẮC NGHIỆM */
+        .options-list { display: flex; flex-direction: column; gap: 12px; margin-top: 20px; }
+        .option-item { display: flex; align-items: center; padding: 12px 16px; border: 1px solid var(--border-color); border-radius: 8px; cursor: pointer; transition: all 0.2s; }
+        .option-item:hover:not(.disabled) { background-color: var(--bg-hover); }
+        .option-item.disabled { cursor: not-allowed; opacity: 0.8; }
+        .option-item input[type="radio"] { margin-right: 12px; transform: scale(1.2); }
+        
+        .option-item.is-correct { border-color: var(--correct-color); background-color: rgba(16, 185, 129, 0.1); font-weight: 600; color: var(--correct-color); }
+        .option-item.is-wrong { border-color: var(--wrong-color); background-color: rgba(239, 68, 68, 0.1); color: var(--wrong-color); }
+        .correct-label { font-size: 14px; color: var(--correct-color); margin-top: 10px; font-weight: 600; display: block; }
+
+        /* ANSWERS: TRẢ LỜI NGẮN */
+        .input-short-answer { width: 100%; max-width: 300px; padding: 12px; border: 1px solid var(--border-color); border-radius: 8px; font-size: 16px; margin-top: 10px; outline: none; background: var(--bg-panel); color: var(--text-main); transition: 0.3s;}
+        .input-short-answer:focus { border-color: var(--btn-active); }
+        .input-short-answer:disabled { background: var(--bg-secondary); cursor: not-allowed; color: var(--text-muted); }
+
+        /* ANSWERS: ĐÚNG SAI */
+        .table-dungsai { width: 100%; border-collapse: collapse; margin-top: 15px; }
+        .table-dungsai th, .table-dungsai td { border: 1px solid var(--border-color); padding: 12px; text-align: center; }
+        .table-dungsai td.statement-text { text-align: left; }
+
+        /* ANSWERS: KÉO THẢ */
+        .drag-drop-container { border: 1px solid var(--border-color); padding: 20px; border-radius: 10px; background: var(--bg-secondary); margin-top: 15px; }
+        .draggable-pool { display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 25px; padding: 15px; background: var(--bg-panel); border: 2px dashed var(--border-color); border-radius: 8px; min-height: 70px; align-items: center; justify-content: center;}
+        .drag-item { background: var(--bg-panel); border: 2px solid var(--primary-color); color: var(--primary-color); padding: 8px 18px; border-radius: 30px; cursor: grab; font-weight: bold; user-select: none; transition: 0.2s; font-size: 15px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);}
+        .drag-item:active { cursor: grabbing; }
+        .drag-item.selected { background: var(--primary-color); color: white; transform: scale(1.05); box-shadow: 0 4px 10px rgba(220,38,38,0.3);}
+        .dd-text-content { font-size: 17px; line-height: 2.5; }
+        .drop-zone { display: inline-flex; align-items: center; justify-content: center; min-width: 100px; height: 38px; border: 2px dashed var(--text-muted); border-radius: 6px; vertical-align: middle; margin: 0 8px; background: var(--bg-panel); cursor: pointer; transition: 0.2s; font-weight: bold; color: var(--primary-color); padding: 0 10px;}
+        .drop-zone.filled { border: 2px solid var(--primary-color); background: var(--bg-hover); border-style: solid; }
+        .drop-zone.review-correct { border-color: var(--correct-color); background: rgba(16, 185, 129, 0.2); color: var(--correct-color); }
+        .drop-zone.review-incorrect { border-color: var(--wrong-color); background: rgba(239, 68, 68, 0.2); color: var(--wrong-color); text-decoration: line-through; }
+        .correct-badge { color: var(--correct-color); font-size: 15px; font-weight: bold; margin-left: 5px; }
+
+        .nav-buttons { display: flex; justify-content: flex-start; gap: 15px; margin-top: auto; }
+        .btn-nav { padding: 10px 24px; border: none; border-radius: 8px; font-size: 15px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 8px; transition: 0.2s; }
+        .btn-prev { background-color: var(--bg-secondary); color: var(--text-main); border: 1px solid var(--border-color); }
+        .btn-prev:hover:not(:disabled) { background-color: var(--bg-hover); }
+        .btn-next { background-color: var(--btn-active); color: #fff; }
+        .btn-next:hover:not(:disabled) { filter: brightness(0.9); }
+
+        /* RIGHT PANEL */
+        .right-panel { width: 380px; background-color: var(--bg-panel); border-left: 1px solid var(--border-color); display: flex; flex-direction: column; flex-shrink: 0; overflow-y: auto; transition: 0.3s;}
+        .panel-section { padding: 20px; border-bottom: 1px solid var(--border-color); }
+        
+        .timer-box { display: flex; align-items: center; justify-content: space-between; background: var(--bg-secondary); padding: 15px; border-radius: 8px; transition: 0.3s;}
+        .time-text { font-size: 32px; font-weight: 700; color: var(--btn-active); font-variant-numeric: tabular-nums; }
+        .btn-submit { background-color: var(--primary-color); color: white; border: none; padding: 12px 24px; border-radius: 8px; font-weight: 600; font-size: 16px; cursor: pointer; transition: 0.2s; }
+        .btn-submit:hover { background-color: var(--primary-hover); }
+        .btn-submit:disabled { background-color: var(--text-muted); cursor: not-allowed; }
+
+        .indicators { display: flex; flex-wrap: wrap; gap: 10px; font-size: 12px; color: var(--text-muted); align-items: center; margin-bottom: 15px; }
+        .dot { padding: 4px 8px; border-radius: 12px; border: 1px solid var(--border-color); display: flex; align-items: center; gap: 5px; background: var(--bg-panel); }
+        .dot i { font-size: 10px; }
+
+        .grid-container { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; }
+        .grid-btn { aspect-ratio: 1; border-radius: 50%; border: 1px solid var(--border-color); background: var(--bg-panel); font-weight: 500; cursor: pointer; transition: 0.2s; display: flex; align-items: center; justify-content: center; font-size: 14px; color: var(--text-muted); }
+        .grid-btn:hover { border-color: var(--text-muted); }
+        .grid-btn.active { box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.3); border-color: var(--btn-active); transform: scale(1.05); color: var(--btn-active); font-weight: 700;}
+        .grid-btn.answered { background: var(--btn-active); border-color: var(--btn-active); color: white; font-weight: 700; }
+        .grid-btn.correct { background: var(--correct-color); border-color: var(--correct-color); color: white; }
+        .grid-btn.wrong { background: var(--wrong-color); border-color: var(--wrong-color); color: white; }
+
+        .progress-container { margin-top: auto; padding: 20px; background: var(--bg-secondary); border-top: 1px solid var(--border-color); transition: 0.3s; }
+        .progress-text { display: flex; justify-content: space-between; font-size: 14px; font-weight: 600; margin-bottom: 8px; color: var(--text-main);}
+        .progress-bar-bg { width: 100%; height: 8px; background: var(--border-color); border-radius: 4px; overflow: hidden; }
+        .progress-bar-fill { height: 100%; background: var(--primary-color); width: 0%; transition: 0.3s ease; }
+        .status-text { font-size: 13px; color: #10b981; display: flex; align-items: center; gap: 5px; margin-top: 10px; }
+
+        /* MODAL CHUNG */
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.8); display: none; align-items: center; justify-content: center; z-index: 9999; backdrop-filter: blur(3px); opacity: 0; transition: opacity 0.3s ease; }
+        .modal-overlay.show { display: flex; opacity: 1; }
+        .modal-box { background: var(--bg-panel); padding: 30px; border-radius: 16px; width: 400px; max-width: 90%; text-align: center; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.2); transform: translateY(20px); transition: 0.3s ease; border: 1px solid var(--border-color); }
+        .modal-overlay.show .modal-box { transform: translateY(0); }
+        .modal-icon { font-size: 48px; margin-bottom: 15px; }
+        .modal-icon.confirm { color: var(--btn-active); }
+        .modal-icon.success { color: var(--correct-color); }
+        .modal-icon.error { color: var(--wrong-color); }
+        .modal-title { font-size: 20px; font-weight: 700; margin-bottom: 10px; color: var(--text-main); }
+        .modal-desc { font-size: 15px; color: var(--text-muted); margin-bottom: 25px; line-height: 1.5; white-space: pre-line; }
+        .modal-actions { display: flex; gap: 15px; justify-content: center; }
+        .btn-modal { padding: 10px 24px; border-radius: 8px; font-weight: 600; font-size: 15px; cursor: pointer; border: none; transition: 0.2s; flex: 1; }
+        .btn-cancel { background: var(--bg-secondary); color: var(--text-main); border: 1px solid var(--border-color); }
+        .btn-cancel:hover { background: var(--bg-hover); }
+        .btn-confirm { background: var(--primary-color); color: white; }
+        .btn-confirm:hover { background: var(--primary-hover); }
+
+        @media (max-width: 768px) {
+            .main-container { flex-direction: column; }
+            .right-panel { width: 100%; height: 300px; border-left: none; border-top: 1px solid var(--border-color); }
+            header { padding: 0 15px; }
+            .exam-title { font-size: 15px; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="header-left">
+            <img src="logo.webp" alt="Logo" class="logo" onerror="this.src='https://cdn-icons-png.flaticon.com/512/3242/3242257.png'">
+            <div class="exam-title" id="ui-exam-title">Đang tải đề thi... <span class="exam-code" id="ui-exam-code"></span></div>
+        </div>
+        <div class="header-right">
+            <button class="btn-icon" id="themeToggle" onclick="toggleTheme()" title="Chế độ Tối/Sáng"><i class="fa-solid fa-moon"></i></button>
+            <button class="btn-icon" onclick="rotateScreen()" title="Xoay ngang màn hình (Mobile)"><i class="fa-solid fa-rotate"></i></button>
+            <button class="btn-icon" onclick="toggleFullScreen()" title="Toàn màn hình"><i class="fa-solid fa-expand"></i></button>
+            <a href="#" class="btn-exit" id="btn-exit"><i class="fa-solid fa-right-from-bracket"></i> Thoát</a>
+        </div>
+    </header>
+
+    <div class="main-container">
+        <!-- LEFT PANEL -->
+        <div class="left-panel">
+            <div class="question-card">
+                <div class="question-header">
+                    <div class="question-number" id="ui-q-num">1</div>
+                    <div class="question-content">
+                        <div id="ui-q-text">Đang tải câu hỏi...</div>
+                        <img id="ui-q-img" class="question-image" src="" alt="Hình minh họa" style="display: none;">
+                    </div>
+                </div>
+                <div id="ui-answers-area"></div>
+            </div>
+
+            <div class="nav-buttons">
+                <button class="btn-nav btn-prev" id="btnPrev" onclick="changeQuestion(-1)"><i class="fa-solid fa-chevron-left"></i> Câu trước</button>
+                <button class="btn-nav btn-next" id="btnNext" onclick="changeQuestion(1)">Câu tiếp <i class="fa-solid fa-chevron-right"></i></button>
+            </div>
+        </div>
+
+        <!-- RIGHT PANEL -->
+        <div class="right-panel">
+            <div class="panel-section">
+                <div class="timer-box">
+                    <div>
+                        <div style="font-size: 13px; color: var(--text-muted); font-weight: 500;">Thời gian còn lại</div>
+                        <div class="time-text" id="ui-timer">--:--</div>
+                    </div>
+                    <button class="btn-submit" id="btnSubmitExam" onclick="requestSubmit()">Nộp bài</button>
+                </div>
+            </div>
+
+            <div class="panel-section" style="flex: 1;">
+                <div class="indicators">
+                    <div class="dot"><i class="fa-solid fa-circle" style="color: var(--text-muted);"></i> Chưa làm</div>
+                    <div class="dot"><i class="fa-solid fa-circle" style="color: var(--btn-active);"></i> Đã làm</div>
+                    <div class="dot" id="ind-correct" style="display:none;"><i class="fa-solid fa-circle" style="color: var(--correct-color);"></i> Đúng</div>
+                    <div class="dot" id="ind-wrong" style="display:none;"><i class="fa-solid fa-circle" style="color: var(--wrong-color);"></i> Sai</div>
+                </div>
+                <div class="grid-container" id="ui-grid"></div>
+            </div>
+
+            <div class="progress-container">
+                <div class="progress-text">
+                    <span>Tiến độ hoàn thành</span>
+                    <span id="ui-progress-count">0/0 câu</span>
+                </div>
+                <div class="progress-bar-bg">
+                    <div class="progress-bar-fill" id="ui-progress-fill"></div>
+                </div>
+                <div class="status-text"><i class="fa-solid fa-circle"></i> Đã kết nối máy chủ Space Edu</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- CUSTOM MODAL UI -->
+    <div class="modal-overlay" id="customModal">
+        <div class="modal-box">
+            <div class="modal-icon" id="modalIcon"><i class="fa-solid fa-circle-info"></i></div>
+            <div class="modal-title" id="modalTitle">Tiêu đề</div>
+            <div class="modal-desc" id="modalDesc">Nội dung mô tả</div>
+            <div class="modal-actions" id="modalActions"></div>
+        </div>
+    </div>
+
+    <script>
+        function initTheme() {
+            const savedTheme = localStorage.getItem("spaceEduTheme") || "light";
+            document.documentElement.setAttribute("data-theme", savedTheme);
+            updateThemeIcon(savedTheme);
+        }
+
+        function toggleTheme() {
+            const currentTheme = document.documentElement.getAttribute("data-theme");
+            const newTheme = currentTheme === "dark" ? "light" : "dark";
+            document.documentElement.setAttribute("data-theme", newTheme);
+            localStorage.setItem("spaceEduTheme", newTheme);
+            updateThemeIcon(newTheme);
+        }
+
+        function updateThemeIcon(theme) {
+            const icon = document.querySelector("#themeToggle i");
+            if(theme === "dark") {
+                icon.className = "fa-solid fa-sun"; 
+            } else {
+                icon.className = "fa-solid fa-moon"; 
+            }
+        }
+
+        function safeRenderMathJax(elements) {
+            if (window.MathJax && typeof MathJax.typesetPromise === 'function') {
+                MathJax.typesetPromise(elements).catch(() => {});
+            } else {
+                setTimeout(() => safeRenderMathJax(elements), 300);
+            }
+        }
+
+        let examData = null;
+        let currentQuestionIndex = 0;
+        let userAnswers = {}; 
+        let totalQuestions = 0;
+        let timeLeft = 0;
+        let timerInterval;
+        let isSubmitted = false;
+        let currentFolder = 'toantsa';
+        let currentExamId = 'BEDU01';
+        let activeDragItem = null;
+        let isFullMode = false;
+
+        document.addEventListener("DOMContentLoaded", () => {
+            initTheme(); 
+            const urlParams = new URLSearchParams(window.location.search);
+            currentExamId = urlParams.get('id') || 'BEDU01'; 
+            currentFolder = urlParams.get('folder') || 'toantsa'; 
+            
+            isFullMode = (urlParams.get('mode') === 'full');
+
+            const btnExit = document.getElementById('btn-exit');
+            if (isFullMode) {
+                btnExit.href = "phongchotsa.html"; 
+            } else {
+                btnExit.href = "danhsachtsa.html"; 
+            }
+
+            fetchExamData(currentFolder, currentExamId);
+        });
+
+        async function fetchExamData(folder, examId) {
+            try {
+                const response = await fetch(`dethi/${folder}/${examId}.json`);
+                if (!response.ok) throw new Error(`Mã lỗi HTTP: ${response.status}`);
+                
+                examData = await response.json();
+                totalQuestions = examData.cauHoi.length;
+                timeLeft = examData.thoiGian * 60; 
+
+                userAnswers = examData.cauHoi.map(q => {
+                    if (q.type === 'dung-sai') return [null, null, null, null];
+                    if (q.type === 'tra-loi-ngan' || q.type === 'dien-tu') return "";
+                    if (q.type === 'keo-tha') return new Array((q.correct || []).length).fill(null);
+                    return null;
+                });
+
+                document.getElementById('ui-exam-title').innerHTML = `${examData.ten} <span class="exam-code">${examData.id}</span>`;
+                
+                initGrid();
+                renderQuestion(0);
+                startTimer();
+                updateProgress();
+
+            } catch (error) {
+                console.error("Lỗi khi tải đề:", error);
+                showModal("Lỗi tải đề", `Không thể tải đề thi ${examId}.json từ thư mục dethi/${folder}/.<br><br><span style="font-size:12px; color:var(--wrong-color);">Chi tiết: ${error.message}</span>`, 'error');
+            }
+        }
+
+        function initGrid() {
+            const grid = document.getElementById('ui-grid');
+            grid.innerHTML = '';
+            for (let i = 0; i < totalQuestions; i++) {
+                const btn = document.createElement('button');
+                btn.className = 'grid-btn';
+                btn.id = `grid-btn-${i}`;
+                btn.innerText = i + 1;
+                btn.onclick = () => renderQuestion(i);
+                grid.appendChild(btn);
+            }
+        }
+
+        function renderQuestion(index) {
+            if (index < 0 || index >= totalQuestions) return;
+            
+            const oldBtn = document.getElementById(`grid-btn-${currentQuestionIndex}`);
+            if(oldBtn) oldBtn.classList.remove('active');
+
+            currentQuestionIndex = index;
+            const q = examData.cauHoi[index];
+
+            const newBtn = document.getElementById(`grid-btn-${currentQuestionIndex}`);
+            if(newBtn) newBtn.classList.add('active');
+
+            document.getElementById('btnPrev').disabled = (index === 0);
+            document.getElementById('btnNext').disabled = (index === totalQuestions - 1);
+
+            document.getElementById('ui-q-num').innerText = index + 1;
+            document.getElementById('ui-q-text').innerHTML = q.text || q.prompt;
+
+            // XỬ LÝ ẢNH CHUẨN CẤU TRÚC FOLDER MỚI
+            const imgEl = document.getElementById('ui-q-img');
+            if (q.image) {
+                let imagePath = q.image;
+                if (!q.image.includes('/')) {
+                    imagePath = `img/${currentFolder}/${currentExamId}/${q.image}`;
+                }
+                imgEl.src = imagePath;
+                imgEl.style.display = 'block';
+            } else {
+                imgEl.style.display = 'none';
+            }
+
+            renderAnswerArea(q, index);
+
+            if (q.type === 'keo-tha') {
+                updateKeoThaUI(index);
+            }
+
+            safeRenderMathJax([document.getElementById('ui-q-text'), document.getElementById('ui-answers-area')]);
+        }
+
+        function renderAnswerArea(q, index) {
+            const area = document.getElementById('ui-answers-area');
+            let html = '';
+            const savedAns = userAnswers[index];
+            const disabledAttr = isSubmitted ? 'disabled' : '';
+            const disabledClass = isSubmitted ? 'disabled' : '';
+
+            if (q.type === 'trac-nghiem' || !q.type) {
+                html += `<div class="options-list">`;
+                q.options.forEach((opt, idx) => {
+                    let isChecked = savedAns === idx ? 'checked' : '';
+                    let itemClass = '';
+                    
+                    if(isSubmitted) {
+                        const isCorrectOption = Array.isArray(q.correct) ? q.correct.includes(idx) : q.correct === idx;
+                        if (isCorrectOption) itemClass = 'is-correct';
+                        else if (savedAns === idx) itemClass = 'is-wrong';
+                    }
+
+                    html += `
+                        <label class="option-item ${disabledClass} ${itemClass}">
+                            <input type="radio" name="q_${index}" value="${idx}" ${isChecked} ${disabledAttr} onchange="saveAnswer(${index}, ${idx})">
+                            <span>${opt}</span>
+                        </label>`;
+                });
+                html += `</div>`;
+            } 
+            else if (q.type === 'tra-loi-ngan' || q.type === 'dien-tu') {
+                const val = savedAns !== undefined ? savedAns : '';
+                html += `<input type="text" class="input-short-answer" placeholder="Nhập câu trả lời..." value="${val}" ${disabledAttr} oninput="saveAnswer(${index}, this.value)">`;
+                if(isSubmitted) html += `<span class="correct-label">Đáp án đúng: ${q.correct}</span>`;
+            }
+            else if (q.type === 'dung-sai') {
+                html += `<table class="table-dungsai"><thead><tr><th>Phát biểu</th><th>Đúng</th><th>Sai</th></tr></thead><tbody>`;
+                let ansArr = savedAns || [];
+                q.options.forEach((stmt, idx) => {
+                    const isTrue = ansArr[idx] === true ? 'checked' : '';
+                    const isFalse = ansArr[idx] === false ? 'checked' : '';
+                    html += `<tr>
+                                <td class="statement-text">${stmt}</td>
+                                <td><input type="radio" name="ds_${index}_${idx}" value="true" ${isTrue} ${disabledAttr} onchange="saveDungSai(${index}, ${idx}, true)"></td>
+                                <td><input type="radio" name="ds_${index}_${idx}" value="false" ${isFalse} ${disabledAttr} onchange="saveDungSai(${index}, ${idx}, false)"></td>
+                             </tr>`;
+                });
+                html += `</tbody></table>`;
+                if(isSubmitted) {
+                    let correctStr = q.correct.map(b => b ? "Đúng" : "Sai").join(" | ");
+                    html += `<span class="correct-label">Đáp án chuẩn: ${correctStr}</span>`;
+                }
+            }
+            else if (q.type === 'keo-tha') {
+                html += `<div class="drag-drop-container">`;
+                html += `<div class="draggable-pool" id="pool_${index}"></div>`;
+                html += `<div class="dd-text-content" id="dd_text_${index}"></div>`;
+                html += `</div>`;
+            }
+
+            area.innerHTML = html;
+        }
+
+        function updateKeoThaUI(qIdx) {
+            let q = examData.cauHoi[qIdx];
+            let uAns = userAnswers[qIdx] || [];
+            
+            let poolHtml = '';
+            q.options.forEach((opt, i) => {
+                if (!uAns.includes(i)) {
+                    let selClass = (activeDragItem && activeDragItem.qIdx === qIdx && activeDragItem.optIdx === i) ? 'selected' : '';
+                    poolHtml += `<div class="drag-item ${selClass}" onclick="handleDragClick(${qIdx}, ${i})" draggable="true" ondragstart="dragStart(event, ${qIdx}, ${i})">${opt}</div>`;
+                }
+            });
+            const poolEl = document.getElementById(`pool_${qIdx}`);
+            if(poolEl) poolEl.innerHTML = poolHtml || '<span style="color: var(--text-muted); font-style:italic;">(Đã sử dụng hết thẻ)</span>';
+
+            let textHtml = '';
+            let parts = q.text.split('[__]');
+            parts.forEach((part, pIdx) => {
+                textHtml += `<span>${part}</span>`;
+                if (pIdx < parts.length - 1) {
+                    let optIdx = uAns[pIdx];
+                    let content = optIdx !== null && optIdx !== undefined ? q.options[optIdx] : '';
+                    let filledClass = (optIdx !== null && optIdx !== undefined) ? 'filled' : '';
+                    
+                    if (isSubmitted) {
+                        let isCorrectDrop = (optIdx === q.correct[pIdx]);
+                        if (isCorrectDrop) filledClass += ' review-correct';
+                        else {
+                            if(optIdx !== null && optIdx !== undefined) filledClass += ' review-incorrect';
+                            content += `<span class="correct-badge">(${q.options[q.correct[pIdx]]})</span>`;
+                        }
+                    }
+
+                    textHtml += `<div class="drop-zone ${filledClass}" onclick="handleDropClick(${qIdx}, ${pIdx})" ondragover="allowDrop(event)" ondrop="drop(event, ${qIdx}, ${pIdx})">${content}</div>`;
+                }
+            });
+            
+            const textContainer = document.getElementById(`dd_text_${qIdx}`);
+            if(textContainer) textContainer.innerHTML = textHtml;
+
+            safeRenderMathJax([poolEl, textContainer]);
+        }
+
+        function handleDragClick(qIdx, optIdx) {
+            if(isSubmitted) return;
+            activeDragItem = { qIdx, optIdx };
+            updateKeoThaUI(qIdx);
+        }
+
+        function handleDropClick(qIdx, blankIdx) {
+            if(isSubmitted) return;
+            let currentAns = userAnswers[qIdx][blankIdx];
+            if (activeDragItem && activeDragItem.qIdx === qIdx) {
+                userAnswers[qIdx][blankIdx] = activeDragItem.optIdx;
+                activeDragItem = null;
+            } 
+            else if (currentAns !== null && currentAns !== undefined) {
+                userAnswers[qIdx][blankIdx] = null;
+            }
+            updateKeoThaUI(qIdx);
+            checkAnsweredStatus(qIdx);
+        }
+
+        function dragStart(ev, qIdx, optIdx) {
+            if(isSubmitted) return;
+            activeDragItem = { qIdx, optIdx };
+            ev.dataTransfer.setData("text", ""); 
+        }
+        function allowDrop(ev) { ev.preventDefault(); }
+        function drop(ev, qIdx, blankIdx) {
+            ev.preventDefault();
+            if (isSubmitted || !activeDragItem || activeDragItem.qIdx !== qIdx) return;
+            userAnswers[qIdx][blankIdx] = activeDragItem.optIdx;
+            activeDragItem = null;
+            updateKeoThaUI(qIdx);
+            checkAnsweredStatus(qIdx);
+        }
+
+        function changeQuestion(step) { renderQuestion(currentQuestionIndex + step); }
+        
+        function saveAnswer(qIndex, val) {
+            if(isSubmitted) return;
+            if(val === '' && typeof val === 'string') userAnswers[qIndex] = undefined;
+            else userAnswers[qIndex] = val;
+            updateGridStatus(qIndex);
+        }
+
+        function saveDungSai(qIndex, stmtIndex, val) {
+            if(isSubmitted) return;
+            if (!userAnswers[qIndex]) userAnswers[qIndex] = [];
+            userAnswers[qIndex][stmtIndex] = val;
+            let isFull = true;
+            for(let i=0; i<examData.cauHoi[qIndex].options.length; i++) {
+                if(userAnswers[qIndex][i] === undefined || userAnswers[qIndex][i] === null) isFull = false;
+            }
+            updateGridStatus(qIndex, isFull);
+        }
+
+        function checkAnsweredStatus(qIndex) {
+            if(isSubmitted) return;
+            const btn = document.getElementById(`grid-btn-${qIndex}`);
+            const q = examData.cauHoi[qIndex];
+            let isAns = false;
+
+            if (q.type === 'keo-tha') {
+                isAns = userAnswers[qIndex] && userAnswers[qIndex].some(a => a !== null && a !== undefined);
+            }
+
+            if (isAns) btn.classList.add('answered');
+            else btn.classList.remove('answered');
+            updateProgress();
+        }
+
+        function updateGridStatus(qIndex, forceComplete = null) {
+            if(isSubmitted) return;
+            const btn = document.getElementById(`grid-btn-${qIndex}`);
+            let isAns = forceComplete !== null ? forceComplete : (userAnswers[qIndex] !== undefined && userAnswers[qIndex] !== null && userAnswers[qIndex] !== "");
+            
+            if (isAns) btn.classList.add('answered');
+            else btn.classList.remove('answered');
+            updateProgress();
+        }
+
+        function updateProgress() {
+            let count = 0;
+            for(let i=0; i<totalQuestions; i++) {
+                if(document.getElementById(`grid-btn-${i}`)?.classList.contains('answered')) count++;
+            }
+            const percent = totalQuestions === 0 ? 0 : Math.round((count / totalQuestions) * 100);
+            document.getElementById('ui-progress-count').innerText = `${count}/${totalQuestions} câu`;
+            document.getElementById('ui-progress-fill').style.width = `${percent}%`;
+        }
+
+        function startTimer() {
+            const timerEl = document.getElementById('ui-timer');
+            timerInterval = setInterval(() => {
+                if (timeLeft <= 0) {
+                    clearInterval(timerInterval);
+                    processSubmission(true);
+                    return;
+                }
+                timeLeft--;
+                const m = Math.floor(timeLeft / 60).toString().padStart(2, '0');
+                const s = (timeLeft % 60).toString().padStart(2, '0');
+                timerEl.innerText = `${m}:${s}`;
+            }, 1000);
+        }
+
+        function showModal(title, desc, type, onConfirmCallback = null) {
+            const overlay = document.getElementById('customModal');
+            document.getElementById('modalTitle').innerText = title;
+            document.getElementById('modalDesc').innerHTML = desc; 
+            
+            const icon = document.getElementById('modalIcon');
+            const actions = document.getElementById('modalActions');
+            actions.innerHTML = '';
+
+            if (type === 'confirm') {
+                icon.innerHTML = '<i class="fa-solid fa-circle-question"></i>';
+                icon.className = 'modal-icon confirm';
+                
+                const btnCancel = document.createElement('button');
+                btnCancel.className = 'btn-modal btn-cancel';
+                btnCancel.innerText = 'Chưa nộp';
+                btnCancel.onclick = () => overlay.classList.remove('show');
+                
+                const btnOk = document.createElement('button');
+                btnOk.className = 'btn-modal btn-confirm';
+                btnOk.innerText = 'Chắc chắn nộp';
+                btnOk.onclick = () => { overlay.classList.remove('show'); if(onConfirmCallback) onConfirmCallback(); };
+                
+                actions.appendChild(btnCancel);
+                actions.appendChild(btnOk);
+            } 
+            else if (type === 'success') {
+                icon.innerHTML = '<i class="fa-solid fa-circle-check"></i>';
+                icon.className = 'modal-icon success';
+                
+                const btnClose = document.createElement('button');
+                btnClose.className = 'btn-modal btn-confirm';
+                btnClose.innerText = 'Xem lại bài làm';
+                btnClose.onclick = () => overlay.classList.remove('show');
+                actions.appendChild(btnClose);
+            }
+            else if (type === 'error') {
+                icon.innerHTML = '<i class="fa-solid fa-circle-xmark"></i>';
+                icon.className = 'modal-icon error';
+                
+                const btnClose = document.createElement('button');
+                btnClose.className = 'btn-modal btn-cancel';
+                btnClose.innerText = 'Đóng';
+                btnClose.onclick = () => overlay.classList.remove('show');
+                actions.appendChild(btnClose);
+            }
+            overlay.classList.add('show');
+        }
+
+        function requestSubmit() {
+            if(isSubmitted) return;
+            showModal("Xác nhận nộp bài", "Bạn có chắc chắn muốn nộp bài thi? Hệ thống sẽ bắt đầu chấm điểm và không thể sửa đổi.", 'confirm', () => processSubmission(false));
+        }
+
+        function processSubmission(isTimeout) {
+            isSubmitted = true;
+            clearInterval(timerInterval);
+            document.getElementById('btnSubmitExam').disabled = true;
+            document.getElementById('ui-timer').innerText = "ĐÃ NỘP";
+
+            let correctCount = 0;
+
+            for(let i=0; i<totalQuestions; i++) {
+                const q = examData.cauHoi[i];
+                const userAns = userAnswers[i];
+                const isCorrect = checkAnswerCorrectness(q, userAns);
+
+                const btn = document.getElementById(`grid-btn-${i}`);
+                if(btn) {
+                    btn.classList.remove('answered');
+                    if(isCorrect) {
+                        btn.classList.add('correct');
+                        correctCount++;
+                    } else {
+                        btn.classList.add('wrong');
+                    }
+                }
+            }
+
+            document.getElementById('ind-correct').style.display = 'flex';
+            document.getElementById('ind-wrong').style.display = 'flex';
+
+            let msg = isTimeout ? "<div style='color: var(--wrong-color); font-weight: bold;'>Hết thời gian làm bài!</div>" : "<div style='color: var(--correct-color); font-weight: bold;'>Nộp bài thành công!</div>";
+            msg += `<div style="margin-top: 15px; font-size: 14px;">Bạn đã trả lời đúng:</div>`;
+            msg += `<div style="font-size: 42px; font-weight: 900; color: var(--primary-color); text-shadow: 0 4px 10px rgba(220,38,38,0.2); margin: 10px 0;">${correctCount}/${totalQuestions}</div>`;
+            msg += `<div style="font-size: 14px; color: var(--text-muted);">câu hỏi</div>`;
+            
+            document.querySelector('.timer-box').innerHTML = `
+                <div>
+                    <div style="font-size: 13px; color: var(--text-muted); font-weight: 500;">ĐIỂM SỐ CỦA BẠN</div>
+                    <div class="time-text" style="color: var(--correct-color);">${correctCount}/${totalQuestions}</div>
+                </div>
+                <button class="btn-submit" disabled style="background-color: var(--correct-color); opacity: 1;">Đã Nộp</button>
+            `;
+            
+            try {
+                let history = JSON.parse(localStorage.getItem('SpaceEdu_History_TSA')) || [];
+                history.unshift({
+                    tenDe: examData.ten,
+                    thoiGianNop: new Date().toLocaleString('vi-VN'),
+                    diem: `${correctCount}/${totalQuestions}`
+                });
+                localStorage.setItem('SpaceEdu_History_TSA', JSON.stringify(history));
+            } catch (err) {}
+
+            // CẬP NHẬT TRẠNG THÁI PHÒNG CHỜ
+            if (isFullMode) {
+                try {
+                    let session = JSON.parse(localStorage.getItem('Space_TSA_Session')) || {};
+                    session.toan = 'done';
+                    session.doc = 'pending'; 
+                    localStorage.setItem('Space_TSA_Session', JSON.stringify(session));
+                } catch(e) {}
+            }
+
+            showModal("Kết quả bài thi", msg, 'success');
+            renderQuestion(currentQuestionIndex);
+        }
+
+        function checkAnswerCorrectness(q, userAns) {
+            if (userAns === undefined || userAns === null) return false;
+            if (q.type === 'trac-nghiem' || !q.type) {
+                if(Array.isArray(q.correct)) return q.correct.includes(userAns);
+                return userAns === q.correct;
+            } 
+            else if (q.type === 'tra-loi-ngan' || q.type === 'dien-tu') {
+                return userAns.toString().trim().toLowerCase() === q.correct.toString().trim().toLowerCase();
+            } 
+            else if (q.type === 'dung-sai') {
+                if (!Array.isArray(userAns) || userAns.length < 4) return false;
+                for(let j=0; j<4; j++) { if(userAns[j] !== q.correct[j]) return false; }
+                return true;
+            }
+            else if (q.type === 'keo-tha') {
+                if (!Array.isArray(userAns) || !Array.isArray(q.correct)) return false;
+                if (userAns.length !== q.correct.length) return false;
+                for(let j=0; j<q.correct.length; j++) {
+                    if (userAns[j] !== q.correct[j]) return false;
+                }
+                return true;
+            }
+            return false;
+        }
+
+        function toggleFullScreen() {
+            if (!document.fullscreenElement) { document.documentElement.requestFullscreen().catch(err => console.log(err)); } 
+            else { if (document.exitFullscreen) document.exitFullscreen(); }
+        }
+        function rotateScreen() {
+            if (screen.orientation && screen.orientation.lock) {
+                const currentType = screen.orientation.type;
+                if (currentType.includes("portrait")) {
+                    screen.orientation.lock("landscape").catch(err => alert("Trình duyệt không hỗ trợ xoay tự động. Hãy xoay ngang thiết bị của bạn."));
+                } else {
+                    screen.orientation.unlock();
+                }
+            } else {
+                alert("Hãy tắt chế độ khóa xoay trên điện thoại và xoay ngang thiết bị để trải nghiệm tốt nhất.");
+            }
+        }
+    </script>
+</body>
+</html>

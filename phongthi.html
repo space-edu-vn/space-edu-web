@@ -6,9 +6,20 @@
     <title>Phòng Luyện Thi - Space Education</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="icon" href="logo.webp" type="image/webp">
-    <script> MathJax = { tex: { inlineMath: [['$', '$'], ['\\(', '\\)']] }, svg: { fontCache: 'global' } }; </script>
+    
+    <!-- Cấu hình MathJax chuẩn duy nhất -->
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']],
+                processEscapes: true
+            },
+            svg: { fontCache: 'global' }
+        };
+    </script>
     <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
-
+    
     <style>
         /* BẢNG MÀU MẶC ĐỊNH (LIGHT MODE) */
         :root { 
@@ -30,11 +41,11 @@
 
         /* BẢNG MÀU GIAO DIỆN TỐI (DARK MODE) */
         [data-theme="dark"] {
-            --deep-red: #ff4d4d; /* Đỏ sáng hơn để nổi bật trên nền đen */
+            --deep-red: #ff4d4d;
             --light-red: rgba(255, 77, 77, 0.2); 
-            --text-dark: #e2e8f0; /* Chữ trắng xám */
-            --bg-main: #0a0a10; /* Nền tối vũ trụ */
-            --bg-card: #14141e; /* Nền khối/card tối */
+            --text-dark: #e2e8f0; 
+            --bg-main: #0a0a10; 
+            --bg-card: #14141e; 
             --border-color: #2a2a35; 
             --btn-bg: #1e1e2d;
             --btn-hover: #2a2a35;
@@ -64,8 +75,6 @@
         
         /* CỘT TRÁI: ĐỀ THI */
         .exam-left { flex: 7; overflow-y: auto; padding: 30px 40px; scroll-behavior: smooth; position: relative;}
-        
-        /* SCROLLBAR TÙY CHỈNH CHO GIAO DIỆN TỐI/SÁNG */
         .exam-left::-webkit-scrollbar { width: 8px; }
         .exam-left::-webkit-scrollbar-track { background: var(--bg-main); }
         .exam-left::-webkit-scrollbar-thumb { background: var(--border-color); border-radius: 10px; }
@@ -108,7 +117,7 @@
         .sa-input.review-incorrect { border-color: #dc3545; background: rgba(220, 53, 69, 0.1); color: #dc3545; }
         .sa-correct-ans { display: none; margin-top: 10px; font-size: 15px; color: #27ae60; font-weight: bold; }
 
-        /* DẠNG 4: KÉO THẢ / CHẠM ĐIỀN (DRAG & DROP) */
+        /* DẠNG 4: KÉO THẢ */
         .drag-drop-container { border: 1px solid var(--border-color); padding: 20px; border-radius: 10px; background: var(--dd-pool-bg); }
         .draggable-pool { display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 25px; padding: 15px; background: var(--bg-card); border: 2px dashed var(--border-color); border-radius: 8px; min-height: 70px; align-items: center; justify-content: center;}
         .drag-item { background: var(--bg-card); border: 2px solid var(--deep-red); color: var(--deep-red); padding: 8px 18px; border-radius: 30px; cursor: grab; font-weight: bold; user-select: none; transition: 0.2s; font-size: 15px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);}
@@ -133,8 +142,6 @@
         .time-display { font-size: 38px; font-weight: 900; color: var(--deep-red); }
         
         .answer-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; overflow-y: auto; padding-bottom: 20px; flex: 1; align-content: flex-start;}
-        
-        /* Chỉnh Scrollbar cho bảng đáp án */
         .answer-grid::-webkit-scrollbar { width: 6px; }
         .answer-grid::-webkit-scrollbar-thumb { background: var(--border-color); border-radius: 10px; }
 
@@ -148,14 +155,6 @@
         .submit-btn { width: 100%; background: var(--deep-red); color: white; border: none; padding: 16px; border-radius: 10px; font-size: 18px; font-weight: bold; cursor: pointer; margin-top: auto; box-shadow: 0 4px 15px rgba(183, 28, 28, 0.3); transition: 0.2s;}
         .submit-btn:hover { filter: brightness(1.1); transform: translateY(-2px); }
 
-        /* BẢNG SỐ LIỆU */
-        .table-wrapper { display: flex; align-items: center; margin-bottom: 20px; gap: 20px; overflow-x: auto; padding: 5px;}
-        .table-label { font-weight: bold; font-style: italic; color: #3498db; font-size: 18px; white-space: nowrap; }
-        .table-responsive { flex: 1; }
-        .math-table { border-collapse: collapse; width: 100%; max-width: 800px; text-align: center; background: var(--bg-card); border: 2px solid var(--deep-red);}
-        .math-table td { border: 1px solid var(--deep-red); padding: 12px 15px; font-size: 18px; color: var(--text-dark); }
-        .math-table td.first-col { color: #3498db; font-weight: bold;} 
-        
         /* MODALS */
         .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 10000; display: flex; align-items: center; justify-content: center; opacity: 0; visibility: hidden; transition: 0.3s ease; }
         .modal-overlay.active { opacity: 1; visibility: visible; }
@@ -171,7 +170,6 @@
         #btnRotate { display: none; }
         @media (max-width: 768px) { #btnRotate { display: block; } }
 
-        /* KHI MATHJAX RENDER TRONG DARK MODE, CẦN ĐẢM BẢO CHỮ MÀU SÁNG */
         [data-theme="dark"] .MathJax { color: #e2e8f0 !important; }
     </style>
 </head>
@@ -182,15 +180,13 @@
             <button class="back-btn-header" onclick="goBack()" title="Quay lại danh sách đề">
                 <i class="fas fa-arrow-left"></i>
             </button>
-            <img src="logo.webp" style="width: 45px; height: 45px; object-fit: contain; background-color: transparent;" onerror="this.style.display='none'">            <div class="test-title-header" id="headerTitle">ĐANG TẢI ĐỀ THI...</div>
+            <img src="logo.webp" style="width: 45px; height: 45px; object-fit: contain; background-color: transparent;" onerror="this.src='https://cdn-icons-png.flaticon.com/512/3242/3242257.png'">
+            <div class="test-title-header" id="headerTitle">ĐANG TẢI ĐỀ THI...</div>
         </div>
         <div class="header-right">
-            <!-- Nút Theme Toggle -->
             <button class="btn-icon" id="btnThemeToggle" title="Chuyển đổi Sáng/Tối"><i class="fas fa-moon"></i></button>
-            
-            <button class="btn-icon" id="btnRotate" title="Xoay ngang (Dành cho Điện thoại)"><i class="fas fa-sync-alt"></i></button>
+            <button class="btn-icon" id="btnRotate" title="Xoay ngang"><i class="fas fa-sync-alt"></i></button>
             <button class="btn-icon" id="btnFullscreen" title="Toàn màn hình"><i class="fas fa-expand"></i></button>
-            
             <div style="display:flex; align-items:center; color: var(--meta-text); font-weight:bold;"><i class="far fa-user-circle" style="margin-right:5px;"></i> Ẩn danh</div>
         </div>
     </header>
@@ -209,7 +205,7 @@
         </div>
     </main>
 
-    <!-- Modals (Submit, Result, Timeout) -->
+    <!-- Modals -->
     <div class="modal-overlay" id="submitModal">
         <div class="modal-box">
             <i class="fas fa-paper-plane" style="font-size: 50px; color: var(--deep-red); margin-bottom: 15px;"></i>
@@ -234,19 +230,12 @@
         </div>
     </div>
 
-    <div class="modal-overlay" id="timeoutModal">
-        <div class="modal-box">
-            <i class="fas fa-hourglass-end" style="font-size: 50px; color: #e74c3c; margin-bottom: 15px;"></i>
-            <h3 style="font-size: 22px; font-weight: 900; margin-bottom: 10px; color: var(--text-dark);">ĐÃ HẾT THỜI GIAN!</h3>
-            <p style="color: var(--meta-text);">Hệ thống đang tự động thu bài và chấm điểm. Vui lòng đợi trong giây lát...</p>
-        </div>
-    </div>
-
     <script>
+        // Lấy dữ liệu từ URL
         const urlParams = new URLSearchParams(window.location.search);
         const idDe = urlParams.get('id');
-        const kyThiHienTai = urlParams.get('kithi') || 'thptqg';
-        const isTSA = (kyThiHienTai === 'tsa');
+        const folder = urlParams.get('folder') || 'thpttoan'; 
+        const isTSA = folder.includes('tsa');
 
         let mockQuestions = [];
         let userAnswers = [];
@@ -256,19 +245,18 @@
         let totalPages = 1;
         let timerInterval;
         let timeTotal = 0;
-        
         let activeDragItem = null; 
 
+        // Điều hướng thông minh dựa vào folder
         function goBack() {
-            window.location.href = `danhsachde.html?kithi=${kyThiHienTai}`;
+            window.location.href = isTSA ? 'danhsachtsa.html' : 'danhsachde.html';
         }
 
-        // ================= HỆ THỐNG THEME TOGGLE (SÁNG / TỐI) =================
+        // ================= HỆ THỐNG THEME =================
         const btnThemeToggle = document.getElementById('btnThemeToggle');
         const themeIcon = btnThemeToggle.querySelector('i');
-        
-        // Kiểm tra xem người dùng đã lưu chế độ nào trước đó chưa
         const savedTheme = localStorage.getItem('SpaceEdu_Theme');
+        
         if (savedTheme === 'dark') {
             document.documentElement.setAttribute('data-theme', 'dark');
             themeIcon.classList.replace('fa-moon', 'fa-sun');
@@ -276,23 +264,21 @@
 
         btnThemeToggle.addEventListener('click', () => {
             if (document.documentElement.getAttribute('data-theme') === 'dark') {
-                // Đổi về Sáng
                 document.documentElement.removeAttribute('data-theme');
                 localStorage.setItem('SpaceEdu_Theme', 'light');
                 themeIcon.classList.replace('fa-sun', 'fa-moon');
             } else {
-                // Đổi sang Tối
                 document.documentElement.setAttribute('data-theme', 'dark');
                 localStorage.setItem('SpaceEdu_Theme', 'dark');
                 themeIcon.classList.replace('fa-moon', 'fa-sun');
             }
         });
 
-        // 1. TẢI DỮ LIỆU ĐỀ
+        // ================= TẢI DỮ LIỆU ĐỘNG =================
         if (!idDe) {
             document.getElementById('headerTitle').textContent = "LỖI: THIẾU MÃ ĐỀ!";
         } else {
-            fetch(`dethi/${idDe}.json`)
+            fetch(`dethi/${folder}/${idDe}.json`)
                 .then(res => { if(!res.ok) throw new Error(); return res.json(); })
                 .then(data => {
                     document.getElementById('headerTitle').textContent = data.ten || data.title;
@@ -311,11 +297,11 @@
                     showPage(1);
                 })
                 .catch(err => {
-                    document.getElementById('headerTitle').textContent = "KHÔNG TÌM THẤY FILE ĐỀ THI!";
+                    document.getElementById('headerTitle').textContent = `LỖI TẢI ĐỀ TỪ THƯ MỤC ${folder.toUpperCase()}`;
                 });
         }
 
-        // 2. RENDER CÂU HỎI
+        // ================= RENDER CÂU HỎI =================
         const qContainer = document.getElementById('questionContainer');
         const aGrid = document.getElementById('answerGrid');
 
@@ -331,11 +317,19 @@
                 let html = `<div class="question-header">Câu ${index + 1}:</div>`;
                 html += `<div class="question-content">${qPrompt}</div>`;
                 
+                // XỬ LÝ HÌNH ẢNH THÔNG MINH
+                // XỬ LÝ HÌNH ẢNH THÔNG MINH
                 if (q.image) {
-                    html += `<img src="img/${idDe}/${q.image}" class="question-image" onerror="this.style.display='none'">`;
+                    let imagePath = q.image;
+                    
+                    if (!q.image.includes('/')) {
+                        // Gọi đầy đủ cả thư mục môn (folder) và thư mục mã đề (idDe)
+                        imagePath = `img/${folder}/${idDe}/${q.image}`;
+                    }
+
+                    html += `<img src="${imagePath}" class="question-image" alt="Hình ảnh câu ${index + 1}">`;
                 }
 
-                // CÁC DẠNG CÂU HỎI
                 if (q.type === 'trac-nghiem' || q.type === 'mcq' || !q.type) {
                     html += `<div class="options-grid">`;
                     (q.options || []).forEach((opt, i) => {
@@ -386,9 +380,7 @@
                 div.innerHTML = html;
                 qContainer.appendChild(div);
 
-                if (q.type === 'keo-tha') {
-                    updateKeoThaUI(index);
-                }
+                if (q.type === 'keo-tha') updateKeoThaUI(index);
             });
 
             aGrid.innerHTML = '';
@@ -403,7 +395,7 @@
             updateStats();
         }
 
-        // ================= KÉO THẢ / CHẠM CHỌN (DRAG & DROP) =================
+        // ================= KÉO THẢ =================
         function updateKeoThaUI(qIdx) {
             let q = mockQuestions[qIdx];
             let uAns = userAnswers[qIdx];
@@ -473,7 +465,7 @@
             checkAnsweredStatus(qIdx);
         }
 
-        // ================= CÁC DẠNG CŨ =================
+        // ================= XỬ LÝ ĐÁP ÁN =================
         function selectMCQ(qIndex, ansIndex) {
             if(isSubmitted) return;
             userAnswers[qIndex] = ansIndex;
@@ -537,9 +529,7 @@
 
             if (window.MathJax) {
                 if (MathJax.typesetClear) MathJax.typesetClear(); 
-                if (MathJax.typesetPromise) {
-                    MathJax.typesetPromise().catch(err => console.log('Đang chờ MathJax tải...')); 
-                }
+                if (MathJax.typesetPromise) MathJax.typesetPromise().catch(err => {}); 
             }
         }
 
@@ -665,16 +655,23 @@
                 <div class="time-display" style="color: #27ae60; font-size: 40px;">${displayScore}</div>
             `;
             
+            // Lưu lịch sử làm bài thông minh theo hệ (THPTQG lưu riêng, TSA lưu riêng)
             try {
-                let history = JSON.parse(localStorage.getItem('SpaceEdu_History')) || [];
-                history.unshift({ maDe: idDe, tenDe: document.getElementById('headerTitle').textContent, diem: displayScore, thoiGianNop: new Date().toLocaleString('vi-VN') }); 
-                localStorage.setItem('SpaceEdu_History', JSON.stringify(history));
+                let historyKey = isTSA ? 'SpaceEdu_History_TSA' : 'SpaceEdu_History';
+                let history = JSON.parse(localStorage.getItem(historyKey)) || [];
+                history.unshift({ 
+                    maDe: idDe, 
+                    tenDe: document.getElementById('headerTitle').textContent, 
+                    diem: displayScore, 
+                    thoiGianNop: new Date().toLocaleString('vi-VN') 
+                }); 
+                localStorage.setItem(historyKey, JSON.stringify(history));
             } catch (err) {}
 
             showPage(1); 
         }
 
-        // ================= FULLSCREEN =================
+        // ================= TRÌNH DUYỆT & ĐIỀU KHIỂN =================
         const btnFullscreen = document.getElementById('btnFullscreen');
         const iconFullscreen = btnFullscreen.querySelector('i');
 
@@ -690,7 +687,6 @@
             }
         });
 
-        // ================= XOAY MÀN HÌNH (MOBILE) =================
         document.getElementById('btnRotate').addEventListener('click', async () => {
             try {
                 if (!document.fullscreenElement) await document.documentElement.requestFullscreen();
